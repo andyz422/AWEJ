@@ -14,6 +14,7 @@ class MealTableViewController: UITableViewController {
     var meals = [Meal]()
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         func loadSampleMeals() {
             let photo1 = UIImage(named: "charmander")!
             let meal1 = Meal(name: "Charmander", photo: photo1, rating: 4)!
@@ -26,12 +27,18 @@ class MealTableViewController: UITableViewController {
             
             meals += [meal1, meal2, meal3]
         }
-        super.viewDidLoad()
+        
+        
         // Use the edit button item provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem()
         
-        // Load the sample data.
-        loadSampleMeals()
+        // Load any saved meals, otherwise load sample data.
+        if let savedMeals = loadMeals() {
+            meals += savedMeals
+        } else {
+            // Load the sample data.
+            loadSampleMeals()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -98,6 +105,7 @@ class MealTableViewController: UITableViewController {
         if editingStyle == .Delete {
             // Delete the row from the data source
             meals.removeAtIndex(indexPath.row)
+            saveMeals()
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
