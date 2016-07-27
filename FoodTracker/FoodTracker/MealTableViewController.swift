@@ -138,5 +138,6 @@ class MealTableViewController: UITableViewController {
          
     }
     
+    // MARK: NSCoding
 
 }
