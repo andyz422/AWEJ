@@ -74,11 +74,13 @@ class MealTableViewController: UITableViewController {
                 tableView.reloadRowsAtIndexPaths([selectedIndexPath], withRowAnimation: .None)
             }
             else {
-            // Add a new Meal.
-            let newIndexPath = NSIndexPath(forRow: meals.count, inSection: 0)
-            meals.append(meal)
-            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
+                // Add a new Meal.
+                let newIndexPath = NSIndexPath(forRow: meals.count, inSection: 0)
+                meals.append(meal)
+                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
             }
+            // Save the meals.
+            saveMeals()
         }
     }
 
@@ -139,5 +141,15 @@ class MealTableViewController: UITableViewController {
     }
     
     // MARK: NSCoding
+    func saveMeals() {
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meals, toFile: Meal.ArchiveURL.path!)
+        if !isSuccessfulSave {
+            print("Failed to save meals...")
+        }
+    }
+    
+    func loadMeals() -> [Meal]? {
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Meal.ArchiveURL.path!) as? [Meal]
+    }
 
 }
