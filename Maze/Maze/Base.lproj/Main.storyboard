@@ -14,11 +14,11 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="exit" translatesAutoresizingMaskIntoConstraints="NO" id="n1n-12-y0i">
-                                <rect key="frame" x="720" y="199" width="16" height="16"/>
+                                <rect key="frame" x="651" y="199" width="16" height="16"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="pacman" translatesAutoresizingMaskIntoConstraints="NO" id="Qkh-UI-rJM">
                                 <rect key="frame" x="0.0" y="199" width="16" height="16"/>
@@ -27,44 +27,44 @@
                                 <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="UkG-iS-2Ee">
-                                <rect key="frame" x="63" y="40" width="32" height="32"/>
+                                <rect key="frame" x="31" y="20" width="32" height="32"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="xZ0-wJ-lET">
-                                <rect key="frame" x="124" y="107" width="32" height="32"/>
+                                <rect key="frame" x="63" y="42" width="32" height="32"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="Xpd-GS-Dhb">
-                                <rect key="frame" x="285" y="304" width="32" height="32"/>
+                                <rect key="frame" x="122" y="242" width="32" height="32"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="MTk-Pw-r7D">
-                                <rect key="frame" x="0.0" y="382" width="32" height="32"/>
+                                <rect key="frame" x="0.0" y="343" width="32" height="32"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="qFi-re-XRV">
-                                <rect key="frame" x="704" y="0.0" width="32" height="32"/>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="GHW-mn-eIs">
-                                <rect key="frame" x="704" y="382" width="32" height="32"/>
+                                <rect key="frame" x="635" y="0.0" width="32" height="32"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="CXK-eO-Ejg">
-                                <rect key="frame" x="663" y="346" width="32" height="32"/>
+                                <rect key="frame" x="595" y="313" width="32" height="32"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="S6d-wH-O7S">
-                                <rect key="frame" x="605" y="299" width="32" height="32"/>
+                                <rect key="frame" x="635" y="343" width="32" height="32"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ghost" translatesAutoresizingMaskIntoConstraints="NO" id="HsB-x4-ZIb">
                                 <rect key="frame" x="360" y="0.0" width="16" height="16"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ghost" translatesAutoresizingMaskIntoConstraints="NO" id="wUg-73-inP">
-                                <rect key="frame" x="538" y="398" width="16" height="16"/>
+                                <rect key="frame" x="494" y="359" width="16" height="16"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ghost" translatesAutoresizingMaskIntoConstraints="NO" id="TrC-Dh-5Ib">
-                                <rect key="frame" x="156" y="398" width="16" height="16"/>
+                                <rect key="frame" x="155" y="359" width="16" height="16"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="squarewall" translatesAutoresizingMaskIntoConstraints="NO" id="GHW-mn-eIs">
+                                <rect key="frame" x="547" y="261" width="32" height="32"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
                         <outlet property="exit" destination="n1n-12-y0i" id="LaN-1O-GzS"/>
                         <outlet property="ghost1" destination="TrC-Dh-5Ib" id="PRe-UU-u49"/>
