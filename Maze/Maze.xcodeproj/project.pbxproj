@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB37E9121D4FDDD100393B92 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB37E9111D4FDDD100393B92 /* CoreMotion.framework */; };
+		EB37E9141D4FDDF600393B92 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB37E9131D4FDDF600393B92 /* QuartzCore.framework */; };
 		EB9D88CE1D4EB54300402FC4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9D88CD1D4EB54300402FC4 /* main.m */; };
 		EB9D88D11D4EB54300402FC4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9D88D01D4EB54300402FC4 /* AppDelegate.m */; };
 		EB9D88D41D4EB54300402FC4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9D88D31D4EB54300402FC4 /* ViewController.m */; };
@@ -27,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB37E9111D4FDDD100393B92 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		EB37E9131D4FDDF600393B92 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		EB9D88C91D4EB54300402FC4 /* Maze.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Maze.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB9D88CD1D4EB54300402FC4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EB9D88CF1D4EB54300402FC4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -47,6 +51,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB37E9141D4FDDF600393B92 /* QuartzCore.framework in Frameworks */,
+				EB37E9121D4FDDD100393B92 /* CoreMotion.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +69,8 @@
 		EB9D88C01D4EB54300402FC4 = {
 			isa = PBXGroup;
 			children = (
+				EB37E9131D4FDDF600393B92 /* QuartzCore.framework */,
+				EB37E9111D4FDDD100393B92 /* CoreMotion.framework */,
 				EB9D88CB1D4EB54300402FC4 /* Maze */,
 				EB9D88E51D4EB54300402FC4 /* MazeUITests */,
 				EB9D88CA1D4EB54300402FC4 /* Products */,
@@ -400,6 +408,7 @@
 				EB9D88ED1D4EB54300402FC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EB9D88EE1D4EB54300402FC4 /* Build configuration list for PBXNativeTarget "MazeUITests" */ = {
 			isa = XCConfigurationList;
@@ -408,6 +417,7 @@
 				EB9D88F01D4EB54300402FC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
