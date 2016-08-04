@@ -13,15 +13,12 @@
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background1" translatesAutoresizingMaskIntoConstraints="NO" id="8Fk-kQ-A1T">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="554"/>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="charmander" translatesAutoresizingMaskIntoConstraints="NO" id="rj3-Fi-7mD">
-                                <rect key="frame" x="269" y="0.0" width="62" height="64"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="diglett" translatesAutoresizingMaskIntoConstraints="NO" id="lOX-Kf-r1W">
                                 <rect key="frame" x="269" y="492" width="62" height="62"/>
@@ -31,6 +28,9 @@
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="laser" translatesAutoresizingMaskIntoConstraints="NO" id="TpO-ew-C2d">
                                 <rect key="frame" x="284" y="77" width="32" height="67"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="charmander" translatesAutoresizingMaskIntoConstraints="NO" id="rj3-Fi-7mD">
+                                <rect key="frame" x="269" y="0.0" width="62" height="64"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
