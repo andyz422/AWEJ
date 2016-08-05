@@ -10,30 +10,24 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    let button = SKSpriteNode(imageNamed: "button")
-    let diglett = SKSpriteNode(imageNamed: "diglett")
-    let background1 = SKSpriteNode(imageNamed: "background1")
-    let charmander = SKSpriteNode(imageNamed: "charmander")
-    
     override func didMoveToView(view: SKView) {
         
-        // self.backgroundColor = SKColor.blackColor()
+        self.backgroundColor = SKColor.blackColor()
         self.anchorPoint = CGPointMake(0.5, 0.5)
         
-        self.addChild(button)
-        button.position = CGPointMake(149, 562)
+        let button = SKSpriteNode(imageNamed: "button")
+        let background1 = SKSpriteNode(imageNamed:"background1")
+
         
-        self.addChild(diglett)
-        diglett.position = CGPointMake(269, 492)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        for touch in (touches as! Set<UITouch>) {
+        for touch in (touches) {
             let location = touch.locationInNode(self)
         }
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    /*override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             
@@ -50,5 +44,5 @@ class GameScene: SKScene {
             
             button.position = CGPointMake(button.position.x - xDist, button.position.y - yDist)
         }
-    }
+    }*/
 }
