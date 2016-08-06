@@ -10,45 +10,49 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    let background1 = SKSpriteNode(imageNamed:"background1")
-    let panel = SKSpriteNode(imageNamed:"panel")
     let button = SKSpriteNode(imageNamed:"button")
     let diglett = SKSpriteNode(imageNamed:"diglett")
+    let charmander = SKSpriteNode(imageNamed:"charmander")
+    let laser = SKSpriteNode(imageNamed:"laser")
+    let base = CGRect(x: -200, y: -840, width: 100, height: 100)
     
     var stickActive:Bool = false
     
     override func didMoveToView(view: SKView) {
         
-        self.backgroundColor = SKColor.blackColor()
         self.anchorPoint = CGPointMake(0.5, 0.5)
-        
-        self.addChild(background1)
-        background1.position = CGPointMake(-300, 0)
-        
+
         self.addChild(button)
-        button.position = CGPointMake(-50, -300)
-        button.size.width = 50
-        button.size.height = 50
-        
-        self.addChild(panel)
-        panel.position = CGPointMake(-50, -300)
-        panel.size.width = 60
-        panel.size.height = 60
+        button.position = CGPointMake(-200, -840)
+        button.size.width = 100
+        button.size.height = 100
+        button.zPosition = 10
         
         self.addChild(diglett)
-        diglett.position = CGPointMake(100, 200)
+        diglett.position = CGPointMake(0, -600)
         diglett.size.height = 100
         diglett.size.width = 100
+        button.zPosition = 10
+        
+        self.addChild(charmander)
+        charmander.position = CGPointMake(0, 800)
+        charmander.size.width = 100
+        charmander.size.height = 100
+        charmander.zPosition = 10
+        
+        self.addChild(laser)
+        laser.position = CGPointMake(0, 400)
+        laser.size.width = 50
+        laser.size.height = 100
+        laser.zPosition = 10
         
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        
         for touch in touches {
             let location = touch.locationInNode(self)
             
-            
-            if (CGRectContainsPoint(button.frame, location)) {
+            if (CGRectContainsPoint(base, location)) {
                 stickActive = true
             } else {
                 stickActive = false
@@ -61,8 +65,8 @@ class GameScene: SKScene {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             
-            if (stickActive == true) {
-                let v = CGVector(dx: location.x - button.position.x, dy: location.y - button.position.y)
+            if (stickActive) {
+                let v = CGVector(dx: location.x - base.origin.x, dy: location.y - base.origin.y)
                 let angle = atan2(v.dy, v.dx)
             
                 let length:CGFloat = 40
@@ -70,19 +74,20 @@ class GameScene: SKScene {
                 let xDist:CGFloat = sin(angle - 1.57079633) * length
                 let yDist:CGFloat = cos(angle - 1.57079633) * length
                 
-                if (CGRectContainsPoint(button.frame, location)) {
-                button.position = location
+                if (CGRectContainsPoint(base, location)) {
+                    button.position = location
                 
                 } else {
-                    button.position = CGPointMake(button.position.x - xDist, button.position.y + yDist)
+                    button.position = CGPointMake(base.origin.x - xDist, base.origin.y + yDist)
                 }
+                diglett.zRotation = angle - 1.57079633
             }
         }
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if (stickActive == true) {
-            let move:SKAction = SKAction.moveTo(button.position, duration: 0.2)
+            let move:SKAction = SKAction.moveTo(base.origin, duration: 0.2)
             move.timingMode = .EaseOut
             
             button.runAction(move)
