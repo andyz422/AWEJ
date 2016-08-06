@@ -102,9 +102,9 @@
 			isa = PBXGroup;
 			children = (
 				EBD580DC1D568E3300151FE9 /* AppDelegate.swift */,
+				EBD580E21D568E3300151FE9 /* GameViewController.swift */,
 				EBD580DE1D568E3300151FE9 /* GameScene.sks */,
 				EBD580E01D568E3300151FE9 /* GameScene.swift */,
-				EBD580E21D568E3300151FE9 /* GameViewController.swift */,
 				EBD580E41D568E3300151FE9 /* Main.storyboard */,
 				EBD580E71D568E3300151FE9 /* Assets.xcassets */,
 				EBD580E91D568E3300151FE9 /* LaunchScreen.storyboard */,
@@ -494,6 +494,7 @@
 				EBD581071D568E3300151FE9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EBD581081D568E3300151FE9 /* Build configuration list for PBXNativeTarget "gameTests" */ = {
 			isa = XCConfigurationList;
@@ -502,6 +503,7 @@
 				EBD5810A1D568E3300151FE9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EBD5810B1D568E3300151FE9 /* Build configuration list for PBXNativeTarget "gameUITests" */ = {
 			isa = XCConfigurationList;
@@ -510,6 +512,7 @@
 				EBD5810D1D568E3300151FE9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
