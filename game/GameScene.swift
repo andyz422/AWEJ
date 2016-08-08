@@ -10,6 +10,13 @@ import SpriteKit
 
 class GameScene: SKScene {
     var button = SKSpriteNode(imageNamed:"button")
+    
+    var button2 = SKSpriteNode(imageNamed:"button2")
+    var button2_pressed = false
+    
+    var button3 = SKSpriteNode(imageNamed:"button3")
+    var button3_pressed = false
+    
     var diglett = SKSpriteNode(imageNamed:"diglett")
     var charmander = SKSpriteNode(imageNamed:"charmander")
     var laser = SKSpriteNode(imageNamed:"laser")
@@ -21,11 +28,15 @@ class GameScene: SKScene {
 
     override func didMoveToView(view: SKView) {
         button = self.childNodeWithName("button") as! SKSpriteNode
+        button2 = self.childNodeWithName("button2") as! SKSpriteNode
+        button3 = self.childNodeWithName("button3") as! SKSpriteNode
         diglett = self.childNodeWithName("diglett") as! SKSpriteNode
         charmander = self.childNodeWithName("charmander") as! SKSpriteNode
         laser = self.childNodeWithName("laser") as! SKSpriteNode
         
         button.zPosition = 10
+        button2.zPosition = 10
+        button3.zPosition = 10
         diglett.zPosition = 10
         charmander.zPosition = 10
         laser.zPosition = 10
@@ -45,6 +56,22 @@ class GameScene: SKScene {
         for touch in touches {
             let location = touch.locationInNode(self)
             stickActive = CGRectContainsPoint(base, location)
+
+            if CGRectContainsPoint(button2.frame, location) {
+                /*addChild(button2p)
+                button2p.position = CGPoint(x: 174.633, y: -811.999)
+                button2p.size.width = 105
+                button2p.size.height = 110
+                button2_pressed = true*/
+            }
+            
+            if CGRectContainsPoint(button3.frame, location) {
+                /*addChild(button3p)
+                button3p.position = CGPoint(x: 358.54, y: -811.999)
+                button3p.size.width = 105
+                button3p.size.height = 110
+                button3_pressed = true*/
+            }
         }
     }
     
@@ -86,6 +113,15 @@ class GameScene: SKScene {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let remove_button = SKAction.removeFromParent()
+        
+        /*if (button2_pressed) {
+            button2p.runAction(remove_button)
+        }*/
+        
+        /*if (button3_pressed) {
+            button3p.runAction(remove_button)
+        }*/
         
         if (diglett_inaction) {
             diglett.removeActionForKey("aKey")
@@ -95,6 +131,7 @@ class GameScene: SKScene {
             move.timingMode = .EaseOut
             
             button.runAction(move)
+        
         }
     }
 }
