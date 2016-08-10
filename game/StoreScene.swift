@@ -22,12 +22,14 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     var charmander = SKSpriteNode(imageNamed:"charmander")
     var background = SKSpriteNode(imageNamed:"background1")
     var base = CGRect(x: 0, y: 0, width: 0, height: 0)
-        
+    
+    var xDist = CGFloat()
+    var yDist = CGFloat()
     var stickActive:Bool = false
     var diglett_inaction = false
     
     let diglett_category = uint_fast32_t(0x1 << 0)
-    let button_category = uint_fast32_t(0x1 << 1)
+    let background_category = uint_fast32_t(0x1 << 1)
     
     override func didMoveToView(view: SKView) {
         
@@ -47,27 +49,34 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         diglett.physicsBody = SKPhysicsBody(rectangleOfSize: diglett.size)
         diglett.physicsBody!.dynamic = true
         diglett.physicsBody?.categoryBitMask = diglett_category
-        diglett.physicsBody?.contactTestBitMask = button_category
+        diglett.physicsBody?.contactTestBitMask = background_category
         diglett.physicsBody?.collisionBitMask = 1
         diglett.physicsBody?.usesPreciseCollisionDetection = true
          
-        button.physicsBody = SKPhysicsBody(rectangleOfSize: button.size)
-        button.physicsBody!.dynamic = false
-        button.physicsBody?.categoryBitMask = button_category
-        button.physicsBody?.contactTestBitMask = diglett_category
-        button.physicsBody?.collisionBitMask = 0
-        button.physicsBody?.usesPreciseCollisionDetection = true
+        background.physicsBody = SKPhysicsBody(rectangleOfSize: background.size)
+        background.physicsBody!.dynamic = false
+        background.physicsBody?.categoryBitMask = background_category
+        background.physicsBody?.contactTestBitMask = diglett_category
+        background.physicsBody?.collisionBitMask = 0
+        background.physicsBody?.usesPreciseCollisionDetection = true
         
         
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
-        if (contact.bodyA.node == diglett && contact.bodyB.node == button) || (contact.bodyA.node == button && contact.bodyB.node == diglett) {
+        if (contact.bodyA.node == diglett && contact.bodyB.node == background) || (contact.bodyA.node == button && contact.bodyB.node == background) {
             print("HI")
         }
     }
-        
-        
+    
+    
+    override func update(currentTime: NSTimeInterval) {
+        if diglett_inaction {
+            diglett.position = CGPointMake(diglett.position.x - xDist, diglett.position.y + yDist)
+        }
+    }
+    
+    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch in touches {
 
@@ -93,17 +102,14 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
             let location = touch.locationInNode(self)
             
             if (stickActive) {
-                if (diglett_inaction) {
-                    diglett.removeActionForKey("aKey")
-                    diglett_inaction = false
-                }
+
                 let v = CGVector(dx: location.x - base.midX, dy: location.y - base.midY)
                 let angle = atan2(v.dy, v.dx)
                 
                 let length:CGFloat = 40
                 
-                var xDist:CGFloat = sin(angle - 1.57079633) * length
-                var yDist:CGFloat = cos(angle - 1.57079633) * length
+                xDist = sin(angle - 1.57079633) * length
+                yDist = cos(angle - 1.57079633) * length
                 
                 if (CGRectContainsPoint(base, location)) {
                     xDist = xDist / 2
@@ -114,10 +120,6 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
                 } else {
                     button.position = CGPointMake(base.midX - xDist, base.midY + yDist)
                 }
-                
-                let action_move = SKAction.moveBy(CGVectorMake(-xDist, yDist), duration: 0.02)
-                let repeat_action = SKAction.repeatActionForever(action_move)
-                diglett.runAction(repeat_action, withKey: "aKey")
                 diglett_inaction = true
             }
         }
@@ -133,10 +135,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
             button3.zPosition = 20
         }
         
-        if (diglett_inaction) {
-            diglett.removeActionForKey("aKey")
-            diglett_inaction = false
-        }
+        diglett_inaction = false
         if (stickActive == true) {
             let move:SKAction = SKAction.moveTo(CGPoint(x: base.midX, y: base.midY), duration: 0.2)
             move.timingMode = .EaseOut
