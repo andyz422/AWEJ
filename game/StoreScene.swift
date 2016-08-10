@@ -53,20 +53,15 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         diglett.physicsBody?.collisionBitMask = 1
         diglett.physicsBody?.usesPreciseCollisionDetection = true
          
-        background.physicsBody = SKPhysicsBody(rectangleOfSize: background.size)
+        /*background.physicsBody = SKPhysicsBody(edgeLoopFromRect: background.frame)
         background.physicsBody!.dynamic = false
         background.physicsBody?.categoryBitMask = background_category
         background.physicsBody?.contactTestBitMask = diglett_category
         background.physicsBody?.collisionBitMask = 0
-        background.physicsBody?.usesPreciseCollisionDetection = true
+        background.physicsBody?.usesPreciseCollisionDetection = true*/
         
+        self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
         
-    }
-    
-    func didBeginContact(contact: SKPhysicsContact) {
-        if (contact.bodyA.node == diglett && contact.bodyB.node == background) || (contact.bodyA.node == button && contact.bodyB.node == background) {
-            print("HI")
-        }
     }
     
     

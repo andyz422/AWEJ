@@ -230,7 +230,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "game/StoreScene.swift"
-            timestampString = "492557334.971899"
+            timestampString = "492557918.447727"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "149"
@@ -244,28 +244,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "game/StoreScene.swift"
-            timestampString = "492556605.405163"
+            timestampString = "492557918.447727"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
             landmarkName = "didMoveToView(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "game/StoreScene.swift"
-            timestampString = "492556605.405163"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "didBeginContact(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -298,22 +282,6 @@
             startingLineNumber = "51"
             endingLineNumber = "51"
             landmarkName = "didMoveToView(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "game/StoreScene.swift"
-            timestampString = "492556605.405163"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "didBeginContact(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
