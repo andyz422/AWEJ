@@ -12,17 +12,17 @@ import SpriteKit
 
 class StoreScene: SKScene, SKPhysicsContactDelegate {
     
-    var button = SKSpriteNode(imageNamed:"button")
-    var button2 = SKSpriteNode(imageNamed:"button2")
-    var button2p = SKSpriteNode(imageNamed:"button2p")
+    var button = SKSpriteNode()
+    var button2 = SKSpriteNode()
+    var button2p = SKSpriteNode()
     var button2_pressed = false
-    var button3 = SKSpriteNode(imageNamed:"button3")
-    var button3p = SKSpriteNode(imageNamed:"button3p")
+    var button3 = SKSpriteNode()
+    var button3p = SKSpriteNode()
     var button3_pressed = false
-    var diglett = SKSpriteNode(imageNamed:"diglett")
-    var charmander = SKSpriteNode(imageNamed:"charmander")
-    var background = SKSpriteNode(imageNamed:"background1")
-    var base = CGRect(x: 0, y: 0, width: 0, height: 0)
+    var diglett = SKSpriteNode()
+    var charmander = SKSpriteNode()
+    var background = SKSpriteNode()
+    var base = CGRect()
     
     var xDist = CGFloat()
     var yDist = CGFloat()
@@ -30,7 +30,6 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     var diglett_inaction = false
     
     let diglett_category = uint_fast32_t(0x1 << 0)
-    let background_category = uint_fast32_t(0x1 << 1)
     
     override func didMoveToView(view: SKView) {
         
@@ -44,22 +43,21 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         button3p = self.childNodeWithName("button3p_store") as! SKSpriteNode
         diglett = self.childNodeWithName("diglett_store") as! SKSpriteNode
         charmander = self.childNodeWithName("charmander_store") as! SKSpriteNode
-        background = self.childNodeWithName("background_store") as! SKSpriteNode
         base = button.frame
+        
+        button.zPosition = 10
+        button2.zPosition = 20
+        button2p.zPosition = 10
+        button3.zPosition = 20
+        button3p.zPosition = 10
+        diglett.zPosition = 10
+        charmander.zPosition = 10
         
         diglett.physicsBody = SKPhysicsBody(rectangleOfSize: diglett.size)
         diglett.physicsBody!.dynamic = true
         diglett.physicsBody?.categoryBitMask = diglett_category
-        diglett.physicsBody?.contactTestBitMask = background_category
         diglett.physicsBody?.collisionBitMask = 1
         diglett.physicsBody?.usesPreciseCollisionDetection = true
-         
-        /*background.physicsBody = SKPhysicsBody(edgeLoopFromRect: background.frame)
-        background.physicsBody!.dynamic = false
-        background.physicsBody?.categoryBitMask = background_category
-        background.physicsBody?.contactTestBitMask = diglett_category
-        background.physicsBody?.collisionBitMask = 0
-        background.physicsBody?.usesPreciseCollisionDetection = true*/
         
         self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
         
