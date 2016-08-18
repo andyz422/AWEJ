@@ -44,6 +44,12 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         
         base = button.frame
         
+        button.alpha = 0.75
+        button2.alpha = 0.75
+        button2p.alpha = 0.75
+        button3.alpha = 0.75
+        button3p.alpha = 0.75
+        
         let charmander_move_right = SKAction.moveByX(800, y: 0, duration: 3.0)
         let charmander_move_left = SKAction.moveByX(-800, y: 0, duration: 3.0)
         let charmander_sequence = SKAction.sequence([charmander_move_right, charmander_move_left])

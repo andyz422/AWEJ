@@ -22,6 +22,10 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     var diglett = SKSpriteNode()
     var charmander = SKSpriteNode()
     var background = SKSpriteNode()
+    var text1_1 = SKSpriteNode()
+    var text1_2 = SKSpriteNode()
+    var text1_3 = SKSpriteNode()
+    var text_array = []
     var base = CGRect()
     
     var xDist = CGFloat()
@@ -43,6 +47,16 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         button3p = self.childNodeWithName("button3p_store") as! SKSpriteNode
         diglett = self.childNodeWithName("diglett_store") as! SKSpriteNode
         charmander = self.childNodeWithName("charmander_store") as! SKSpriteNode
+        text1_1 = self.childNodeWithName("text1_1") as! SKSpriteNode
+        text1_2 = self.childNodeWithName("text1_2") as! SKSpriteNode
+        text_array = [text1_1, text1_2]
+
+        for text in text_array {
+            if text as! SKSpriteNode != text1_1 {
+                text.runAction(SKAction.hide())
+            }
+        }
+        
         base = button.frame
         
         button.zPosition = 10
@@ -53,6 +67,12 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         diglett.zPosition = 10
         charmander.zPosition = 10
         
+        button.alpha = 0.75
+        button2.alpha = 0.75
+        button2p.alpha = 0.75
+        button3.alpha = 0.75
+        button3p.alpha = 0.75
+        
         diglett.physicsBody = SKPhysicsBody(rectangleOfSize: diglett.size)
         diglett.physicsBody!.dynamic = true
         diglett.physicsBody?.categoryBitMask = diglett_category
@@ -60,6 +80,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         diglett.physicsBody?.usesPreciseCollisionDetection = true
         
         self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
+        
         
     }
     
@@ -72,8 +93,12 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        
+        var touch_count = -1
+        
         for touch in touches {
-
+            
+            touch_count += 1
             let location = touch.locationInNode(self)
             stickActive = CGRectContainsPoint(base, location)
                 
@@ -85,6 +110,14 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
             if CGRectContainsPoint(button3.frame, location) {
                 button3.zPosition = 0
                 button3_pressed = true
+                
+                if touch_count < text_array.count {
+                    text_array[touch_count].runAction(SKAction.hide())
+                }
+                if touch_count + 1 < text_array.count {
+                    text_array[touch_count + 1].runAction(SKAction.unhide())
+                }
+
             }
         }
     }
