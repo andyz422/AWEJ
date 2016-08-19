@@ -21,6 +21,10 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var diglett = SKSpriteNode()
     var charmander = SKSpriteNode()
     var background = SKSpriteNode()
+    var wall_left = SKSpriteNode()
+    var wall_right = SKSpriteNode()
+    var wall_top = SKSpriteNode()
+    var wall_bottom = SKSpriteNode()
     
     var text1_1 = SKSpriteNode()
     var text1_2 = SKSpriteNode()
@@ -52,6 +56,12 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         button3p = self.childNodeWithName("button3p_town") as! SKSpriteNode
         diglett = self.childNodeWithName("diglett_town") as! SKSpriteNode
         charmander = self.childNodeWithName("charmander_town") as! SKSpriteNode
+        
+        wall_left = self.childNodeWithName("wall_left") as! SKSpriteNode
+        wall_right = self.childNodeWithName("wall_right") as! SKSpriteNode
+        wall_top = self.childNodeWithName("wall_top") as! SKSpriteNode
+        wall_bottom = self.childNodeWithName("wall_bottom") as! SKSpriteNode
+        
         /*text1_1 = self.childNodeWithName("text1_1") as! SKSpriteNode
         text1_2 = self.childNodeWithName("text1_2") as! SKSpriteNode
         text1_3 = self.childNodeWithName("text1_3") as! SKSpriteNode
@@ -67,6 +77,10 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         base = button.frame
         
         background.zPosition = 0
+        wall_left.zPosition = 10
+        wall_right.zPosition = 10
+        wall_top.zPosition = 10
+        wall_bottom.zPosition = 10
         button.zPosition = 10
         button2.zPosition = 20
         button2p.zPosition = 10
@@ -89,25 +103,54 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         diglett.physicsBody?.contactTestBitMask = object_category
         diglett.physicsBody?.usesPreciseCollisionDetection = true
         
-        /*door.physicsBody = SKPhysicsBody(rectangleOfSize: door.size)
-        door.physicsBody!.dynamic = false
-        door.physicsBody?.categoryBitMask = object_category
-        door.physicsBody?.collisionBitMask = 1
-        door.physicsBody?.usesPreciseCollisionDetection = true*/
+        charmander.physicsBody = SKPhysicsBody(rectangleOfSize: charmander.size)
+        charmander.physicsBody!.dynamic = false
+        charmander.physicsBody?.categoryBitMask = object_category
+        charmander.physicsBody?.collisionBitMask = 1
+        charmander.physicsBody?.usesPreciseCollisionDetection = true
         
-        self.physicsBody = SKPhysicsBody(edgeLoopFromRect: background.frame)
-        //self.physicsBody
+        wall_left.physicsBody = SKPhysicsBody(rectangleOfSize: wall_left.size)
+        wall_left.physicsBody!.dynamic = false
+        wall_left.physicsBody?.categoryBitMask = object_category
+        wall_left.physicsBody?.collisionBitMask = 1
+        wall_left.physicsBody?.usesPreciseCollisionDetection = true
+        
+        wall_right.physicsBody = SKPhysicsBody(rectangleOfSize: wall_right.size)
+        wall_right.physicsBody!.dynamic = false
+        wall_right.physicsBody?.categoryBitMask = object_category
+        wall_right.physicsBody?.collisionBitMask = 1
+        wall_right.physicsBody?.usesPreciseCollisionDetection = true
+        
+        wall_top.physicsBody = SKPhysicsBody(rectangleOfSize: wall_top.size)
+        wall_top.physicsBody!.dynamic = false
+        wall_top.physicsBody?.categoryBitMask = object_category
+        wall_top.physicsBody?.collisionBitMask = 1
+        wall_top.physicsBody?.usesPreciseCollisionDetection = true
+        
+        wall_bottom.physicsBody = SKPhysicsBody(rectangleOfSize: wall_bottom.size)
+        wall_bottom.physicsBody!.dynamic = false
+        wall_bottom.physicsBody?.categoryBitMask = object_category
+        wall_bottom.physicsBody?.collisionBitMask = 1
+        wall_bottom.physicsBody?.usesPreciseCollisionDetection = true
+        
     }
     
-    /*func didBeginContact(contact: SKPhysicsContact) {
-        leave = (contact.bodyA.node!.name == "diglett_store" && contact.bodyB.node!.name == "door") || (contact.bodyA.node!.name == "door" && contact.bodyB.node!.name == "diglett_store")
-    }*/
+    func didBeginContact(contact: SKPhysicsContact) {
+        /*leave = (contact.bodyA.node!.name == "diglett_store" && contact.bodyB.node!.name == "door") || (contact.bodyA.node!.name == "door" && contact.bodyB.node!.name == "diglett_store")*/
+        diglett_inaction = false
+    }
+    
+    
     
     override func update(currentTime: NSTimeInterval) {
         
         if diglett_inaction {
             move(background)
             move(charmander)
+            move(wall_left)
+            move(wall_right)
+            move(wall_top)
+            move(wall_bottom)
         }
     }
     

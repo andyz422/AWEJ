@@ -40,7 +40,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     let object_category = uint_fast32_t(0x1 << 0)
     
     var touch_count = -1
-
+    
     override func didMoveToView(view: SKView) {
         
         self.physicsWorld.contactDelegate = self
@@ -89,6 +89,12 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         diglett.physicsBody?.contactTestBitMask = object_category
         diglett.physicsBody?.usesPreciseCollisionDetection = true
         
+        charmander.physicsBody = SKPhysicsBody(rectangleOfSize: charmander.size)
+        charmander.physicsBody!.dynamic = false
+        charmander.physicsBody?.categoryBitMask = object_category
+        charmander.physicsBody?.collisionBitMask = 1
+        charmander.physicsBody?.usesPreciseCollisionDetection = true
+        
         door.physicsBody = SKPhysicsBody(rectangleOfSize: door.size)
         door.physicsBody!.dynamic = false
         door.physicsBody?.categoryBitMask = object_category
@@ -104,10 +110,15 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         leave = (contact.bodyA.node!.name == "diglett_store" && contact.bodyB.node!.name == "door") || (contact.bodyA.node!.name == "door" && contact.bodyB.node!.name == "diglett_store")
     }
     
+    func didEndContact(contact: SKPhysicsContact) {
+        leave = false
+    }
+    
     override func update(currentTime: NSTimeInterval) {
         if diglett_inaction {
             diglett.position = CGPointMake(diglett.position.x - xDist, diglett.position.y + yDist)
         }
+        
     }
     
     
@@ -117,16 +128,21 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
             
             let location = touch.locationInNode(self)
             stickActive = CGRectContainsPoint(base, location)
-                
+            
             if CGRectContainsPoint(button2.frame, location) {
                 button2.zPosition = 0
                 button2_pressed = true
             }
                 
             if CGRectContainsPoint(button3.frame, location) {
-                touch_count += 1
                 button3.zPosition = 0
                 button3_pressed = true
+                
+                if (touch_count + 1 < text_array.count && text_array[touch_count + 1].hidden == true) {
+                    break
+                }
+                touch_count += 1
+                
 
                 if touch_count < text_array.count {
                     text_array[touch_count].runAction(SKAction.hide())
