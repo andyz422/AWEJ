@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB41ADE01D669AD600D05953 /* TownScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB41ADDF1D669AD600D05953 /* TownScene.swift */; };
+		EB41ADE21D669AF100D05953 /* TownScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EB41ADE11D669AF100D05953 /* TownScene.sks */; };
 		EBD115A41D59354100609B29 /* StoreScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD115A31D59354100609B29 /* StoreScene.swift */; };
 		EBD115A61D59355800609B29 /* StoreScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EBD115A51D59355800609B29 /* StoreScene.sks */; };
 		EBD115A81D59357100609B29 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBD115A71D59357100609B29 /* SpriteKit.framework */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB41ADDF1D669AD600D05953 /* TownScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TownScene.swift; sourceTree = "<group>"; };
+		EB41ADE11D669AF100D05953 /* TownScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TownScene.sks; sourceTree = "<group>"; };
 		EBD115A31D59354100609B29 /* StoreScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreScene.swift; sourceTree = "<group>"; };
 		EBD115A51D59355800609B29 /* StoreScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = StoreScene.sks; sourceTree = "<group>"; };
 		EBD115A71D59357100609B29 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
@@ -113,6 +117,8 @@
 				EBD580E21D568E3300151FE9 /* GameViewController.swift */,
 				EBD115A51D59355800609B29 /* StoreScene.sks */,
 				EBD115A31D59354100609B29 /* StoreScene.swift */,
+				EB41ADE11D669AF100D05953 /* TownScene.sks */,
+				EB41ADDF1D669AD600D05953 /* TownScene.swift */,
 				EBD580DE1D568E3300151FE9 /* BattleScene.sks */,
 				EBD580E01D568E3300151FE9 /* BattleScene.swift */,
 				EBD580E41D568E3300151FE9 /* Main.storyboard */,
@@ -245,6 +251,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB41ADE21D669AF100D05953 /* TownScene.sks in Resources */,
 				EBD580DF1D568E3300151FE9 /* BattleScene.sks in Resources */,
 				EBD580EB1D568E3300151FE9 /* LaunchScreen.storyboard in Resources */,
 				EBD580E81D568E3300151FE9 /* Assets.xcassets in Resources */,
@@ -278,6 +285,7 @@
 				EBD580E31D568E3300151FE9 /* GameViewController.swift in Sources */,
 				EBD115A41D59354100609B29 /* StoreScene.swift in Sources */,
 				EBD580DD1D568E3300151FE9 /* AppDelegate.swift in Sources */,
+				EB41ADE01D669AD600D05953 /* TownScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
