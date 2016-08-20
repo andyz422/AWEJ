@@ -152,46 +152,57 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         battle_door.physicsBody?.categoryBitMask = object_category
         battle_door.physicsBody?.collisionBitMask = 1
         battle_door.physicsBody?.usesPreciseCollisionDetection = true
+
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
+        
         let directions = ["wall_left", "wall_right", "wall_top", "wall_bottom"]
-        leave = (contact.bodyA.node!.name! == "diglett_store" && ["store_door", "battle_door"].contains(contact.bodyB.node!.name!)) || (["store_door", "battle_door"].contains(contact.bodyA.node!.name!) == "door" && contact.bodyB.node!.name! == "diglett_store")
-        if contact.bodyA.node!.name! == "diglett_store" {
-            destination = contact.bodyB.node!.name!
+        let A = contact.bodyA.node!.name!
+        let B = contact.bodyB.node!.name!
+        
+        leave = (A == "diglett_town" && ["store_door", "battle_door"].contains(B)) || (["store_door", "battle_door"].contains(A) == "door" && B == "diglett_store")
+        
+        if A == "diglett_town" {
+            destination = B
         } else {
-            destination = contact.bodyA.node!.name!
+            destination = A
         }
-        if (contact.bodyA.node!.name! == "diglett_town") && (directions.contains(contact.bodyB.node!.name!)) {
-            if (contact.bodyB.node!.name! == "wall_left" || contact.bodyB.node!.name! == "wall_right") {
-                self.hit_wall_lr = contact.bodyB.node!.name!
+        
+        if (A == "diglett_town") && (directions.contains(B)) {
+            if (B == "wall_left" || B == "wall_right") {
+                self.hit_wall_lr = B
             } else {
-                self.hit_wall_ud = contact.bodyB.node!.name!
+                self.hit_wall_ud = B
             }
         }
         
-        if (contact.bodyB.node!.name! == "diglett_town") && (directions.contains(contact.bodyA.node!.name!)) {
-            if (contact.bodyA.node!.name! == "wall_left" || contact.bodyA.node!.name! == "wall_right") {
-                self.hit_wall_lr = contact.bodyA.node!.name!
+        if (B == "diglett_town") && (directions.contains(A)) {
+            if (A == "wall_left" || A == "wall_right") {
+                self.hit_wall_lr = A
             } else {
-                self.hit_wall_ud = contact.bodyA.node!.name!
+                self.hit_wall_ud = A
             }
         }
         diglett_inaction = false
     }
     
     func didEndContact(contact: SKPhysicsContact) {
+        
         let directions = ["wall_left", "wall_right", "wall_top", "wall_bottom"]
-        if (contact.bodyA.node!.name! == "diglett_town") && (directions.contains(contact.bodyB.node!.name!)) {
-            if (contact.bodyB.node!.name! == "wall_left" || contact.bodyB.node!.name! == "wall_right") {
+        let A = contact.bodyA.node!.name!
+        let B = contact.bodyB.node!.name!
+        
+        if (A == "diglett_town") && (directions.contains(B)) {
+            if (B == "wall_left" || B == "wall_right") {
                 self.hit_wall_lr = ""
             } else {
                 self.hit_wall_ud = ""
             }
         }
         
-        if (contact.bodyB.node!.name! == "diglett_town") && (directions.contains(contact.bodyA.node!.name!)) {
-            if (contact.bodyA.node!.name! == "wall_left" || contact.bodyA.node!.name! == "wall_right") {
+        if (B == "diglett_town") && (directions.contains(A)) {
+            if (A == "wall_left" || A == "wall_right") {
                 self.hit_wall_lr = ""
             } else {
                 self.hit_wall_ud = ""
@@ -209,34 +220,39 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             move(wall_right)
             move(wall_top)
             move(wall_bottom)
+            move(store_door)
+            move(battle_door)
         }
     }
     
     func move(sprite: SKSpriteNode) {
         
+        let x = sprite.position.x
+        let y = sprite.position.y
+        
         if hit_wall_lr == "wall_left" && xDist > 0 {
             if hit_wall_ud == "wall_top" && yDist > 0 {
-                sprite.position = CGPointMake(sprite.position.x, sprite.position.y)
+                sprite.position = CGPointMake(x, y)
             } else if hit_wall_ud == "wall_bottom" && yDist < 0 {
-                sprite.position = CGPointMake(sprite.position.x, sprite.position.y)
+                sprite.position = CGPointMake(x, y)
             } else {
-                sprite.position = CGPointMake(sprite.position.x, sprite.position.y - yDist)
+                sprite.position = CGPointMake(x, y - yDist)
             }
         } else if hit_wall_lr == "wall_right" && xDist < 0 {
             if hit_wall_ud == "wall_top" && yDist > 0 {
-                sprite.position = CGPointMake(sprite.position.x, sprite.position.y)
+                sprite.position = CGPointMake(x, y)
             } else if hit_wall_ud == "wall_bottom" && yDist < 0 {
-                sprite.position = CGPointMake(sprite.position.x, sprite.position.y)
+                sprite.position = CGPointMake(x, y)
             } else {
-                sprite.position = CGPointMake(sprite.position.x, sprite.position.y - yDist)
+                sprite.position = CGPointMake(x, y - yDist)
             }
         } else {
             if hit_wall_ud == "wall_top" && yDist > 0 {
-                sprite.position = CGPointMake(sprite.position.x + xDist, sprite.position.y)
+                sprite.position = CGPointMake(x + xDist, y)
             } else if hit_wall_ud == "wall_bottom" && yDist < 0 {
-                sprite.position = CGPointMake(sprite.position.x + xDist, sprite.position.y)
+                sprite.position = CGPointMake(x + xDist, y)
             } else {
-                sprite.position = CGPointMake(sprite.position.x + xDist, sprite.position.y - yDist)
+                sprite.position = CGPointMake(x + xDist, y - yDist)
             }
         }
     }
@@ -260,9 +276,19 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 if leave {
                     let transition = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1.0)
                     if destination == "store_door" {
-                        self.view?.presentScene(StoreScene(fileNamed: "StoreScene")!, transition: transition)
-                    } else {
-                        self.view?.presentScene(BattleScene(fileNamed: "BattleScene")!, transition: transition)
+                        if let scene = StoreScene(fileNamed: "StoreScene") {
+                            let skView = self.view as SKView!
+                            skView.ignoresSiblingOrder = true
+                            scene.scaleMode = .AspectFill
+                            skView.presentScene(scene, transition: transition)
+                        }
+                    } else if destination == "battle_door"{
+                        if let scene = BattleScene(fileNamed: "BattleScene") {
+                            let skView = self.view as SKView!
+                            skView.ignoresSiblingOrder = true
+                            scene.scaleMode = .AspectFill
+                            skView.presentScene(scene, transition: transition)
+                        }
                     }
                 }
             }
