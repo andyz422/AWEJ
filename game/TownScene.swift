@@ -25,6 +25,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var wall_right = SKSpriteNode()
     var wall_top = SKSpriteNode()
     var wall_bottom = SKSpriteNode()
+    var hit_wall = String()
     
     var text1_1 = SKSpriteNode()
     var text1_2 = SKSpriteNode()
@@ -137,10 +138,19 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContact(contact: SKPhysicsContact) {
         /*leave = (contact.bodyA.node!.name == "diglett_store" && contact.bodyB.node!.name == "door") || (contact.bodyA.node!.name == "door" && contact.bodyB.node!.name == "diglett_store")*/
+        if (contact.bodyA.node!.name! == "diglett_town") && (["wall_left", "wall_right", "wall_top", "wall_bottom"].contains(contact.bodyB.node!.name!)) {
+            hit_wall = contact.bodyB.node!.name!
+        }
+        
+        if (contact.bodyB.node!.name! == "diglett_town") && (["wall_left", "wall_right", "wall_top", "wall_bottom"].contains(contact.bodyA.node!.name!)) {
+            hit_wall = contact.bodyA.node!.name!
+        }
         diglett_inaction = false
     }
     
-    
+    func didEndContact(contact: SKPhysicsContact) {
+        hit_wall = ""
+    }
     
     override func update(currentTime: NSTimeInterval) {
         
@@ -155,7 +165,18 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func move(sprite: SKSpriteNode) {
-        sprite.position = CGPointMake(sprite.position.x + xDist, sprite.position.y - yDist)
+        if hit_wall == "" {
+            sprite.position = CGPointMake(sprite.position.x + xDist, sprite.position.y - yDist)
+        } else if hit_wall == "wall_left" {
+            
+        } else if hit_wall == "wall_right" {
+            
+        } else if hit_wall == "wall_top" {
+            
+        } else if hit_wall == "wall_bottom" {
+            
+        }
+        
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
