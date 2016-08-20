@@ -156,8 +156,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
-        
-        let directions = ["wall_left", "wall_right", "wall_top", "wall_bottom"]
+        let objects = ["wall_left", "wall_right", "wall_top", "wall_bottom", "store_door", "battle_door"]
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
@@ -169,19 +168,53 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             destination = A
         }
         
-        if (A == "diglett_town") && (directions.contains(B)) {
-            if (B == "wall_left" || B == "wall_right") {
-                self.hit_wall_lr = B
+        if (A == "diglett_town") && (objects.contains(B)) {
+            /*if (B == "wall_top" || B == "wall_bottom") {
+                hit_wall_ud = B
             } else {
-                self.hit_wall_ud = B
+                if B == "store_door" {
+                    hit_wall_lr = "wall_left"
+                } else if B == "battle_door" {
+                    hit_wall_lr = "wall_right"
+                } else {
+                    hit_wall_lr = B
+                }
+            }*/
+            if contact.contactNormal.dy < -0.9 {
+                hit_wall_ud = "wall_bottom"
+            } else if contact.contactNormal.dy > 0.9 {
+                hit_wall_ud = "wall_top"
+            }
+            
+            if contact.contactNormal.dx < -0.9 {
+                hit_wall_lr = "wall_left"
+            } else if contact.contactNormal.dx > 0.9 {
+                hit_wall_lr = "wall_right"
             }
         }
         
-        if (B == "diglett_town") && (directions.contains(A)) {
-            if (A == "wall_left" || A == "wall_right") {
-                self.hit_wall_lr = A
+        if (B == "diglett_town") && (objects.contains(A)) {
+            /*if (A == "wall_top" || A == "wall_bottom") {
+                hit_wall_ud = A
             } else {
-                self.hit_wall_ud = A
+                if A == "store_door" {
+                    hit_wall_lr = "wall_left"
+                } else if A == "battle_door" {
+                    hit_wall_lr = "wall_right"
+                } else {
+                    hit_wall_lr = A
+                }
+            }*/
+            if contact.contactNormal.dy < -0.9 {
+                hit_wall_ud = "wall_bottom"
+            } else if contact.contactNormal.dy > 0.9 {
+                hit_wall_ud = "wall_top"
+            }
+            
+            if contact.contactNormal.dx < -0.9 {
+                hit_wall_lr = "wall_left"
+            } else if contact.contactNormal.dx > 0.9 {
+                hit_wall_lr = "wall_right"
             }
         }
         diglett_inaction = false
@@ -189,23 +222,23 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     
     func didEndContact(contact: SKPhysicsContact) {
         
-        let directions = ["wall_left", "wall_right", "wall_top", "wall_bottom"]
+        let objects = ["wall_left", "wall_right", "wall_top", "wall_bottom", "store_door", "battle_door"]
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
-        if (A == "diglett_town") && (directions.contains(B)) {
-            if (B == "wall_left" || B == "wall_right") {
-                self.hit_wall_lr = ""
-            } else {
+        if (A == "diglett_town") && (objects.contains(B)) {
+            if (B == "wall_top" || B == "wall_bottom") {
                 self.hit_wall_ud = ""
+            } else {
+                self.hit_wall_lr = ""
             }
         }
         
-        if (B == "diglett_town") && (directions.contains(A)) {
-            if (A == "wall_left" || A == "wall_right") {
-                self.hit_wall_lr = ""
-            } else {
+        if (B == "diglett_town") && (objects.contains(A)) {
+            if (A == "wall_top" || A == "wall_bottom") {
                 self.hit_wall_ud = ""
+            } else {
+                self.hit_wall_lr = ""
             }
         }
         leave = false

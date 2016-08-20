@@ -326,11 +326,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "game/TownScene.swift"
-            timestampString = "493424128.951195"
+            timestampString = "493427622.03596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
             landmarkName = "didBeginContact(_:)"
             landmarkType = "5">
          </BreakpointContent>
