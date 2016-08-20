@@ -227,18 +227,16 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         let B = contact.bodyB.node!.name!
         
         if (A == "diglett_town") && (objects.contains(B)) {
-            if (B == "wall_top" || B == "wall_bottom") {
-                self.hit_wall_ud = ""
+            if (hit_wall_ud == "wall_top" || hit_wall_ud == "wall_bottom") {
+                hit_wall_ud = ""
             } else {
-                self.hit_wall_lr = ""
+                hit_wall_lr = ""
             }
-        }
-        
-        if (B == "diglett_town") && (objects.contains(A)) {
-            if (A == "wall_top" || A == "wall_bottom") {
-                self.hit_wall_ud = ""
+        } else if (B == "diglett_town") && (objects.contains(A)) {
+            if (hit_wall_ud == "wall_top" || hit_wall_ud == "wall_bottom") {
+                hit_wall_ud = ""
             } else {
-                self.hit_wall_lr = ""
+                hit_wall_lr = ""
             }
         }
         leave = false

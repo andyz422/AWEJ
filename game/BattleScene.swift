@@ -34,13 +34,13 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         self.physicsWorld.gravity = CGVectorMake(0, 0)
         
-        button = self.childNodeWithName("button") as! SKSpriteNode
-        button2 = self.childNodeWithName("button2") as! SKSpriteNode
-        button2p = self.childNodeWithName("button2p") as! SKSpriteNode
-        button3 = self.childNodeWithName("button3") as! SKSpriteNode
-        button3p = self.childNodeWithName("button3p") as! SKSpriteNode
-        diglett = self.childNodeWithName("diglett") as! SKSpriteNode
-        charmander = self.childNodeWithName("charmander") as! SKSpriteNode
+        button = self.childNodeWithName("button_battle") as! SKSpriteNode
+        button2 = self.childNodeWithName("button2_battle") as! SKSpriteNode
+        button2p = self.childNodeWithName("button2p_battle") as! SKSpriteNode
+        button3 = self.childNodeWithName("button3_battle") as! SKSpriteNode
+        button3p = self.childNodeWithName("button3p_battle") as! SKSpriteNode
+        diglett = self.childNodeWithName("diglett_battle") as! SKSpriteNode
+        charmander = self.childNodeWithName("charmander_battle") as! SKSpriteNode
         
         base = button.frame
         
@@ -111,7 +111,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         weapon.physicsBody?.contactTestBitMask = charmander_category
         weapon.physicsBody?.collisionBitMask = 1
         weapon.physicsBody?.usesPreciseCollisionDetection = true*/
-        
+
         weapon.position = diglett.position
         weapon.size = CGSize(width: 50, height: 100)
         addChild(weapon)
