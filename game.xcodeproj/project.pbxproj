@@ -114,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				EBD580DC1D568E3300151FE9 /* AppDelegate.swift */,
+				EBD580E41D568E3300151FE9 /* Main.storyboard */,
 				EBD580E21D568E3300151FE9 /* GameViewController.swift */,
 				EBD115A51D59355800609B29 /* StoreScene.sks */,
 				EBD115A31D59354100609B29 /* StoreScene.swift */,
@@ -121,7 +122,6 @@
 				EB41ADDF1D669AD600D05953 /* TownScene.swift */,
 				EBD580DE1D568E3300151FE9 /* BattleScene.sks */,
 				EBD580E01D568E3300151FE9 /* BattleScene.swift */,
-				EBD580E41D568E3300151FE9 /* Main.storyboard */,
 				EBD580E71D568E3300151FE9 /* Assets.xcassets */,
 				EBD580E91D568E3300151FE9 /* LaunchScreen.storyboard */,
 				EBD580EC1D568E3300151FE9 /* Info.plist */,

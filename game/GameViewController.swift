@@ -11,10 +11,17 @@ import SpriteKit
 
 class GameViewController: UIViewController {
     
+    @IBOutlet weak var newGame: UIButton!
+    @IBOutlet weak var loadGame: UIButton!
+    @IBOutlet weak var options: UIButton!
+    @IBOutlet weak var controls: UIButton!
+    @IBOutlet weak var quit: UIButton!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let scene = TownScene(fileNamed:"TownScene") {
+        /*if let scene = TownScene(fileNamed:"TownScene") {
             // Configure the view.
             let skView = self.view as! SKView
             skView.showsFPS = true
@@ -27,7 +34,7 @@ class GameViewController: UIViewController {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
-        }
+        }*/
     }
 
     override func shouldAutorotate() -> Bool {
