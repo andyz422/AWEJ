@@ -113,11 +113,12 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         weapon.physicsBody?.usesPreciseCollisionDetection = true*/
 
         weapon.position = diglett.position
-        weapon.size = CGSize(width: 50, height: 100)
-        addChild(weapon)
+        weapon.size = CGSize(width: 20, height: 100)
+        
         let shoot_action = SKAction.moveBy(CGVector(dx: 0, dy: self.frame.height + 100 - weapon.position.y), duration: 3)
         let shoot_action_done = SKAction.removeFromParent()
-        weapon.runAction(SKAction.sequence([shoot_action, shoot_action_done]))
+        weapon.runAction(SKAction.sequence([shoot_action, SKAction.waitForDuration(3), shoot_action_done]))
+        addChild(weapon)
     }
     
 
