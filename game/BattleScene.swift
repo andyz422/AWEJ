@@ -115,7 +115,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         weapon.position = diglett.position
         weapon.size = CGSize(width: 50, height: 100)
         addChild(weapon)
-        let shoot_action = SKAction.moveBy(CGVector(dx: 0, dy: self.frame.height + 200 - weapon.position.y), duration: 3)
+        let shoot_action = SKAction.moveBy(CGVector(dx: 0, dy: self.frame.height + 100 - weapon.position.y), duration: 3)
         let shoot_action_done = SKAction.removeFromParent()
         weapon.runAction(SKAction.sequence([shoot_action, shoot_action_done]))
     }
