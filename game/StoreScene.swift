@@ -82,28 +82,25 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         button3.alpha = 0.75
         button3p.alpha = 0.75
         
-        diglett.physicsBody = SKPhysicsBody(rectangleOfSize: diglett.size)
-        diglett.physicsBody!.dynamic = true
-        diglett.physicsBody?.categoryBitMask = diglett_category
-        diglett.physicsBody?.collisionBitMask = 1
-        diglett.physicsBody?.contactTestBitMask = object_category
-        diglett.physicsBody?.usesPreciseCollisionDetection = true
-        
-        charmander.physicsBody = SKPhysicsBody(rectangleOfSize: charmander.size)
-        charmander.physicsBody!.dynamic = false
-        charmander.physicsBody?.categoryBitMask = object_category
-        charmander.physicsBody?.collisionBitMask = 1
-        charmander.physicsBody?.usesPreciseCollisionDetection = true
-        
-        door.physicsBody = SKPhysicsBody(rectangleOfSize: door.size)
-        door.physicsBody!.dynamic = false
-        door.physicsBody?.categoryBitMask = object_category
-        door.physicsBody?.collisionBitMask = 1
-        door.physicsBody?.usesPreciseCollisionDetection = true
+        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: object_category, precise: true)
+        createPhysicsBody(charmander, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         
         self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
+    }
+    
+    func createPhysicsBody(sprite: SKSpriteNode, shape: String, dynamic: Bool, category: uint_fast32_t, collision: uint, contact: uint_fast32_t, precise: Bool) {
         
-        
+        if shape == "rectangle" {
+            sprite.physicsBody = SKPhysicsBody(rectangleOfSize: sprite.size)
+        } else {
+            sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height / 2)
+        }
+        sprite.physicsBody!.dynamic = dynamic
+        sprite.physicsBody?.categoryBitMask = category
+        sprite.physicsBody?.collisionBitMask = collision
+        sprite.physicsBody?.contactTestBitMask = contact
+        sprite.physicsBody?.usesPreciseCollisionDetection = precise
     }
     
     func didBeginContact(contact: SKPhysicsContact) {

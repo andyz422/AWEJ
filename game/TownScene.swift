@@ -104,55 +104,28 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         button3.alpha = 0.75
         button3p.alpha = 0.75
         
-        diglett.physicsBody = SKPhysicsBody(rectangleOfSize: diglett.size)
-        diglett.physicsBody!.dynamic = true
-        diglett.physicsBody?.categoryBitMask = diglett_category
-        diglett.physicsBody?.collisionBitMask = 1
-        diglett.physicsBody?.contactTestBitMask = object_category
-        diglett.physicsBody?.usesPreciseCollisionDetection = true
+        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: object_category, precise: true)
+        createPhysicsBody(charmander, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall_left, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall_right, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall_top, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall_bottom, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(store_door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(battle_door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+    }
+    
+    func createPhysicsBody(sprite: SKSpriteNode, shape: String, dynamic: Bool, category: uint_fast32_t, collision: uint, contact: uint_fast32_t, precise: Bool) {
         
-        charmander.physicsBody = SKPhysicsBody(rectangleOfSize: charmander.size)
-        charmander.physicsBody!.dynamic = false
-        charmander.physicsBody?.categoryBitMask = object_category
-        charmander.physicsBody?.collisionBitMask = 1
-        charmander.physicsBody?.usesPreciseCollisionDetection = true
-        
-        wall_left.physicsBody = SKPhysicsBody(rectangleOfSize: wall_left.size)
-        wall_left.physicsBody!.dynamic = false
-        wall_left.physicsBody?.categoryBitMask = object_category
-        wall_left.physicsBody?.collisionBitMask = 1
-        wall_left.physicsBody?.usesPreciseCollisionDetection = true
-        
-        wall_right.physicsBody = SKPhysicsBody(rectangleOfSize: wall_right.size)
-        wall_right.physicsBody!.dynamic = false
-        wall_right.physicsBody?.categoryBitMask = object_category
-        wall_right.physicsBody?.collisionBitMask = 1
-        wall_right.physicsBody?.usesPreciseCollisionDetection = true
-        
-        wall_top.physicsBody = SKPhysicsBody(rectangleOfSize: wall_top.size)
-        wall_top.physicsBody!.dynamic = false
-        wall_top.physicsBody?.categoryBitMask = object_category
-        wall_top.physicsBody?.collisionBitMask = 1
-        wall_top.physicsBody?.usesPreciseCollisionDetection = true
-        
-        wall_bottom.physicsBody = SKPhysicsBody(rectangleOfSize: wall_bottom.size)
-        wall_bottom.physicsBody!.dynamic = false
-        wall_bottom.physicsBody?.categoryBitMask = object_category
-        wall_bottom.physicsBody?.collisionBitMask = 1
-        wall_bottom.physicsBody?.usesPreciseCollisionDetection = true
-        
-        store_door.physicsBody = SKPhysicsBody(rectangleOfSize: store_door.size)
-        store_door.physicsBody!.dynamic = false
-        store_door.physicsBody?.categoryBitMask = object_category
-        store_door.physicsBody?.collisionBitMask = 1
-        store_door.physicsBody?.usesPreciseCollisionDetection = true
-        
-        battle_door.physicsBody = SKPhysicsBody(rectangleOfSize: battle_door.size)
-        battle_door.physicsBody!.dynamic = false
-        battle_door.physicsBody?.categoryBitMask = object_category
-        battle_door.physicsBody?.collisionBitMask = 1
-        battle_door.physicsBody?.usesPreciseCollisionDetection = true
-
+        if shape == "rectangle" {
+            sprite.physicsBody = SKPhysicsBody(rectangleOfSize: sprite.size)
+        } else {
+            sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height / 2)
+        }
+        sprite.physicsBody!.dynamic = dynamic
+        sprite.physicsBody?.categoryBitMask = category
+        sprite.physicsBody?.collisionBitMask = collision
+        sprite.physicsBody?.contactTestBitMask = contact
+        sprite.physicsBody?.usesPreciseCollisionDetection = precise
     }
     
     func didBeginContact(contact: SKPhysicsContact) {

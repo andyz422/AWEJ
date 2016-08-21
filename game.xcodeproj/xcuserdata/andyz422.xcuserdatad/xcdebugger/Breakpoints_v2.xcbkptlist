@@ -326,12 +326,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "game/TownScene.swift"
-            timestampString = "493427622.03596"
+            timestampString = "493511157.996948"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
             landmarkName = "didBeginContact(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "game/TownScene.swift"
+            timestampString = "493511157.996948"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "createPhysicsBody(_:shape:dynamic:category:collision:contact:precise:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
