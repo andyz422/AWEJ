@@ -28,6 +28,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     
     let diglett_category = uint_fast32_t(0x1 << 0)
     let charmander_category = uint_fast32_t(0x1 << 1)
+    let weapon_category = uint_fast32_t(0x1 << 2)
 
     override func didMoveToView(view: SKView) {
         
@@ -57,23 +58,25 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         
         charmander.runAction(repeat_charmander)
         
-        diglett.physicsBody = SKPhysicsBody(rectangleOfSize: diglett.size)
-        diglett.physicsBody!.dynamic = true
-        diglett.physicsBody?.categoryBitMask = diglett_category
-        diglett.physicsBody?.contactTestBitMask = charmander_category
-        diglett.physicsBody?.collisionBitMask = 1
-        diglett.physicsBody?.usesPreciseCollisionDetection = true
-        
-        charmander.physicsBody = SKPhysicsBody(rectangleOfSize: charmander.size)
-        charmander.physicsBody!.dynamic = true
-        charmander.physicsBody?.categoryBitMask = charmander_category
-        charmander.physicsBody?.contactTestBitMask = diglett_category
-        charmander.physicsBody?.collisionBitMask = 1
-        charmander.physicsBody?.usesPreciseCollisionDetection = true
+        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: charmander_category, precise: true)
+        createPhysicsBody(charmander, shape: "rectangle", dynamic: true, category: charmander_category, collision: 1, contact: diglett_category, precise: true)
         
         self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
     }
     
+    func createPhysicsBody(sprite: SKSpriteNode, shape: String, dynamic: Bool, category: uint_fast32_t, collision: uint, contact: uint_fast32_t, precise: Bool) {
+        
+        if shape == "rectangle" {
+            sprite.physicsBody = SKPhysicsBody(rectangleOfSize: sprite.size)
+        } else {
+            sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height / 2)
+        }
+        sprite.physicsBody!.dynamic = dynamic
+        sprite.physicsBody?.categoryBitMask = category
+        sprite.physicsBody?.collisionBitMask = collision
+        sprite.physicsBody?.contactTestBitMask = contact
+        sprite.physicsBody?.usesPreciseCollisionDetection = precise
+    }
     
     override func update(currentTime: NSTimeInterval) {
         if diglett_inaction {
@@ -92,6 +95,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
                 button2.zPosition = 0
                 button2_pressed = true
                 let bomb = SKSpriteNode(imageNamed:"bomb")
+                bomb.size = CGSize(width: 30, height: 100)
                 shoot_weapon(bomb)
             }
             
@@ -99,26 +103,29 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
                 button3.zPosition = 0
                 button3_pressed = true
                 let laser = SKSpriteNode(imageNamed:"laser")
+                laser.size = CGSize(width: 10, height: 100)
                 shoot_weapon(laser)
             }
         }
     }
     
     func shoot_weapon(weapon: SKSpriteNode) {
-        /*weapon.physicsBody = SKPhysicsBody(rectangleOfSize: weapon.size)
-        weapon.physicsBody!.dynamic = true
-        weapon.physicsBody?.categoryBitMask = diglett_category
-        weapon.physicsBody?.contactTestBitMask = charmander_category
-        weapon.physicsBody?.collisionBitMask = 1
-        weapon.physicsBody?.usesPreciseCollisionDetection = true*/
-
+        
+        createPhysicsBody(weapon, shape: "rectangle", dynamic: true, category: weapon_category, collision: 0, contact: charmander_category, precise: true)
         weapon.position = diglett.position
-        weapon.size = CGSize(width: 20, height: 100)
         
         let shoot_action = SKAction.moveBy(CGVector(dx: 0, dy: self.frame.height + 100 - weapon.position.y), duration: 3)
         let shoot_action_done = SKAction.removeFromParent()
-        weapon.runAction(SKAction.sequence([shoot_action, SKAction.waitForDuration(3), shoot_action_done]))
+        weapon.runAction(SKAction.sequence([shoot_action, shoot_action_done]))
+        weapon.zPosition = 5
         addChild(weapon)
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        let A = contact.bodyA.node!.name
+        let B = contact.bodyB.node!.name
+        
+        print(A, B)
     }
     
 
