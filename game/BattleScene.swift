@@ -96,6 +96,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
                 button2_pressed = true
                 let bomb = SKSpriteNode(imageNamed:"bomb")
                 bomb.size = CGSize(width: 30, height: 100)
+                bomb.name = "bomb"
                 shoot_weapon(bomb)
             }
             
@@ -103,6 +104,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
                 button3.zPosition = 0
                 button3_pressed = true
                 let laser = SKSpriteNode(imageNamed:"laser")
+                laser.name = "laser"
                 laser.size = CGSize(width: 10, height: 100)
                 shoot_weapon(laser)
             }
@@ -122,10 +124,16 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
-        let A = contact.bodyA.node!.name
-        let B = contact.bodyB.node!.name
+        if contact.bodyA.node!.name != nil && contact.bodyB.node!.name != nil {
+            let A = contact.bodyA.node!.name!
+            let B = contact.bodyB.node!.name!
         
-        print(A, B)
+            if ((A == "charmander_battle" && ["laser", "bomb"].contains(B)) || (B == "charmander_battle" && ["laser", "bomb"].contains(A))) {
+                if A == "charmander_battle" {
+                
+                }
+            }
+        }
     }
     
 
