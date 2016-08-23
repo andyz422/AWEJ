@@ -310,11 +310,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "game/TownScene.swift"
-            timestampString = "493422970.285169"
+            timestampString = "493602618.374236"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
             landmarkName = "didMoveToView(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -326,27 +326,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "game/TownScene.swift"
-            timestampString = "493511157.996948"
+            timestampString = "493602618.374236"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
-            landmarkName = "didBeginContact(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "game/TownScene.swift"
-            timestampString = "493511157.996948"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
             landmarkName = "createPhysicsBody(_:shape:dynamic:category:collision:contact:precise:)"
             landmarkType = "5">
          </BreakpointContent>

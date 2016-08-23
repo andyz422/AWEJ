@@ -14,7 +14,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let scene = BattleScene(fileNamed:"BattleScene") {
+        if let scene = TownScene(fileNamed:"TownScene") {
             // Configure the view.
             let skView = self.view as! SKView
             skView.showsFPS = true

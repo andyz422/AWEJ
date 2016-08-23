@@ -187,7 +187,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
                 } else {
                     button.position = CGPointMake(base.midX - xDist, base.midY + yDist)
                 }
-                diglett_inaction = true
+                diglett_inaction = touch_count >= text_array.count - 1
             }
         }
     }

@@ -20,13 +20,20 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var button3_pressed = false
     var diglett = SKSpriteNode()
     var charmander = SKSpriteNode()
+    var squirtle = SKSpriteNode()
     var background = SKSpriteNode()
-    var wall_left = SKSpriteNode()
-    var wall_right = SKSpriteNode()
-    var wall_top = SKSpriteNode()
-    var wall_bottom = SKSpriteNode()
+    var wall1 = SKSpriteNode()
+    var wall2 = SKSpriteNode()
+    var wall3 = SKSpriteNode()
+    var wall4 = SKSpriteNode()
+    var wall5 = SKSpriteNode()
+    var wall6 = SKSpriteNode()
+    var wall7 = SKSpriteNode()
+    var wall8 = SKSpriteNode()
     var hit_wall_lr = ""
     var hit_wall_ud = ""
+    var contact1 = SKPhysicsContact()
+    var contact2 = SKPhysicsContact()
     
     var text1_1 = SKSpriteNode()
     var text1_2 = SKSpriteNode()
@@ -47,6 +54,8 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     let object_category = uint_fast32_t(0x1 << 0)
     let background_category = uint_fast32_t(0x1 << 1)
     
+    let exclamation = SKSpriteNode(imageNamed: "exclamation")
+    
     override func didMoveToView(view: SKView) {
         
         self.physicsWorld.contactDelegate = self
@@ -60,11 +69,16 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         button3p = self.childNodeWithName("button3p_town") as! SKSpriteNode
         diglett = self.childNodeWithName("diglett_town") as! SKSpriteNode
         charmander = self.childNodeWithName("charmander_town") as! SKSpriteNode
+        squirtle = self.childNodeWithName("squirtle_town") as! SKSpriteNode
         
-        wall_left = self.childNodeWithName("wall_left") as! SKSpriteNode
-        wall_right = self.childNodeWithName("wall_right") as! SKSpriteNode
-        wall_top = self.childNodeWithName("wall_top") as! SKSpriteNode
-        wall_bottom = self.childNodeWithName("wall_bottom") as! SKSpriteNode
+        wall1 = self.childNodeWithName("wall1") as! SKSpriteNode
+        wall2 = self.childNodeWithName("wall2") as! SKSpriteNode
+        wall3 = self.childNodeWithName("wall3") as! SKSpriteNode
+        wall4 = self.childNodeWithName("wall4") as! SKSpriteNode
+        wall5 = self.childNodeWithName("wall5") as! SKSpriteNode
+        wall6 = self.childNodeWithName("wall6") as! SKSpriteNode
+        wall7 = self.childNodeWithName("wall7") as! SKSpriteNode
+        wall8 = self.childNodeWithName("wall8") as! SKSpriteNode
         
         store_door = self.childNodeWithName("store_door") as! SKSpriteNode
         battle_door = self.childNodeWithName("battle_door") as! SKSpriteNode
@@ -84,10 +98,14 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         base = button.frame
         
         background.zPosition = 0
-        wall_left.zPosition = 10
-        wall_right.zPosition = 10
-        wall_top.zPosition = 10
-        wall_bottom.zPosition = 10
+        wall1.zPosition = 10
+        wall2.zPosition = 10
+        wall3.zPosition = 10
+        wall4.zPosition = 10
+        wall5.zPosition = 10
+        wall6.zPosition = 10
+        wall7.zPosition = 10
+        wall8.zPosition = 10
         button.zPosition = 10
         button2.zPosition = 20
         button2p.zPosition = 10
@@ -95,6 +113,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         button3p.zPosition = 10
         diglett.zPosition = 10
         charmander.zPosition = 10
+        squirtle.zPosition = 10
         store_door.zPosition = 10
         battle_door.zPosition = 10
         
@@ -106,12 +125,19 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         
         createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: object_category, precise: true)
         createPhysicsBody(charmander, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
-        createPhysicsBody(wall_left, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
-        createPhysicsBody(wall_right, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
-        createPhysicsBody(wall_top, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
-        createPhysicsBody(wall_bottom, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(squirtle, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall1, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall2, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall3, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall4, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall5, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall6, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall7, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(wall8, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(store_door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(battle_door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        
+        can_talk(squirtle)
     }
     
     func createPhysicsBody(sprite: SKSpriteNode, shape: String, dynamic: Bool, category: uint_fast32_t, collision: uint, contact: uint_fast32_t, precise: Bool) {
@@ -128,8 +154,10 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         sprite.physicsBody?.usesPreciseCollisionDetection = precise
     }
     
+    
     func didBeginContact(contact: SKPhysicsContact) {
-        let objects = ["wall_left", "wall_right", "wall_top", "wall_bottom", "store_door", "battle_door"]
+        
+        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "battle_door", "charmander_town", "squirtle_town"]
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
@@ -141,72 +169,38 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             destination = A
         }
         
-        if (A == "diglett_town") && (objects.contains(B)) {
-            /*if (B == "wall_top" || B == "wall_bottom") {
-                hit_wall_ud = B
-            } else {
-                if B == "store_door" {
-                    hit_wall_lr = "wall_left"
-                } else if B == "battle_door" {
-                    hit_wall_lr = "wall_right"
-                } else {
-                    hit_wall_lr = B
-                }
-            }*/
-            if contact.contactNormal.dy < -0.9 {
+        if (A == "diglett_town" && objects.contains(B)) || (B == "diglett_town" && objects.contains(A)) {
+
+            if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy < 0 {
                 hit_wall_ud = "wall_bottom"
-            } else if contact.contactNormal.dy > 0.9 {
+            } else if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy > 0 {
                 hit_wall_ud = "wall_top"
             }
             
-            if contact.contactNormal.dx < -0.9 {
+            if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx < 0 {
                 hit_wall_lr = "wall_left"
-            } else if contact.contactNormal.dx > 0.9 {
+            } else if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx > 0 {
                 hit_wall_lr = "wall_right"
             }
         }
         
-        if (B == "diglett_town") && (objects.contains(A)) {
-            /*if (A == "wall_top" || A == "wall_bottom") {
-                hit_wall_ud = A
-            } else {
-                if A == "store_door" {
-                    hit_wall_lr = "wall_left"
-                } else if A == "battle_door" {
-                    hit_wall_lr = "wall_right"
-                } else {
-                    hit_wall_lr = A
-                }
-            }*/
-            if contact.contactNormal.dy < -0.9 {
-                hit_wall_ud = "wall_bottom"
-            } else if contact.contactNormal.dy > 0.9 {
-                hit_wall_ud = "wall_top"
-            }
-            
-            if contact.contactNormal.dx < -0.9 {
-                hit_wall_lr = "wall_left"
-            } else if contact.contactNormal.dx > 0.9 {
-                hit_wall_lr = "wall_right"
-            }
-        }
         diglett_inaction = false
     }
     
     func didEndContact(contact: SKPhysicsContact) {
-        
-        let objects = ["wall_left", "wall_right", "wall_top", "wall_bottom", "store_door", "battle_door"]
+
+        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town"]
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
         if (A == "diglett_town") && (objects.contains(B)) {
-            if (hit_wall_ud == "wall_top" || hit_wall_ud == "wall_bottom") {
+            if hit_wall_ud == "wall_top" || hit_wall_ud == "wall_bottom" {
                 hit_wall_ud = ""
             } else {
                 hit_wall_lr = ""
             }
         } else if (B == "diglett_town") && (objects.contains(A)) {
-            if (hit_wall_ud == "wall_top" || hit_wall_ud == "wall_bottom") {
+            if hit_wall_ud == "wall_top" || hit_wall_ud == "wall_bottom" {
                 hit_wall_ud = ""
             } else {
                 hit_wall_lr = ""
@@ -220,10 +214,15 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         if diglett_inaction {
             move(background)
             move(charmander)
-            move(wall_left)
-            move(wall_right)
-            move(wall_top)
-            move(wall_bottom)
+            move(squirtle)
+            move(wall1)
+            move(wall2)
+            move(wall3)
+            move(wall4)
+            move(wall5)
+            move(wall6)
+            move(wall7)
+            move(wall8)
             move(store_door)
             move(battle_door)
         }
@@ -259,6 +258,15 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 sprite.position = CGPointMake(x + xDist, y - yDist)
             }
         }
+    }
+    
+    func can_talk(sprite: SKSpriteNode) {
+        
+        exclamation.position = CGPoint(x: sprite.position.x, y: sprite.position.y + 100)
+        exclamation.zPosition = 10
+        exclamation.size = CGSize(width: 230, height: 170)
+        addChild(exclamation)
+        
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
