@@ -30,6 +30,23 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var wall6 = SKSpriteNode()
     var wall7 = SKSpriteNode()
     var wall8 = SKSpriteNode()
+    var house1 = SKSpriteNode()
+    var house2 = SKSpriteNode()
+    var house3 = SKSpriteNode()
+    var house4 = SKSpriteNode()
+    var house5 = SKSpriteNode()
+    var house6 = SKSpriteNode()
+    var house7 = SKSpriteNode()
+    var house8 = SKSpriteNode()
+    var inn = SKSpriteNode()
+    var cow1 = SKSpriteNode()
+    var cow2 = SKSpriteNode()
+    var cow3 = SKSpriteNode()
+    var cow4 = SKSpriteNode()
+    var store = SKSpriteNode()
+    var mugger = SKSpriteNode()
+    var thief = SKSpriteNode()
+    
     var hit_wall_lr = ""
     var hit_wall_ud = ""
     var contact1 = SKPhysicsContact()
@@ -80,6 +97,23 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         wall7 = self.childNodeWithName("wall7") as! SKSpriteNode
         wall8 = self.childNodeWithName("wall8") as! SKSpriteNode
         
+        house1 = self.childNodeWithName("house1") as! SKSpriteNode
+        house2 = self.childNodeWithName("house2") as! SKSpriteNode
+        house3 = self.childNodeWithName("house3") as! SKSpriteNode
+        house4 = self.childNodeWithName("house4") as! SKSpriteNode
+        house5 = self.childNodeWithName("house5") as! SKSpriteNode
+        house6 = self.childNodeWithName("house6") as! SKSpriteNode
+        house7 = self.childNodeWithName("house7") as! SKSpriteNode
+        house8 = self.childNodeWithName("house8") as! SKSpriteNode
+        inn = self.childNodeWithName("inn") as! SKSpriteNode
+        cow1 = self.childNodeWithName("cow1") as! SKSpriteNode
+        cow2 = self.childNodeWithName("cow2") as! SKSpriteNode
+        cow3 = self.childNodeWithName("cow3") as! SKSpriteNode
+        cow4 = self.childNodeWithName("cow4") as! SKSpriteNode
+        store = self.childNodeWithName("store") as! SKSpriteNode
+        mugger = self.childNodeWithName("mugger") as! SKSpriteNode
+        thief = self.childNodeWithName("thief") as! SKSpriteNode
+        
         store_door = self.childNodeWithName("store_door") as! SKSpriteNode
         battle_door = self.childNodeWithName("battle_door") as! SKSpriteNode
         
@@ -114,8 +148,25 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         diglett.zPosition = 10
         charmander.zPosition = 10
         squirtle.zPosition = 10
-        store_door.zPosition = 10
+        store_door.zPosition = 11
         battle_door.zPosition = 10
+        
+        /*house1.zPosition = 10
+        house2.zPosition = 10
+        house3.zPosition = 10
+        house4.zPosition = 10
+        house5.zPosition = 10
+        house6.zPosition = 10
+        house7.zPosition = 10
+        house8.zPosition = 10
+        inn.zPosition = 10
+        cow1.zPosition = 10
+        cow2.zPosition = 10
+        cow3.zPosition = 10
+        cow4.zPosition = 10
+        store.zPosition = 10
+        mugger.zPosition = 10
+        thief.zPosition = 10*/
         
         button.alpha = 0.75
         button2.alpha = 0.75
@@ -169,8 +220,27 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             destination = A
         }
         
-        if (A == "diglett_town" && objects.contains(B)) || (B == "diglett_town" && objects.contains(A)) {
+        if (A == "diglett_town" && objects.contains(B)) {
 
+            if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy < 0 {
+                hit_wall_ud = "wall_bottom"
+                contact1 = contact
+                contact1_nil = false
+            } else if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy > 0 {
+                hit_wall_ud = "wall_top"
+                contact1 = contact
+                contact1_nil = false
+            }
+            
+            if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx < 0 {
+                hit_wall_lr = "wall_left"
+            } else if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx > 0 {
+                hit_wall_lr = "wall_right"
+            }
+        }
+        
+        if (B == "diglett_town" && objects.contains(A)) {
+            
             if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy < 0 {
                 hit_wall_ud = "wall_bottom"
                 contact1 = contact
@@ -214,7 +284,6 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                     hit_wall_ud = ""
                 } else {
                     hit_wall_lr = ""
-                    
                 }
             } else {
                 hit_wall_lr = ""
@@ -222,6 +291,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         }
         leave = false
     }
+    
     
     override func update(currentTime: NSTimeInterval) {
         
@@ -239,6 +309,22 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             move(wall8)
             move(store_door)
             move(battle_door)
+            move(house1)
+            move(house2)
+            move(house3)
+            move(house4)
+            move(house5)
+            move(house6)
+            move(house7)
+            move(house8)
+            move(inn)
+            move(cow1)
+            move(cow2)
+            move(cow3)
+            move(cow4)
+            move(store)
+            move(mugger)
+            move(thief)
         }
     }
     
@@ -246,6 +332,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         
         let x = sprite.position.x
         let y = sprite.position.y
+        
         
         if hit_wall_lr == "wall_left" && xDist > 0 {
             if hit_wall_ud == "wall_top" && yDist > 0 {
