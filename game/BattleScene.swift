@@ -29,6 +29,26 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     let diglett_category = uint_fast32_t(0x1 << 0)
     let charmander_category = uint_fast32_t(0x1 << 1)
     let weapon_category = uint_fast32_t(0x1 << 2)
+
+    var health_count = 7
+    var health_array = []
+    var health1 = SKSpriteNode()
+    var health2 = SKSpriteNode()
+    var health3 = SKSpriteNode()
+    var health4 = SKSpriteNode()
+    var health5 = SKSpriteNode()
+    var health6 = SKSpriteNode()
+    var health7 = SKSpriteNode()
+    
+    var enemy_health_count = 7
+    var enemy_health_array = []
+    var health1e = SKSpriteNode()
+    var health2e = SKSpriteNode()
+    var health3e = SKSpriteNode()
+    var health4e = SKSpriteNode()
+    var health5e = SKSpriteNode()
+    var health6e = SKSpriteNode()
+    var health7e = SKSpriteNode()
     
     var timer = NSTimer()
 
@@ -44,6 +64,25 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         button3p = self.childNodeWithName("button3p_battle") as! SKSpriteNode
         diglett = self.childNodeWithName("diglett_battle") as! SKSpriteNode
         charmander = self.childNodeWithName("charmander_battle") as! SKSpriteNode
+        
+        health1 = self.childNodeWithName("health1") as! SKSpriteNode
+        health2 = self.childNodeWithName("health2") as! SKSpriteNode
+        health3 = self.childNodeWithName("health3") as! SKSpriteNode
+        health4 = self.childNodeWithName("health4") as! SKSpriteNode
+        health5 = self.childNodeWithName("health5") as! SKSpriteNode
+        health6 = self.childNodeWithName("health6") as! SKSpriteNode
+        health7 = self.childNodeWithName("health7") as! SKSpriteNode
+        
+        health1e = self.childNodeWithName("health1e") as! SKSpriteNode
+        health2e = self.childNodeWithName("health2e") as! SKSpriteNode
+        health3e = self.childNodeWithName("health3e") as! SKSpriteNode
+        health4e = self.childNodeWithName("health4e") as! SKSpriteNode
+        health5e = self.childNodeWithName("health5e") as! SKSpriteNode
+        health6e = self.childNodeWithName("health6e") as! SKSpriteNode
+        health7e = self.childNodeWithName("health7e") as! SKSpriteNode
+        
+        health_array = [health1, health2, health3, health4, health5, health6, health7]
+        enemy_health_array = [health1e, health2e, health3e, health4e, health5e, health6e, health7e]
         
         base = button.frame
         
@@ -66,9 +105,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         timer = NSTimer(timeInterval: 1.0, target: self, selector: #selector(charmander_shoot), userInfo: nil, repeats: true)
         NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
         
-        
         self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
-        
         
     }
     
@@ -141,21 +178,58 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
+        
+        let transition = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1.0)
+
         if contact.bodyA.node!.name != nil && contact.bodyB.node!.name != nil {
             let A = contact.bodyA.node!.name!
             let B = contact.bodyB.node!.name!
         
             if (A == "charmander_battle" && ["laser", "bomb"].contains(B)) {
-                print("charmander hit")
-            
+                if enemy_health_count > 1 {
+                    enemy_health_array[enemy_health_count - 1].runAction(SKAction.hide())
+                    enemy_health_count -= 1
+                } else {
+                    timer.invalidate()
+                    charmander.removeAllActions()
+                }
+                
             } else if (B == "charmander_battle" && ["laser", "bomb"].contains(A)) {
-                print("charmander hit")
+                if enemy_health_count > 1 {
+                    enemy_health_array[enemy_health_count - 1].runAction(SKAction.hide())
+                    enemy_health_count -= 1
+                } else {
+                    timer.invalidate()
+                    charmander.removeAllActions()
+                }
             }
             
             if (A == "diglett_battle" && B == "laser") {
-                print("diglett hit")
+                if health_count > 1 {
+                    health_array[health_count - 1].runAction(SKAction.hide())
+                    health_count -= 1
+                } else {
+                    if let scene = GameOverScene(fileNamed: "GameOverScene") {
+                        let skView = self.view as SKView!
+                        skView.ignoresSiblingOrder = true
+                        scene.scaleMode = .AspectFill
+                        skView.presentScene(scene, transition: transition)
+                    }
+                }
+                
+                
             } else if (B == "diglett_battle" && A == "laser") {
-                print("diglett hit")
+                if health_count > 1 {
+                    health_array[health_count - 1].runAction(SKAction.hide())
+                    health_count -= 1
+                } else {
+                    if let scene = GameOverScene(fileNamed: "GameOverScene") {
+                        let skView = self.view as SKView!
+                        skView.ignoresSiblingOrder = true
+                        scene.scaleMode = .AspectFill
+                        skView.presentScene(scene, transition: transition)
+                    }
+                }
             }
         }
     }

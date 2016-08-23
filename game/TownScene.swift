@@ -192,7 +192,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didEndContact(contact: SKPhysicsContact) {
-
+        
         let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town"]
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
@@ -214,6 +214,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                     hit_wall_ud = ""
                 } else {
                     hit_wall_lr = ""
+                    
                 }
             } else {
                 hit_wall_lr = ""
@@ -320,6 +321,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         for touch in touches {

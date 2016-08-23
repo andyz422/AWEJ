@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		EB41ADE01D669AD600D05953 /* TownScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB41ADDF1D669AD600D05953 /* TownScene.swift */; };
 		EB41ADE21D669AF100D05953 /* TownScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EB41ADE11D669AF100D05953 /* TownScene.sks */; };
+		EB6FCD631D6CE052004AA8D0 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6FCD621D6CE052004AA8D0 /* GameOverScene.swift */; };
+		EB6FCD651D6CE083004AA8D0 /* GameOverScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EB6FCD641D6CE083004AA8D0 /* GameOverScene.sks */; };
 		EB8B32621D6A594100C50DB8 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8B32611D6A594100C50DB8 /* MenuScene.swift */; };
 		EB8B32641D6A596500C50DB8 /* MenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EB8B32631D6A596500C50DB8 /* MenuScene.sks */; };
 		EBD115A41D59354100609B29 /* StoreScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD115A31D59354100609B29 /* StoreScene.swift */; };
@@ -45,6 +47,8 @@
 /* Begin PBXFileReference section */
 		EB41ADDF1D669AD600D05953 /* TownScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TownScene.swift; sourceTree = "<group>"; };
 		EB41ADE11D669AF100D05953 /* TownScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TownScene.sks; sourceTree = "<group>"; };
+		EB6FCD621D6CE052004AA8D0 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		EB6FCD641D6CE083004AA8D0 /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOverScene.sks; sourceTree = "<group>"; };
 		EB8B32611D6A594100C50DB8 /* MenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		EB8B32631D6A596500C50DB8 /* MenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MenuScene.sks; sourceTree = "<group>"; };
 		EBD115A31D59354100609B29 /* StoreScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreScene.swift; sourceTree = "<group>"; };
@@ -127,6 +131,8 @@
 				EB41ADDF1D669AD600D05953 /* TownScene.swift */,
 				EBD580DE1D568E3300151FE9 /* BattleScene.sks */,
 				EBD580E01D568E3300151FE9 /* BattleScene.swift */,
+				EB6FCD641D6CE083004AA8D0 /* GameOverScene.sks */,
+				EB6FCD621D6CE052004AA8D0 /* GameOverScene.swift */,
 				EBD580E71D568E3300151FE9 /* Assets.xcassets */,
 				EBD580E41D568E3300151FE9 /* Main.storyboard */,
 				EBD580E91D568E3300151FE9 /* LaunchScreen.storyboard */,
@@ -261,6 +267,7 @@
 				EBD580DF1D568E3300151FE9 /* BattleScene.sks in Resources */,
 				EBD580EB1D568E3300151FE9 /* LaunchScreen.storyboard in Resources */,
 				EBD580E81D568E3300151FE9 /* Assets.xcassets in Resources */,
+				EB6FCD651D6CE083004AA8D0 /* GameOverScene.sks in Resources */,
 				EBD115A61D59355800609B29 /* StoreScene.sks in Resources */,
 				EBD580E61D568E3300151FE9 /* Main.storyboard in Resources */,
 				EB8B32641D6A596500C50DB8 /* MenuScene.sks in Resources */,
@@ -290,6 +297,7 @@
 			files = (
 				EBD580E11D568E3300151FE9 /* BattleScene.swift in Sources */,
 				EBD580E31D568E3300151FE9 /* GameViewController.swift in Sources */,
+				EB6FCD631D6CE052004AA8D0 /* GameOverScene.swift in Sources */,
 				EBD115A41D59354100609B29 /* StoreScene.swift in Sources */,
 				EB8B32621D6A594100C50DB8 /* MenuScene.swift in Sources */,
 				EBD580DD1D568E3300151FE9 /* AppDelegate.swift in Sources */,
