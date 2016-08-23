@@ -33,7 +33,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var hit_wall_lr = ""
     var hit_wall_ud = ""
     var contact1 = SKPhysicsContact()
-    var contact2 = SKPhysicsContact()
+    var contact1_nil = true
     
     var text1_1 = SKSpriteNode()
     var text1_2 = SKSpriteNode()
@@ -157,7 +157,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContact(contact: SKPhysicsContact) {
         
-        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "battle_door", "charmander_town", "squirtle_town"]
+        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town"]
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
@@ -173,8 +173,12 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
 
             if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy < 0 {
                 hit_wall_ud = "wall_bottom"
+                contact1 = contact
+                contact1_nil = false
             } else if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy > 0 {
                 hit_wall_ud = "wall_top"
+                contact1 = contact
+                contact1_nil = false
             }
             
             if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx < 0 {
@@ -194,14 +198,23 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         let B = contact.bodyB.node!.name!
         
         if (A == "diglett_town") && (objects.contains(B)) {
-            if hit_wall_ud == "wall_top" || hit_wall_ud == "wall_bottom" {
-                hit_wall_ud = ""
+            if !contact1_nil {
+                if  (B == contact1.bodyA.node!.name! || B == contact1.bodyB.node!.name) {
+                    hit_wall_ud = ""
+                } else {
+                    hit_wall_lr = ""
+                }
             } else {
                 hit_wall_lr = ""
             }
+            
         } else if (B == "diglett_town") && (objects.contains(A)) {
-            if hit_wall_ud == "wall_top" || hit_wall_ud == "wall_bottom" {
-                hit_wall_ud = ""
+            if !contact1_nil {
+                if (A == contact1.bodyA.node!.name! || A == contact1.bodyB.node!.name) {
+                    hit_wall_ud = ""
+                } else {
+                    hit_wall_lr = ""
+                }
             } else {
                 hit_wall_lr = ""
             }

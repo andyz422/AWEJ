@@ -29,6 +29,8 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     let diglett_category = uint_fast32_t(0x1 << 0)
     let charmander_category = uint_fast32_t(0x1 << 1)
     let weapon_category = uint_fast32_t(0x1 << 2)
+    
+    var timer = NSTimer()
 
     override func didMoveToView(view: SKView) {
         
@@ -61,7 +63,20 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: charmander_category, precise: true)
         createPhysicsBody(charmander, shape: "rectangle", dynamic: true, category: charmander_category, collision: 1, contact: diglett_category, precise: true)
         
+        timer = NSTimer(timeInterval: 1.0, target: self, selector: #selector(charmander_shoot), userInfo: nil, repeats: true)
+        NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
+        
+        
         self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
+        
+        
+    }
+    
+    func charmander_shoot() {
+        let laser = SKSpriteNode(imageNamed:"laser")
+        laser.name = "laser"
+        laser.size = CGSize(width: 10, height: 100)
+        shoot_weapon(laser, position: charmander.position, moveBy: CGVector(dx: 0, dy: -self.frame.height - 100 + laser.position.y), duration: 2.0, contact_category: diglett_category)
     }
     
     func createPhysicsBody(sprite: SKSpriteNode, shape: String, dynamic: Bool, category: uint_fast32_t, collision: uint, contact: uint_fast32_t, precise: Bool) {
@@ -82,6 +97,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         if diglett_inaction {
             diglett.position = CGPointMake(diglett.position.x - xDist, diglett.position.y + yDist)
         }
+        
     }
     
     
@@ -97,7 +113,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
                 let bomb = SKSpriteNode(imageNamed:"bomb")
                 bomb.size = CGSize(width: 30, height: 100)
                 bomb.name = "bomb"
-                shoot_weapon(bomb)
+                shoot_weapon(bomb, position: diglett.position, moveBy: CGVector(dx: 0, dy: self.frame.height + 100 - bomb.position.y), duration: 2.0, contact_category: charmander_category)
             }
             
             if CGRectContainsPoint(button3.frame, location) {
@@ -106,17 +122,18 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
                 let laser = SKSpriteNode(imageNamed:"laser")
                 laser.name = "laser"
                 laser.size = CGSize(width: 10, height: 100)
-                shoot_weapon(laser)
+                shoot_weapon(laser, position: diglett.position, moveBy: CGVector(dx: 0, dy: self.frame.height + 100 - laser.position.y), duration: 2.0, contact_category: charmander_category)
+
             }
         }
     }
     
-    func shoot_weapon(weapon: SKSpriteNode) {
+    func shoot_weapon(weapon: SKSpriteNode, position: CGPoint, moveBy: CGVector, duration: Double, contact_category: uint_fast32_t) {
         
-        createPhysicsBody(weapon, shape: "rectangle", dynamic: true, category: weapon_category, collision: 0, contact: charmander_category, precise: true)
-        weapon.position = diglett.position
+        createPhysicsBody(weapon, shape: "rectangle", dynamic: true, category: weapon_category, collision: 0, contact: contact_category, precise: true)
         
-        let shoot_action = SKAction.moveBy(CGVector(dx: 0, dy: self.frame.height + 100 - weapon.position.y), duration: 3)
+        weapon.position = position
+        let shoot_action = SKAction.moveBy(moveBy, duration: duration)
         let shoot_action_done = SKAction.removeFromParent()
         weapon.runAction(SKAction.sequence([shoot_action, shoot_action_done]))
         weapon.zPosition = 5
@@ -128,10 +145,17 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
             let A = contact.bodyA.node!.name!
             let B = contact.bodyB.node!.name!
         
-            if ((A == "charmander_battle" && ["laser", "bomb"].contains(B)) || (B == "charmander_battle" && ["laser", "bomb"].contains(A))) {
-                if A == "charmander_battle" {
-                
-                }
+            if (A == "charmander_battle" && ["laser", "bomb"].contains(B)) {
+                print("charmander hit")
+            
+            } else if (B == "charmander_battle" && ["laser", "bomb"].contains(A)) {
+                print("charmander hit")
+            }
+            
+            if (A == "diglett_battle" && B == "laser") {
+                print("diglett hit")
+            } else if (B == "diglett_battle" && A == "laser") {
+                print("diglett hit")
             }
         }
     }
