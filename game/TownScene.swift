@@ -21,6 +21,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var diglett = SKSpriteNode()
     var charmander = SKSpriteNode()
     var squirtle = SKSpriteNode()
+    
     var background = SKSpriteNode()
     var wall1 = SKSpriteNode()
     var wall2 = SKSpriteNode()
@@ -187,6 +188,24 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         createPhysicsBody(wall8, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(store_door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(battle_door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(house1, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(house2, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(house3, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(house4, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(house5, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(house6, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(house7, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(house8, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(inn, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(cow1, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(cow2, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(cow3, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(cow4, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(store, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(mugger, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(thief, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+
+        
         
         can_talk(squirtle)
     }
@@ -208,7 +227,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContact(contact: SKPhysicsContact) {
         
-        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town"]
+        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town", "house1", "house2", "house3", "house4", "house5", "house6", "house7", "house8", "inn", "cow1", "cow2", "cow3", "cow4", "store", "mugger", "thief"]
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
@@ -220,12 +239,13 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             destination = A
         }
         
-        if (A == "diglett_town" && objects.contains(B)) {
+        if (A == "diglett_town" && objects.contains(B)) || (B == "diglett_town" && objects.contains(A)) {
 
             if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy < 0 {
                 hit_wall_ud = "wall_bottom"
                 contact1 = contact
                 contact1_nil = false
+
             } else if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy > 0 {
                 hit_wall_ud = "wall_top"
                 contact1 = contact
@@ -234,43 +254,27 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             
             if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx < 0 {
                 hit_wall_lr = "wall_left"
+                
             } else if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx > 0 {
                 hit_wall_lr = "wall_right"
             }
         }
-        
-        if (B == "diglett_town" && objects.contains(A)) {
-            
-            if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy < 0 {
-                hit_wall_ud = "wall_bottom"
-                contact1 = contact
-                contact1_nil = false
-            } else if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy > 0 {
-                hit_wall_ud = "wall_top"
-                contact1 = contact
-                contact1_nil = false
-            }
-            
-            if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx < 0 {
-                hit_wall_lr = "wall_left"
-            } else if abs(contact.contactNormal.dx) > abs(contact.contactNormal.dy) && contact.contactNormal.dx > 0 {
-                hit_wall_lr = "wall_right"
-            }
-        }
-        
         diglett_inaction = false
     }
     
     func didEndContact(contact: SKPhysicsContact) {
-        
-        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town"]
+
+        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town", "house1", "house2", "house3", "house4", "house5", "house6", "house7", "house8", "inn", "cow1", "cow2", "cow3", "cow4", "store", "mugger", "thief"]
+
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
-        if (A == "diglett_town") && (objects.contains(B)) {
+        if A == "diglett_town" && (objects.contains(B)) {
             if !contact1_nil {
                 if  (B == contact1.bodyA.node!.name! || B == contact1.bodyB.node!.name) {
                     hit_wall_ud = ""
+                    contact1 = SKPhysicsContact()
+                    contact1_nil = true
                 } else {
                     hit_wall_lr = ""
                 }
@@ -278,16 +282,20 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 hit_wall_lr = ""
             }
             
-        } else if (B == "diglett_town") && (objects.contains(A)) {
+        } else if B == "diglett_town" && (objects.contains(A)) {
+            
             if !contact1_nil {
                 if (A == contact1.bodyA.node!.name! || A == contact1.bodyB.node!.name) {
                     hit_wall_ud = ""
+                    contact1 = SKPhysicsContact()
+                    contact1_nil = true
                 } else {
                     hit_wall_lr = ""
                 }
             } else {
                 hit_wall_lr = ""
             }
+
         }
         leave = false
     }
@@ -330,6 +338,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     
     func move(sprite: SKSpriteNode) {
         
+        diglett.zRotation = 0
         let x = sprite.position.x
         let y = sprite.position.y
         

@@ -185,44 +185,22 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
             let A = contact.bodyA.node!.name!
             let B = contact.bodyB.node!.name!
         
-            if (A == "charmander_battle" && ["laser", "bomb"].contains(B)) {
-                if enemy_health_count > 1 {
+            if (A == "charmander_battle" && ["laser", "bomb"].contains(B)) || (B == "charmander_battle" && ["laser", "bomb"].contains(A)) {
+                if enemy_health_count > 2 {
                     enemy_health_array[enemy_health_count - 1].runAction(SKAction.hide())
                     enemy_health_count -= 1
                 } else {
+                    enemy_health_array[enemy_health_count - 1].runAction(SKAction.hide())
                     timer.invalidate()
                     charmander.removeAllActions()
                 }
                 
-            } else if (B == "charmander_battle" && ["laser", "bomb"].contains(A)) {
-                if enemy_health_count > 1 {
-                    enemy_health_array[enemy_health_count - 1].runAction(SKAction.hide())
-                    enemy_health_count -= 1
-                } else {
-                    timer.invalidate()
-                    charmander.removeAllActions()
-                }
-            }
-            
-            if (A == "diglett_battle" && B == "laser") {
-                if health_count > 1 {
+            } else if (A == "diglett_battle" && B == "laser") || (B == "diglett_battle" && A == "laser") {
+                if health_count > 2 {
                     health_array[health_count - 1].runAction(SKAction.hide())
                     health_count -= 1
                 } else {
-                    if let scene = GameOverScene(fileNamed: "GameOverScene") {
-                        let skView = self.view as SKView!
-                        skView.ignoresSiblingOrder = true
-                        scene.scaleMode = .AspectFill
-                        skView.presentScene(scene, transition: transition)
-                    }
-                }
-                
-                
-            } else if (B == "diglett_battle" && A == "laser") {
-                if health_count > 1 {
                     health_array[health_count - 1].runAction(SKAction.hide())
-                    health_count -= 1
-                } else {
                     if let scene = GameOverScene(fileNamed: "GameOverScene") {
                         let skView = self.view as SKView!
                         skView.ignoresSiblingOrder = true
