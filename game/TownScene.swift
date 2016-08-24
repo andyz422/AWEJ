@@ -205,8 +205,6 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         createPhysicsBody(mugger, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(thief, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
 
-        
-        
         can_talk(squirtle)
     }
     

@@ -102,7 +102,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: charmander_category, precise: true)
         createPhysicsBody(charmander, shape: "rectangle", dynamic: true, category: charmander_category, collision: 1, contact: diglett_category, precise: true)
         
-        timer = NSTimer(timeInterval: 1.0, target: self, selector: #selector(charmander_shoot), userInfo: nil, repeats: true)
+        timer = NSTimer(timeInterval: 0.5, target: self, selector: #selector(charmander_shoot), userInfo: nil, repeats: true)
         NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
         
         self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
