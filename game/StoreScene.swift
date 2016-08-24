@@ -173,7 +173,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
                 let v = CGVector(dx: location.x - base.midX, dy: location.y - base.midY)
                 let angle = atan2(v.dy, v.dx)
                 
-                let length:CGFloat = 40
+                let length:CGFloat = 10
                 
                 xDist = sin(angle - 1.57079633) * length
                 yDist = cos(angle - 1.57079633) * length
