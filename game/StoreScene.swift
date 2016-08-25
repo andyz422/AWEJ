@@ -59,9 +59,9 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         button3p = self.childNodeWithName("button3p_store") as! SKSpriteNode
         diglett = self.childNodeWithName("diglett_store") as! SKSpriteNode
         charmander = self.childNodeWithName("charmander_store") as! SKSpriteNode
-        text1_1 = self.childNodeWithName("text1_1") as! SKSpriteNode
-        text1_2 = self.childNodeWithName("text1_2") as! SKSpriteNode
-        text1_3 = self.childNodeWithName("text1_3") as! SKSpriteNode
+        text1_1 = self.childNodeWithName("text_store_1") as! SKSpriteNode
+        text1_2 = self.childNodeWithName("text_store_2") as! SKSpriteNode
+        text1_3 = self.childNodeWithName("text_store_3") as! SKSpriteNode
         text_array = [text1_1, text1_2, text1_3]
         door = self.childNodeWithName("door") as! SKSpriteNode
 
@@ -73,6 +73,9 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         
         base = button.frame
         
+        text1_1.zPosition = 10
+        text1_2.zPosition = 10
+        text1_3.zPosition = 10
         background.zPosition = 2
         background2.zPosition = 1
         background3.zPosition = 0
@@ -182,7 +185,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
                 let v = CGVector(dx: location.x - base.midX, dy: location.y - base.midY)
                 let angle = atan2(v.dy, v.dx)
                 
-                let length:CGFloat = 10
+                let length:CGFloat = 20
                 
                 xDist = sin(angle - 1.57079633) * length
                 yDist = cos(angle - 1.57079633) * length

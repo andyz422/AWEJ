@@ -53,11 +53,6 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var contact1 = SKPhysicsContact()
     var contact1_nil = true
     
-    var text1_1 = SKSpriteNode()
-    var text1_2 = SKSpriteNode()
-    var text1_3 = SKSpriteNode()
-    var text_array: Array<Array<String>!>!
-    
     var store_door = SKSpriteNode()
     var battle_door = SKSpriteNode()
     var leave = false
@@ -79,9 +74,15 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var exclamations: Array<SKSpriteNode>!
     var objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town", "house1", "house2", "house3", "house4", "house5", "house6", "house7", "house8", "inn", "cow1", "cow2", "cow3", "cow4", "store", "mugger", "thief"]
     
+    var text1_1 = SKSpriteNode()
+    var text1_2 = SKSpriteNode()
+    var text1_3 = SKSpriteNode()
+    var text_array: Array<Array<SKSpriteNode>!>!
+    var current_text_array: Array<SKSpriteNode>!
     var talkers: Array<String>!
     var talk = false
     var talkTo = String()
+    var touch_count = -1
     
     
     override func didMoveToView(view: SKView) {
@@ -129,20 +130,21 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         store_door = self.childNodeWithName("store_door") as! SKSpriteNode
         battle_door = self.childNodeWithName("battle_door") as! SKSpriteNode
         
-        /*text1_1 = self.childNodeWithName("text1_1") as! SKSpriteNode
+        text1_1 = self.childNodeWithName("text1_1") as! SKSpriteNode
         text1_2 = self.childNodeWithName("text1_2") as! SKSpriteNode
         text1_3 = self.childNodeWithName("text1_3") as! SKSpriteNode
-        text_array = [text1_1, text1_2, text1_3]*/
-        //door = self.childNodeWithName("door") as! SKSpriteNode
         
-        /*for text in text_array {
-            if text as! SKSpriteNode != text1_1 {
+        text_array = [[text1_1, text1_2, text1_3], [text1_1, text1_2]]
+        
+        for texts in text_array {
+            for text in texts {
                 text.runAction(SKAction.hide())
             }
-        }*/
+        }
         
         base = button.frame
-        
+        //door = self.childNodeWithName("door") as! SKSpriteNode
+
         //background.zPosition = 0
         wall1.zPosition = 10
         wall2.zPosition = 10
@@ -456,6 +458,17 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 if talk {
                     if let index = talkers.indexOf(talkTo) {
                         exclamations[index].runAction(SKAction.hide())
+                        
+                        touch_count += 1
+                        current_text_array = text_array[index]
+                        
+                        if touch_count < current_text_array.count {
+                            current_text_array[touch_count].runAction(SKAction.hide())
+                        }
+                        if touch_count + 1 < current_text_array.count {
+                            current_text_array[touch_count + 1].runAction(SKAction.unhide())
+                        }
+                        
                     }
                 }
             }
@@ -487,7 +500,8 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 } else {
                     button.position = CGPointMake(base.midX - xDist, base.midY + yDist)
                 }
-                diglett_inaction = true
+                diglett_inaction = touch_count >= current_text_array.count - 1
+                
             }
         }
     }
