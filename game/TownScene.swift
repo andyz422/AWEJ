@@ -56,11 +56,14 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var text1_1 = SKSpriteNode()
     var text1_2 = SKSpriteNode()
     var text1_3 = SKSpriteNode()
-    var text_array = []
+    var text_array: Array<Array<String>!>!
+    
     var store_door = SKSpriteNode()
     var battle_door = SKSpriteNode()
     var leave = false
     var destination = ""
+ 
+    
     var base = CGRect()
     
     var xDist = CGFloat()
@@ -73,12 +76,19 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     let object_category = uint_fast32_t(0x1 << 1)
     let background_category = uint_fast32_t(0x1 << 1)
     
+    var exclamations: Array<SKSpriteNode>!
+    var objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town", "house1", "house2", "house3", "house4", "house5", "house6", "house7", "house8", "inn", "cow1", "cow2", "cow3", "cow4", "store", "mugger", "thief"]
+    
+    var talkers: Array<String>!
+    var talk = false
+    var talkTo = String()
+    
     
     override func didMoveToView(view: SKView) {
         
         self.physicsWorld.contactDelegate = self
         self.physicsWorld.gravity = CGVectorMake(0, 0)
-        
+
         //background = self.childNodeWithName("town") as! SKSpriteNode
         button = self.childNodeWithName("button_town") as! SKSpriteNode
         button2 = self.childNodeWithName("button2_town") as! SKSpriteNode
@@ -206,16 +216,29 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         createPhysicsBody(mugger, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
         createPhysicsBody(thief, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
         
+        can_talk(charmander)
         can_talk(squirtle)
     }
     
     func can_talk(sprite: SKSpriteNode) { // exclamation not appearing
+        
         let exclamation = SKSpriteNode(imageNamed: "exclamation")
-
-        exclamation.position = CGPoint(x: sprite.position.x, y: sprite.position.y + 200)
+        exclamation.position = CGPoint(x: sprite.position.x, y: sprite.position.y + (sprite.size.height / 2) + 50)
         exclamation.zPosition = 10
         exclamation.size = CGSize(width: 230, height: 170)
         addChild(exclamation)
+        
+        if talkers == nil {
+            talkers = [sprite.name!]
+        } else {
+            talkers.append(sprite.name!)
+        }
+        
+        if exclamations == nil {
+            exclamations = [exclamation]
+        } else {
+            exclamations.append(exclamation)
+        }
     }
     
     
@@ -237,19 +260,33 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContact(contact: SKPhysicsContact) {
         
-        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town", "house1", "house2", "house3", "house4", "house5", "house6", "house7", "house8", "inn", "cow1", "cow2", "cow3", "cow4", "store", "mugger", "thief"]
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
-        leave = (A == "diglett_town" && ["store_door", "battle_door"].contains(B)) || (["store_door", "battle_door"].contains(A) == "door" && B == "diglett_store")
+        //leave and destination are variables used for transitioning scenes
+        leave = (A == diglett.name! && [store_door.name!, battle_door.name!].contains(B)) || ([store_door.name!, battle_door.name!].contains(A) && B == diglett.name!)
         
-        if A == "diglett_town" {
-            destination = B
-        } else {
-            destination = A
+        if leave {
+            if A == diglett.name! {
+                destination = B
+            } else {
+                destination = A
+            }
         }
         
-        if (A == "diglett_town" && objects.contains(B)) || (B == "diglett_town" && objects.contains(A)) {
+        talk = (A == diglett.name! && talkers.contains(B)) || (talkers.contains(A) && B == diglett.name!)
+
+        if talk {
+            if A == diglett.name! {
+                talkTo = B
+            } else {
+                talkTo = A
+            }
+        }
+        
+        // detecting collisions, and using hit_wall_ud and hit_wall_lr to signal movement constraints in move()
+        // contact1 references the ud contact
+        if (A == diglett.name! && objects.contains(B)) || (B == diglett.name! && objects.contains(A)) {
 
             if abs(contact.contactNormal.dy) > abs(contact.contactNormal.dx) && contact.contactNormal.dy < 0 {
                 hit_wall_ud = "wall_bottom"
@@ -274,12 +311,10 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     
     func didEndContact(contact: SKPhysicsContact) {
         
-        let objects = ["wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "store_door", "battle_door", "charmander_town", "squirtle_town", "house1", "house2", "house3", "house4", "house5", "house6", "house7", "house8", "inn", "cow1", "cow2", "cow3", "cow4", "store", "mugger", "thief"]
-
         let A = contact.bodyA.node!.name!
         let B = contact.bodyB.node!.name!
         
-        if A == "diglett_town" && (objects.contains(B)) {
+        if A == diglett.name! && (objects.contains(B)) {
             if !contact1_nil {
                 if  (B == contact1.bodyA.node!.name! || B == contact1.bodyB.node!.name) { // Not robust; falsely frees ud constraint and maintains lr constraint when in ud & lr contact with the same node
                     hit_wall_ud = ""
@@ -292,7 +327,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 hit_wall_lr = ""
             }
             
-        } else if B == "diglett_town" && (objects.contains(A)) {
+        } else if B == diglett.name! && (objects.contains(A)) {
             if !contact1_nil {
                 if (A == contact1.bodyA.node!.name! || A == contact1.bodyB.node!.name) { // Not robust; falsely frees ud constraint and maintains lr constraint when in ud & lr contact with the same node
                     hit_wall_ud = ""
@@ -307,6 +342,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             
         }
         leave = false
+        talk = false
     }
     
     
@@ -342,6 +378,9 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
             move(store)
             move(mugger)
             move(thief)
+            for exclamation in exclamations {
+                move(exclamation)
+            }
         }
     }
     
@@ -397,20 +436,26 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 
                 if leave {
                     let transition = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1.0)
-                    if destination == "store_door" {
+                    if destination == store_door.name! {
                         if let scene = StoreScene(fileNamed: "StoreScene") {
                             let skView = self.view as SKView!
                             skView.ignoresSiblingOrder = true
                             scene.scaleMode = .AspectFill
                             skView.presentScene(scene, transition: transition)
                         }
-                    } else if destination == "battle_door"{
+                    } else if destination == battle_door.name! {
                         if let scene = BattleScene(fileNamed: "BattleScene") {
                             let skView = self.view as SKView!
                             skView.ignoresSiblingOrder = true
                             scene.scaleMode = .AspectFill
                             skView.presentScene(scene, transition: transition)
                         }
+                    }
+                }
+                
+                if talk {
+                    if let index = talkers.indexOf(talkTo) {
+                        exclamations[index].runAction(SKAction.hide())
                     }
                 }
             }

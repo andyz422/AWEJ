@@ -31,24 +31,11 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     let weapon_category = uint_fast32_t(0x1 << 2)
 
     var health_count = 7
-    var health_array = []
-    var health1 = SKSpriteNode()
-    var health2 = SKSpriteNode()
-    var health3 = SKSpriteNode()
-    var health4 = SKSpriteNode()
-    var health5 = SKSpriteNode()
-    var health6 = SKSpriteNode()
-    var health7 = SKSpriteNode()
+    var health_array: Array<AnyObject>!
     
     var enemy_health_count = 7
-    var enemy_health_array = []
-    var health1e = SKSpriteNode()
-    var health2e = SKSpriteNode()
-    var health3e = SKSpriteNode()
-    var health4e = SKSpriteNode()
-    var health5e = SKSpriteNode()
-    var health6e = SKSpriteNode()
-    var health7e = SKSpriteNode()
+    var enemy_health_array: Array<AnyObject>!
+    
     
     var timer = NSTimer()
 
@@ -65,24 +52,25 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         diglett = self.childNodeWithName("diglett_battle") as! SKSpriteNode
         charmander = self.childNodeWithName("charmander_battle") as! SKSpriteNode
         
-        health1 = self.childNodeWithName("health1") as! SKSpriteNode
-        health2 = self.childNodeWithName("health2") as! SKSpriteNode
-        health3 = self.childNodeWithName("health3") as! SKSpriteNode
-        health4 = self.childNodeWithName("health4") as! SKSpriteNode
-        health5 = self.childNodeWithName("health5") as! SKSpriteNode
-        health6 = self.childNodeWithName("health6") as! SKSpriteNode
-        health7 = self.childNodeWithName("health7") as! SKSpriteNode
+        for i in 1 ... health_count {
+            let health = self.childNodeWithName(String(format: "health%d", i))
+            
+            if health_array == nil {
+                health_array = [health!]
+            } else {
+                health_array.append(health!)
+            }
+        }
         
-        health1e = self.childNodeWithName("health1e") as! SKSpriteNode
-        health2e = self.childNodeWithName("health2e") as! SKSpriteNode
-        health3e = self.childNodeWithName("health3e") as! SKSpriteNode
-        health4e = self.childNodeWithName("health4e") as! SKSpriteNode
-        health5e = self.childNodeWithName("health5e") as! SKSpriteNode
-        health6e = self.childNodeWithName("health6e") as! SKSpriteNode
-        health7e = self.childNodeWithName("health7e") as! SKSpriteNode
-        
-        health_array = [health1, health2, health3, health4, health5, health6, health7]
-        enemy_health_array = [health1e, health2e, health3e, health4e, health5e, health6e, health7e]
+        for i in 1 ... enemy_health_count {
+            let enemy_health = self.childNodeWithName(String(format: "health%de", i))
+            
+            if enemy_health_array == nil {
+                enemy_health_array = [enemy_health!]
+            } else {
+                enemy_health_array.append(enemy_health!)
+            }
+        }
         
         base = button.frame
         

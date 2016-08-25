@@ -23,6 +23,8 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     var charmander = SKSpriteNode()
     
     var background = SKSpriteNode()
+    var background2 = SKSpriteNode()
+    var background3 = SKSpriteNode()
     var text1_1 = SKSpriteNode()
     var text1_2 = SKSpriteNode()
     var text1_3 = SKSpriteNode()
@@ -46,6 +48,10 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         self.physicsWorld.gravity = CGVectorMake(0, 0)
         
+        background = self.childNodeWithName("store_background") as! SKSpriteNode
+        background2 = self.childNodeWithName("store_background2") as! SKSpriteNode
+        background3 = self.childNodeWithName("store_background2") as! SKSpriteNode
+        
         button = self.childNodeWithName("button_store") as! SKSpriteNode
         button2 = self.childNodeWithName("button2_store") as! SKSpriteNode
         button2p = self.childNodeWithName("button2p_store") as! SKSpriteNode
@@ -67,6 +73,9 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         
         base = button.frame
         
+        background.zPosition = 2
+        background2.zPosition = 1
+        background3.zPosition = 0
         button.zPosition = 10
         button2.zPosition = 20
         button2p.zPosition = 10
