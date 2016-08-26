@@ -77,6 +77,10 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var text1_1 = SKSpriteNode()
     var text1_2 = SKSpriteNode()
     var text1_3 = SKSpriteNode()
+    var text_cow1 = SKSpriteNode()
+    var text_cow2 = SKSpriteNode()
+    var text_cow3 = SKSpriteNode()
+    var text_cow4 = SKSpriteNode()
     var text_array: Array<Array<SKSpriteNode>!>!
     var current_text_array: Array<SKSpriteNode>!
     var talkers: Array<String>!
@@ -133,8 +137,12 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         text1_1 = self.childNodeWithName("text_town_1") as! SKSpriteNode
         text1_2 = self.childNodeWithName("text_town_2") as! SKSpriteNode
         text1_3 = self.childNodeWithName("text_town_3") as! SKSpriteNode
+        text_cow1 = self.childNodeWithName("text_cow1") as! SKSpriteNode
+        text_cow2 = self.childNodeWithName("text_cow2") as! SKSpriteNode
+        text_cow3 = self.childNodeWithName("text_cow3") as! SKSpriteNode
+        text_cow4 = self.childNodeWithName("text_cow4") as! SKSpriteNode
         
-        text_array = [[text1_1, text1_2, text1_3], [text1_1, text1_2], [text1_1], [text1_1], [text1_1], [text1_1], [text1_3]]
+        text_array = [[text1_1, text1_2, text1_3], [text1_1, text1_2], [text_cow1], [text_cow2], [text_cow3], [text_cow4], [text_cow3]]
         
         for texts in text_array {
             for text in texts {

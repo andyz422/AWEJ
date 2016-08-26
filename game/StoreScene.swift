@@ -120,7 +120,6 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContact(contact: SKPhysicsContact) {
         leave = (contact.bodyA.node!.name == "diglett_store" && contact.bodyB.node!.name == "door_store") || (contact.bodyA.node!.name == "door_store" && contact.bodyB.node!.name == "diglett_store")
-        print(leave)
     }
     
     func didEndContact(contact: SKPhysicsContact) {
