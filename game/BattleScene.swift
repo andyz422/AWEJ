@@ -127,7 +127,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         let laser = SKSpriteNode(imageNamed:"enemy_laser")
         laser.name = "enemy_laser"
         laser.size = CGSize(width: 10, height: 100)
-        shoot_weapon(laser, position: charmander.position, moveBy: CGVector(dx: 0, dy: -self.frame.height - 100 + laser.position.y), duration: 2.0, category: player_category, contact_category: player_category)
+        shoot_weapon(laser, position: charmander.position, moveBy: CGVector(dx: 0, dy: -self.frame.height - 100 + laser.position.y), duration: 2.0, category: 0, contact_category: player_category)
     }
     
     func createPhysicsBody(sprite: SKSpriteNode, shape: String, dynamic: Bool, category: uint_fast32_t, collision: uint, contact: uint_fast32_t, precise: Bool) {
