@@ -23,8 +23,9 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     var charmander = SKSpriteNode()
     
     var background = SKSpriteNode()
-    var background2 = SKSpriteNode()
-    var background3 = SKSpriteNode()
+    var store_wall_left = SKSpriteNode()
+    var store_wall_right = SKSpriteNode()
+    
     var text1_1 = SKSpriteNode()
     var text1_2 = SKSpriteNode()
     var text1_3 = SKSpriteNode()
@@ -49,8 +50,8 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.gravity = CGVectorMake(0, 0)
         
         background = self.childNodeWithName("store_background") as! SKSpriteNode
-        background2 = self.childNodeWithName("store_background2") as! SKSpriteNode
-        background3 = self.childNodeWithName("store_background2") as! SKSpriteNode
+        store_wall_left = self.childNodeWithName("store_wall_left") as! SKSpriteNode
+        store_wall_right = self.childNodeWithName("store_wall_right") as! SKSpriteNode
         
         button = self.childNodeWithName("button_store") as! SKSpriteNode
         button2 = self.childNodeWithName("button2_store") as! SKSpriteNode
@@ -76,9 +77,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         text1_1.zPosition = 10
         text1_2.zPosition = 10
         text1_3.zPosition = 10
-        background.zPosition = 2
-        background2.zPosition = 1
-        background3.zPosition = 0
+        background.zPosition = 0
         button.zPosition = 10
         button2.zPosition = 20
         button2p.zPosition = 10
@@ -94,9 +93,12 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         button3.alpha = 0.75
         button3p.alpha = 0.75
         
-        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: object_category, precise: true)
+        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(charmander, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(store_wall_left, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(store_wall_right, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
+
         
         self.physicsBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
     }
@@ -112,6 +114,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         sprite.physicsBody?.categoryBitMask = category
         sprite.physicsBody?.collisionBitMask = collision
         sprite.physicsBody?.contactTestBitMask = contact
+        sprite.physicsBody?.allowsRotation = false
         sprite.physicsBody?.usesPreciseCollisionDetection = precise
     }
     
@@ -185,7 +188,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
                 let v = CGVector(dx: location.x - base.midX, dy: location.y - base.midY)
                 let angle = atan2(v.dy, v.dx)
                 
-                let length:CGFloat = 20
+                let length:CGFloat = 10
                 
                 xDist = sin(angle - 1.57079633) * length
                 yDist = cos(angle - 1.57079633) * length
@@ -194,11 +197,8 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
                     xDist = xDist / 2
                     yDist = yDist / 2
                     
-                    button.position = location
-                    
-                } else {
-                    button.position = CGPointMake(base.midX - xDist, base.midY + yDist)
                 }
+                button.position = CGPointMake(base.midX - (3 * xDist), base.midY + (3 * yDist))
                 diglett_inaction = touch_count >= text_array.count - 1
             }
         }

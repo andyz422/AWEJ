@@ -82,7 +82,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     var talkers: Array<String>!
     var talk = false
     var talkTo = String()
-    var touch_count = -1
+    var talk_count = -1
     
     
     override func didMoveToView(view: SKView) {
@@ -130,9 +130,9 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         store_door = self.childNodeWithName("store_door") as! SKSpriteNode
         battle_door = self.childNodeWithName("battle_door") as! SKSpriteNode
         
-        text1_1 = self.childNodeWithName("text1_1") as! SKSpriteNode
-        text1_2 = self.childNodeWithName("text1_2") as! SKSpriteNode
-        text1_3 = self.childNodeWithName("text1_3") as! SKSpriteNode
+        text1_1 = self.childNodeWithName("text_town_1") as! SKSpriteNode
+        text1_2 = self.childNodeWithName("text_town_2") as! SKSpriteNode
+        text1_3 = self.childNodeWithName("text_town_3") as! SKSpriteNode
         
         text_array = [[text1_1, text1_2, text1_3], [text1_1, text1_2]]
         
@@ -141,6 +141,10 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 text.runAction(SKAction.hide())
             }
         }
+        
+        text1_1.zPosition = 20
+        text1_2.zPosition = 20
+        text1_3.zPosition = 20
         
         base = button.frame
         //door = self.childNodeWithName("door") as! SKSpriteNode
@@ -188,35 +192,35 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         button3.alpha = 0.75
         button3p.alpha = 0.75
         
-        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 0, contact: object_category, precise: true, pinned: true)
-        createPhysicsBody(charmander, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(squirtle, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(wall1, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(wall2, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(wall3, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(wall4, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(wall5, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(wall6, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(wall7, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(wall8, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(store_door, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(battle_door, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(house1, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(house2, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(house3, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(house4, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(house5, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(house6, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(house7, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(house8, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(inn, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(cow1, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(cow2, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(cow3, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(cow4, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(store, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(mugger, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
-        createPhysicsBody(thief, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true, pinned: true)
+        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 0, contact: object_category, precise: true)
+        createPhysicsBody(charmander, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(squirtle, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(wall1, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(wall2, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(wall3, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(wall4, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(wall5, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(wall6, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(wall7, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(wall8, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(store_door, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(battle_door, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(house1, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(house2, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(house3, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(house4, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(house5, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(house6, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(house7, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(house8, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(inn, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(cow1, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(cow2, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(cow3, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(cow4, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(store, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(mugger, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
+        createPhysicsBody(thief, shape: "rectangle", dynamic: false, category: object_category, collision: 0, contact: 0, precise: true)
         
         can_talk(charmander)
         can_talk(squirtle)
@@ -244,7 +248,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     }
     
     
-    func createPhysicsBody(sprite: SKSpriteNode, shape: String, dynamic: Bool, category: uint_fast32_t, collision: uint, contact: uint_fast32_t, precise: Bool, pinned: Bool) {
+    func createPhysicsBody(sprite: SKSpriteNode, shape: String, dynamic: Bool, category: uint_fast32_t, collision: uint, contact: uint_fast32_t, precise: Bool) {
         
         if shape == "rectangle" {
             sprite.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: sprite.size.width + 6, height: sprite.size.height + 6))
@@ -459,16 +463,22 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                     if let index = talkers.indexOf(talkTo) {
                         exclamations[index].runAction(SKAction.hide())
                         
-                        touch_count += 1
                         current_text_array = text_array[index]
+                        talk_count += 1
                         
-                        if touch_count < current_text_array.count {
-                            current_text_array[touch_count].runAction(SKAction.hide())
+                        if talk_count == 0 {
+                            current_text_array[talk_count].runAction(SKAction.unhide())
+                        } else {
+                            if talk_count < current_text_array.count {
+                                current_text_array[talk_count - 1].runAction(SKAction.hide())
+                            }
+                            if talk_count < current_text_array.count {
+                                current_text_array[talk_count].runAction(SKAction.unhide())
+                            } else {
+                                current_text_array[talk_count - 1].runAction(SKAction.hide())
+                                talk_count = -1
+                            }
                         }
-                        if touch_count + 1 < current_text_array.count {
-                            current_text_array[touch_count + 1].runAction(SKAction.unhide())
-                        }
-                        
                     }
                 }
             }
@@ -477,7 +487,6 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
     
 
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        
         for touch in touches {
             let location = touch.locationInNode(self)
             
@@ -495,13 +504,9 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                     xDist = xDist / 2
                     yDist = yDist / 2
                     
-                    button.position = location
-                    
-                } else {
-                    button.position = CGPointMake(base.midX - xDist, base.midY + yDist)
                 }
-                diglett_inaction = touch_count >= current_text_array.count - 1
-                
+                button.position = CGPointMake(base.midX - (3 * xDist), base.midY + (3 * yDist))
+                diglett_inaction = talk_count == -1
             }
         }
     }
