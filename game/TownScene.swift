@@ -153,6 +153,10 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         text1_1.zPosition = 20
         text1_2.zPosition = 20
         text1_3.zPosition = 20
+        text_cow1.zPosition = 20
+        text_cow2.zPosition = 20
+        text_cow3.zPosition = 20
+        text_cow4.zPosition = 20
         
         base = button.frame
         //door = self.childNodeWithName("door") as! SKSpriteNode
