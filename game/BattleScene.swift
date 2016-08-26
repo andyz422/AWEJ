@@ -197,6 +197,14 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
                             text_array[talk_count - 1].runAction(SKAction.hide())
                             talk_count = -1
                             talk = false
+                            
+                            let transition = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1.0)
+                            if let scene = TownScene(fileNamed: "TownScene") {
+                                let skView = self.view as SKView!
+                                skView.ignoresSiblingOrder = true
+                                scene.scaleMode = .AspectFill
+                                skView.presentScene(scene, transition: transition)
+                            }
                         }
                     }
                 }
@@ -233,7 +241,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
                     timer.invalidate()
                     charmander.removeAllActions()
                     exclamation = SKSpriteNode(imageNamed: "exclamation")
-                    exclamation.position = CGPoint(x: charmander.position.x, y: charmander.position.y + (charmander.size.height / 2) + 50)
+                    exclamation.position = CGPoint(x: charmander.position.x, y: charmander.position.y + (charmander.size.height / 2) + 30)
                     exclamation.zPosition = 10
                     exclamation.size = CGSize(width: 230, height: 170)
                     addChild(exclamation)

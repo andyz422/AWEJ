@@ -134,7 +134,7 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         text1_2 = self.childNodeWithName("text_town_2") as! SKSpriteNode
         text1_3 = self.childNodeWithName("text_town_3") as! SKSpriteNode
         
-        text_array = [[text1_1, text1_2, text1_3], [text1_1, text1_2]]
+        text_array = [[text1_1, text1_2, text1_3], [text1_1, text1_2], [text1_1], [text1_1], [text1_1], [text1_1], [text1_3]]
         
         for texts in text_array {
             for text in texts {
@@ -224,6 +224,12 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
         
         can_talk(charmander)
         can_talk(squirtle)
+        can_talk(cow1)
+        can_talk(cow2)
+        can_talk(cow3)
+        can_talk(cow4)
+        can_talk(battle_door)
+        
     }
     
     func can_talk(sprite: SKSpriteNode) { // exclamation not appearing
@@ -440,25 +446,6 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                 button3.zPosition = 0
                 button3_pressed = true
                 
-                if leave {
-                    let transition = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1.0)
-                    if destination == store_door.name! {
-                        if let scene = StoreScene(fileNamed: "StoreScene") {
-                            let skView = self.view as SKView!
-                            skView.ignoresSiblingOrder = true
-                            scene.scaleMode = .AspectFill
-                            skView.presentScene(scene, transition: transition)
-                        }
-                    } else if destination == battle_door.name! {
-                        if let scene = BattleScene(fileNamed: "BattleScene") {
-                            let skView = self.view as SKView!
-                            skView.ignoresSiblingOrder = true
-                            scene.scaleMode = .AspectFill
-                            skView.presentScene(scene, transition: transition)
-                        }
-                    }
-                }
-                
                 if talk {
                     if let index = talkers.indexOf(talkTo) {
                         exclamations[index].runAction(SKAction.hide())
@@ -477,6 +464,43 @@ class TownScene: SKScene, SKPhysicsContactDelegate {
                             } else {
                                 current_text_array[talk_count - 1].runAction(SKAction.hide())
                                 talk_count = -1
+                                if leave {
+                                    let transition = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1.0)
+                                    if destination == store_door.name! {
+                                        if let scene = StoreScene(fileNamed: "StoreScene") {
+                                            let skView = self.view as SKView!
+                                            skView.ignoresSiblingOrder = true
+                                            scene.scaleMode = .AspectFill
+                                            skView.presentScene(scene, transition: transition)
+                                        }
+                                    } else if destination == battle_door.name! {
+                                        if let scene = BattleScene(fileNamed: "BattleScene") {
+                                            let skView = self.view as SKView!
+                                            skView.ignoresSiblingOrder = true
+                                            scene.scaleMode = .AspectFill
+                                            skView.presentScene(scene, transition: transition)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if leave {
+                        let transition = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1.0)
+                        if destination == store_door.name! {
+                            if let scene = StoreScene(fileNamed: "StoreScene") {
+                                let skView = self.view as SKView!
+                                skView.ignoresSiblingOrder = true
+                                scene.scaleMode = .AspectFill
+                                skView.presentScene(scene, transition: transition)
+                            }
+                        } else if destination == battle_door.name! {
+                            if let scene = BattleScene(fileNamed: "BattleScene") {
+                                let skView = self.view as SKView!
+                                skView.ignoresSiblingOrder = true
+                                scene.scaleMode = .AspectFill
+                                skView.presentScene(scene, transition: transition)
                             }
                         }
                     }

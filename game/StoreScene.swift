@@ -64,7 +64,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         text1_2 = self.childNodeWithName("text_store_2") as! SKSpriteNode
         text1_3 = self.childNodeWithName("text_store_3") as! SKSpriteNode
         text_array = [text1_1, text1_2, text1_3]
-        door = self.childNodeWithName("door") as! SKSpriteNode
+        door = self.childNodeWithName("door_store") as! SKSpriteNode
 
         for text in text_array {
             if text as! SKSpriteNode != text1_1 {
@@ -93,7 +93,7 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
         button3.alpha = 0.75
         button3p.alpha = 0.75
         
-        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: 0, precise: true)
+        createPhysicsBody(diglett, shape: "rectangle", dynamic: true, category: diglett_category, collision: 1, contact: object_category, precise: true)
         createPhysicsBody(charmander, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(door, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
         createPhysicsBody(store_wall_left, shape: "rectangle", dynamic: false, category: object_category, collision: 1, contact: 0, precise: true)
@@ -119,7 +119,8 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
-        leave = (contact.bodyA.node!.name == "diglett_store" && contact.bodyB.node!.name == "door") || (contact.bodyA.node!.name == "door" && contact.bodyB.node!.name == "diglett_store")
+        leave = (contact.bodyA.node!.name == "diglett_store" && contact.bodyB.node!.name == "door_store") || (contact.bodyA.node!.name == "door_store" && contact.bodyB.node!.name == "diglett_store")
+        print(leave)
     }
     
     func didEndContact(contact: SKPhysicsContact) {
@@ -162,10 +163,9 @@ class StoreScene: SKScene, SKPhysicsContactDelegate {
                 if touch_count + 1 < text_array.count {
                     text_array[touch_count + 1].runAction(SKAction.unhide())
                 }
-                
                 if (touch_count >= text_array.count) && (leave) {
                     let transition = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1.0)
-                    if let scene = TownScene(fileNamed:"TownScene") {
+                    if let scene = TownScene(fileNamed: "TownScene") {
                         let skView = self.view as SKView!
                         skView.ignoresSiblingOrder = true
                         scene.scaleMode = .AspectFill
