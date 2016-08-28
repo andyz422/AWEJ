@@ -15,6 +15,8 @@
 		EB33720B1D70EE72004D984F /* MountainScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EB33720A1D70EE72004D984F /* MountainScene.sks */; };
 		EB41ADE01D669AD600D05953 /* TownScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB41ADDF1D669AD600D05953 /* TownScene.swift */; };
 		EB41ADE21D669AF100D05953 /* TownScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EB41ADE11D669AF100D05953 /* TownScene.sks */; };
+		EB6F4A9A1D738685007E82B3 /* Battle2Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6F4A991D738685007E82B3 /* Battle2Scene.swift */; };
+		EB6F4A9C1D738696007E82B3 /* Battle2Scene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EB6F4A9B1D738696007E82B3 /* Battle2Scene.sks */; };
 		EB6FCD631D6CE052004AA8D0 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6FCD621D6CE052004AA8D0 /* GameOverScene.swift */; };
 		EB6FCD651D6CE083004AA8D0 /* GameOverScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EB6FCD641D6CE083004AA8D0 /* GameOverScene.sks */; };
 		EB8B32621D6A594100C50DB8 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8B32611D6A594100C50DB8 /* MenuScene.swift */; };
@@ -59,6 +61,8 @@
 		EB33720A1D70EE72004D984F /* MountainScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MountainScene.sks; sourceTree = "<group>"; };
 		EB41ADDF1D669AD600D05953 /* TownScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TownScene.swift; sourceTree = "<group>"; };
 		EB41ADE11D669AF100D05953 /* TownScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TownScene.sks; sourceTree = "<group>"; };
+		EB6F4A991D738685007E82B3 /* Battle2Scene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Battle2Scene.swift; sourceTree = "<group>"; };
+		EB6F4A9B1D738696007E82B3 /* Battle2Scene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Battle2Scene.sks; sourceTree = "<group>"; };
 		EB6FCD621D6CE052004AA8D0 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 		EB6FCD641D6CE083004AA8D0 /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOverScene.sks; sourceTree = "<group>"; };
 		EB8B32611D6A594100C50DB8 /* MenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
@@ -143,6 +147,8 @@
 				EB41ADDF1D669AD600D05953 /* TownScene.swift */,
 				EBD580DE1D568E3300151FE9 /* BattleScene.sks */,
 				EBD580E01D568E3300151FE9 /* BattleScene.swift */,
+				EB6F4A9B1D738696007E82B3 /* Battle2Scene.sks */,
+				EB6F4A991D738685007E82B3 /* Battle2Scene.swift */,
 				EB6FCD641D6CE083004AA8D0 /* GameOverScene.sks */,
 				EB6FCD621D6CE052004AA8D0 /* GameOverScene.swift */,
 				EB3372061D70EE52004D984F /* InnScene.sks */,
@@ -288,6 +294,7 @@
 				EB6FCD651D6CE083004AA8D0 /* GameOverScene.sks in Resources */,
 				EBD115A61D59355800609B29 /* StoreScene.sks in Resources */,
 				EBD580E61D568E3300151FE9 /* Main.storyboard in Resources */,
+				EB6F4A9C1D738696007E82B3 /* Battle2Scene.sks in Resources */,
 				EB33720B1D70EE72004D984F /* MountainScene.sks in Resources */,
 				EB8B32641D6A596500C50DB8 /* MenuScene.sks in Resources */,
 				EB3372071D70EE52004D984F /* InnScene.sks in Resources */,
@@ -322,6 +329,7 @@
 				EB3372091D70EE67004D984F /* MountainScene.swift in Sources */,
 				EB6FCD631D6CE052004AA8D0 /* GameOverScene.swift in Sources */,
 				EB3372011D70EDBC004D984F /* Town2Scene.swift in Sources */,
+				EB6F4A9A1D738685007E82B3 /* Battle2Scene.swift in Sources */,
 				EBD115A41D59354100609B29 /* StoreScene.swift in Sources */,
 				EB8B32621D6A594100C50DB8 /* MenuScene.swift in Sources */,
 				EBD580DD1D568E3300151FE9 /* AppDelegate.swift in Sources */,
