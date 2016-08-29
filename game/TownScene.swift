@@ -10,33 +10,6 @@ import UIKit
 import SpriteKit
 
 
-class Position: NSObject, NSCoding {
-    var x: Float = 0.0;
-    var y: Float = 0.0;
-
-    
-    func encodeWithCoder(coder: NSCoder) {
-        coder.encodeObject(x, forKey: "x")
-        coder.encodeObject(y, forKey: "y")
-    }
-    
-    required convenience init(coder: NSCoder) {
-        self.init()
-        x = coder.decodeObjectForKey("x") as! Float
-        y = coder.decodeObjectForKey("y") as! Float;
-    }
-    
-    var position: Position
-    func saveGame(notification: NSNotification) {
-        let saveData = NSMutableData()
-        let archiver = NSKeyedArchiver(forWritingWithMutableData: saveData)
-        
-        archiver.encodeObject(position.x, forKey: "x")
-        archiver.encodeObject(position.y, forKey: "y")
-    }
-}
-
-
 class TownScene: SKScene, SKPhysicsContactDelegate {
     
     var button = SKSpriteNode()
