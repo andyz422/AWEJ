@@ -17,10 +17,20 @@ public class MenuSceneSetup : MonoBehaviour
         if (cachedFont != null) return cachedFont;
 
         // Try different font names that might work in Unity 6
-        string[] fontNames = new string[] { "Arial.ttf", "LegacyRuntime.ttf", "Arial" };
+        // Note: GetBuiltinResource throws ArgumentException (not null) for
+        // names Unity no longer recognizes, e.g. "Arial.ttf" was replaced by
+        // "LegacyRuntime.ttf", so each attempt must be caught individually.
+        string[] fontNames = new string[] { "LegacyRuntime.ttf", "Arial.ttf", "Arial" };
         foreach (string fontName in fontNames)
         {
-            cachedFont = Resources.GetBuiltinResource<Font>(fontName);
+            try
+            {
+                cachedFont = Resources.GetBuiltinResource<Font>(fontName);
+            }
+            catch (System.ArgumentException)
+            {
+                cachedFont = null;
+            }
             if (cachedFont != null)
             {
                 Debug.Log($"Found font: {fontName}");

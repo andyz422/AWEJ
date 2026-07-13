@@ -92,6 +92,7 @@ public class Weapon : MonoBehaviour
         nextFireTime = Time.time + fireRate;
 
         GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        projectileObj.SetActive(true);
         Projectile projectile = projectileObj.GetComponent<Projectile>();
 
         if (projectile != null)
@@ -116,6 +117,7 @@ public class Weapon : MonoBehaviour
         nextFireTime = Time.time + fireRate;
 
         GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        projectileObj.SetActive(true);
         Projectile projectile = projectileObj.GetComponent<Projectile>();
 
         if (projectile != null)
