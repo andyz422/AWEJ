@@ -22,6 +22,8 @@ public static class GameBootstrap
         string sceneName = scene.name;
         Debug.Log("GameBootstrap: Loading scene " + sceneName);
 
+        FitCamera(sceneName);
+
         // Setup scene-specific content
         switch (sceneName)
         {
@@ -40,6 +42,32 @@ public static class GameBootstrap
                 break;
             case "GameOverScene":
                 SetupGameOverScene();
+                break;
+        }
+    }
+
+    static void FitCamera(string sceneName)
+    {
+        Camera cam = Camera.main;
+        if (cam == null || !cam.orthographic || cam.GetComponent<CameraAspectFitter>() != null)
+        {
+            return;
+        }
+
+        CameraAspectFitter fitter = cam.gameObject.AddComponent<CameraAspectFitter>();
+        fitter.referenceOrthographicSize = cam.orthographicSize;
+
+        switch (sceneName)
+        {
+            case "BattleScene":
+            case "Battle2Scene":
+                fitter.minVisibleWidth = 14f;
+                break;
+            case "TownScene":
+                fitter.minVisibleWidth = 20f;
+                break;
+            default:
+                fitter.minVisibleWidth = 0f;
                 break;
         }
     }

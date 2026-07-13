@@ -5,7 +5,6 @@ public class MenuControllerUI : MonoBehaviour
 {
     public GameObject newGameButton;
     public GameObject loadGameButton;
-    public GameObject controlsButton;
     public GameObject optionsButton;
     public GameObject quitButton;
 
@@ -28,11 +27,6 @@ public class MenuControllerUI : MonoBehaviour
         {
             var btn = loadGameButton.GetComponent<Button>();
             if (btn != null) btn.onClick.AddListener(OnLoadGame);
-        }
-        if (controlsButton != null)
-        {
-            var btn = controlsButton.GetComponent<Button>();
-            if (btn != null) btn.onClick.AddListener(OnControls);
         }
         if (optionsButton != null)
         {
@@ -58,11 +52,6 @@ public class MenuControllerUI : MonoBehaviour
     void OnLoadGame()
     {
         Debug.Log("Load Game - Not implemented");
-    }
-
-    void OnControls()
-    {
-        Debug.Log("Controls - Not implemented");
     }
 
     void OnOptions()
