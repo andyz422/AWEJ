@@ -39,23 +39,5 @@ public class TownSceneSetup : MonoBehaviour
         scaler.matchWidthOrHeight = 0.5f;
 
         canvasObj.AddComponent<GraphicRaycaster>();
-
-        // Instructions text
-        GameObject textObj = new GameObject("Instructions");
-        textObj.transform.SetParent(canvasObj.transform, false);
-
-        RectTransform rect = textObj.AddComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0.5f, 1);
-        rect.anchorMax = new Vector2(0.5f, 1);
-        rect.pivot = new Vector2(0.5f, 1);
-        rect.anchoredPosition = new Vector2(0, -20);
-        rect.sizeDelta = new Vector2(600, 50);
-
-        Text text = textObj.AddComponent<Text>();
-        text.text = "WASD to move - Approach doors and press E to enter";
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        text.fontSize = 24;
-        text.alignment = TextAnchor.MiddleCenter;
-        text.color = Color.white;
     }
 }
