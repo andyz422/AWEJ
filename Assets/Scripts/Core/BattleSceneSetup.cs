@@ -151,11 +151,15 @@ public class BattleSceneSetup : MonoBehaviour
         SpriteRenderer sprite = prefab.AddComponent<SpriteRenderer>();
         sprite.sprite = LoadSprite("Weapons/laser");
         sprite.color = isPlayerProjectile ? Color.cyan : Color.red;
-        prefab.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+        prefab.transform.localScale = new Vector3(0.25f, 0.25f, 1);
 
         BoxCollider2D collider = prefab.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
         collider.size = new Vector2(1, 1);
+
+        Rigidbody2D rb = prefab.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.gravityScale = 0f;
 
         prefab.AddComponent<Projectile>();
 

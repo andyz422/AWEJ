@@ -153,8 +153,8 @@ MonoBehaviour:
   moveSpeed: 2
   patrolDistance: 6
   patrolTime: 2
-  weapon: {fileID: 0}
-  fireInterval: 0.5
+  weapon: {fileID: 114200000000002}
+  fireInterval: 1.5
   autoFire: 1
   hasTwoPhases: 0
   phase2HealthThreshold: 7
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 0}
   firePoint: {fileID: 0}
-  fireRate: 0.5
+  fireRate: 1.5
   projectileSpeed: 8
   damage: 1
   isPlayerWeapon: 0

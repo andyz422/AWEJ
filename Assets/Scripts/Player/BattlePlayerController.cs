@@ -27,6 +27,37 @@ public class BattlePlayerController : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        UpdateBoundariesFromWalls();
+    }
+
+    void UpdateBoundariesFromWalls()
+    {
+        Collider2D playerCollider = GetComponent<Collider2D>();
+        float halfWidth = playerCollider != null ? playerCollider.bounds.extents.x : 0f;
+
+        GameObject leftWall = GameObject.Find("Wall_Left");
+        if (leftWall != null)
+        {
+            Collider2D wallCollider = leftWall.GetComponent<Collider2D>();
+            if (wallCollider != null)
+            {
+                leftBoundary = wallCollider.bounds.max.x + halfWidth;
+            }
+        }
+
+        GameObject rightWall = GameObject.Find("Wall_Right");
+        if (rightWall != null)
+        {
+            Collider2D wallCollider = rightWall.GetComponent<Collider2D>();
+            if (wallCollider != null)
+            {
+                rightBoundary = wallCollider.bounds.min.x - halfWidth;
+            }
+        }
+    }
+
     void Update()
     {
         if (!canMove)
