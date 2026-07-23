@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 10f;
+    public float speed = 15f;
     public int damage = 1;
     public float lifetime = 5f;
-    public bool isPlayerProjectile = true;
 
-    private Vector2 direction = Vector2.up;
+    private Vector3 direction = Vector3.forward;
     private bool initialized = false;
 
     void Start()
@@ -22,51 +21,25 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        transform.position += new Vector3(direction.x, direction.y, 0) * speed * Time.deltaTime;
-
-        Vector3 screenPos = Camera.main.WorldToViewportPoint(transform.position);
-        if (screenPos.x < -0.1f || screenPos.x > 1.1f || screenPos.y < -0.1f || screenPos.y > 1.1f)
-        {
-            Destroy(gameObject);
-        }
+        transform.position += direction * speed * Time.deltaTime;
     }
 
-    public void Initialize(Vector2 dir, float spd, int dmg, bool isPlayer)
+    public void Initialize(Vector3 dir, float spd, int dmg)
     {
         direction = dir.normalized;
         speed = spd;
         damage = dmg;
-        isPlayerProjectile = isPlayer;
         initialized = true;
-
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
-        if (isPlayerProjectile)
+        if (other.CompareTag("Player"))
         {
-            EnemyController enemy = other.GetComponent<EnemyController>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(damage);
-                Destroy(gameObject);
-            }
-        }
-        else
-        {
-            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damage);
-                Destroy(gameObject);
-            }
+            return;
         }
 
-        if (other.gameObject.name.StartsWith("Wall"))
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 }

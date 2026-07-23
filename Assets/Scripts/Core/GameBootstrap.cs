@@ -33,10 +33,6 @@ public static class GameBootstrap
             case "TownScene":
                 SetupTownScene();
                 break;
-            case "BattleScene":
-            case "Battle2Scene":
-                SetupBattleScene();
-                break;
             case "StoreScene":
                 SetupStoreScene();
                 break;
@@ -59,10 +55,6 @@ public static class GameBootstrap
 
         switch (sceneName)
         {
-            case "BattleScene":
-            case "Battle2Scene":
-                fitter.minVisibleWidth = 14f;
-                break;
             case "TownScene":
                 fitter.minVisibleWidth = 20f;
                 break;
@@ -93,15 +85,6 @@ public static class GameBootstrap
         {
             GameObject setup = new GameObject("TownSetup");
             setup.AddComponent<TownSceneSetup>();
-        }
-    }
-
-    static void SetupBattleScene()
-    {
-        if (Object.FindAnyObjectByType<BattleSceneSetup>() == null)
-        {
-            GameObject setup = new GameObject("BattleSetup");
-            setup.AddComponent<BattleSceneSetup>();
         }
     }
 

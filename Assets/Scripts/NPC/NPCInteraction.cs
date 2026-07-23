@@ -57,7 +57,7 @@ public class NPCInteraction : MonoBehaviour
             return;
         }
 
-        float distance = Vector2.Distance(transform.position, playerTransform.position);
+        float distance = Vector3.Distance(transform.position, playerTransform.position);
         bool wasInRange = playerInRange;
         playerInRange = distance <= interactionRadius;
 
@@ -110,20 +110,7 @@ public class NPCInteraction : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerInRange = true;
-
-            if (exclamationMark != null && canTalk && !hasInteracted)
-            {
-                exclamationMark.SetActive(true);
-            }
-
-            if (isSceneTrigger && !string.IsNullOrEmpty(targetScene))
-            {
-                if (GameManager.Instance != null)
-                {
-                    GameManager.Instance.GoToScene(targetScene);
-                }
-            }
+            HandleTriggerEnter();
         }
     }
 
@@ -131,12 +118,51 @@ public class NPCInteraction : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerInRange = false;
+            HandleTriggerExit();
+        }
+    }
 
-            if (exclamationMark != null)
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            HandleTriggerEnter();
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            HandleTriggerExit();
+        }
+    }
+
+    void HandleTriggerEnter()
+    {
+        playerInRange = true;
+
+        if (exclamationMark != null && canTalk && !hasInteracted)
+        {
+            exclamationMark.SetActive(true);
+        }
+
+        if (isSceneTrigger && !string.IsNullOrEmpty(targetScene))
+        {
+            if (GameManager.Instance != null)
             {
-                exclamationMark.SetActive(false);
+                GameManager.Instance.GoToScene(targetScene);
             }
+        }
+    }
+
+    void HandleTriggerExit()
+    {
+        playerInRange = false;
+
+        if (exclamationMark != null)
+        {
+            exclamationMark.SetActive(false);
         }
     }
 

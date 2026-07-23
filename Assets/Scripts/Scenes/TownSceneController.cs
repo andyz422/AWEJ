@@ -6,7 +6,6 @@ public class TownSceneController : MonoBehaviour
     public Transform playerSpawn;
 
     public NPCInteraction storeDoor;
-    public NPCInteraction battleDoor;
 
     void Start()
     {
@@ -25,12 +24,6 @@ public class TownSceneController : MonoBehaviour
         {
             storeDoor.isSceneTrigger = true;
             storeDoor.targetScene = "StoreScene";
-        }
-
-        if (battleDoor != null)
-        {
-            battleDoor.isSceneTrigger = true;
-            battleDoor.targetScene = "BattleScene";
         }
     }
 }

@@ -9,6 +9,8 @@ public class PlayerHealth : MonoBehaviour
     private bool isInvincible = false;
     private float invincibilityTimer = 0f;
     private SpriteRenderer spriteRenderer;
+    private MeshRenderer meshRenderer;
+    private Color meshOriginalColor;
 
     void Start()
     {
@@ -23,6 +25,15 @@ public class PlayerHealth : MonoBehaviour
         }
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer == null)
+        {
+            meshRenderer = GetComponent<MeshRenderer>();
+            if (meshRenderer != null)
+            {
+                meshOriginalColor = meshRenderer.material.color;
+            }
+        }
     }
 
     void Update()
@@ -30,13 +41,17 @@ public class PlayerHealth : MonoBehaviour
         if (isInvincible)
         {
             invincibilityTimer -= Time.deltaTime;
+            bool flashOn = Mathf.PingPong(Time.time * 10f, 1f) > 0.5f;
 
             if (spriteRenderer != null)
             {
-                float alpha = Mathf.PingPong(Time.time * 10f, 1f) > 0.5f ? 1f : 0.5f;
                 Color color = spriteRenderer.color;
-                color.a = alpha;
+                color.a = flashOn ? 1f : 0.5f;
                 spriteRenderer.color = color;
+            }
+            else if (meshRenderer != null)
+            {
+                meshRenderer.material.color = flashOn ? meshOriginalColor : Color.white;
             }
 
             if (invincibilityTimer <= 0f)
@@ -47,6 +62,10 @@ public class PlayerHealth : MonoBehaviour
                     Color color = spriteRenderer.color;
                     color.a = 1f;
                     spriteRenderer.color = color;
+                }
+                else if (meshRenderer != null)
+                {
+                    meshRenderer.material.color = meshOriginalColor;
                 }
             }
         }

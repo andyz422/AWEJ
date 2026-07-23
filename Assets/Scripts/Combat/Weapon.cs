@@ -5,11 +5,9 @@ public class Weapon : MonoBehaviour
 {
     public GameObject projectilePrefab;
     public Transform firePoint;
-    public float fireRate = 0.5f;
-    public float projectileSpeed = 10f;
+    public float fireRate = 0.4f;
+    public float projectileSpeed = 15f;
     public int damage = 1;
-    public bool isPlayerWeapon = true;
-    public bool useBombInput = false;
 
     private InputSystem_Actions inputActions;
     private InputAction fireAction;
@@ -17,20 +15,9 @@ public class Weapon : MonoBehaviour
 
     void OnEnable()
     {
-        if (isPlayerWeapon)
-        {
-            inputActions = new InputSystem_Actions();
-            inputActions.Enable();
-
-            if (useBombInput)
-            {
-                fireAction = inputActions.Player.Attack;
-            }
-            else
-            {
-                fireAction = inputActions.Player.Jump;
-            }
-        }
+        inputActions = new InputSystem_Actions();
+        inputActions.Enable();
+        fireAction = inputActions.Player.Attack;
     }
 
     void OnDisable()
@@ -56,73 +43,32 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerWeapon)
+        if (fireAction != null && fireAction.WasPressedThisFrame())
         {
-            bool shouldFire = false;
-
-            if (fireAction != null && fireAction.WasPressedThisFrame())
-            {
-                shouldFire = true;
-            }
-
-            if (!useBombInput && Input.GetKeyDown(KeyCode.Space))
-            {
-                shouldFire = true;
-            }
-
-            if (shouldFire)
-            {
-                Fire();
-            }
+            Fire();
         }
     }
 
     public void Fire()
     {
-        if (Time.time < nextFireTime)
-        {
-            return;
-        }
-
-        if (projectilePrefab == null)
-        {
-            return;
-        }
-
-        nextFireTime = Time.time + fireRate;
-
-        GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        projectileObj.SetActive(true);
-        Projectile projectile = projectileObj.GetComponent<Projectile>();
-
-        if (projectile != null)
-        {
-            Vector2 direction = isPlayerWeapon ? Vector2.up : Vector2.down;
-            projectile.Initialize(direction, projectileSpeed, damage, isPlayerWeapon);
-        }
+        FireInDirection(firePoint.forward);
     }
 
-    public void FireInDirection(Vector2 direction)
+    public void FireInDirection(Vector3 direction)
     {
-        if (Time.time < nextFireTime)
-        {
-            return;
-        }
-
-        if (projectilePrefab == null)
+        if (Time.time < nextFireTime || projectilePrefab == null)
         {
             return;
         }
 
         nextFireTime = Time.time + fireRate;
 
-        GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        projectileObj.SetActive(true);
+        GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(direction));
         Projectile projectile = projectileObj.GetComponent<Projectile>();
 
         if (projectile != null)
         {
-            projectile.Initialize(direction.normalized, projectileSpeed, damage, isPlayerWeapon);
+            projectile.Initialize(direction.normalized, projectileSpeed, damage);
         }
     }
 }
