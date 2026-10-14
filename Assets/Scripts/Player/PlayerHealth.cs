@@ -106,8 +106,24 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    // Picks up max/current health changes made outside combat (shop upgrades, respawns).
+    public void SyncFromGameManager()
+    {
+        if (GameManager.Instance != null)
+        {
+            maxHealth = GameManager.Instance.maxPlayerHealth;
+            currentHealth = Mathf.Min(GameManager.Instance.playerHealth, maxHealth);
+        }
+    }
+
     void Die()
     {
+        if (AreaManager.Instance != null)
+        {
+            AreaManager.Instance.HandlePlayerDefeated();
+            return;
+        }
+
         if (GameManager.Instance != null)
         {
             GameManager.Instance.GameOver();

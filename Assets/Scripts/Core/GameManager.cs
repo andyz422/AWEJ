@@ -1,5 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+// How the player arrived at the current location; decides where they spawn.
+public enum AreaEntry
+{
+    Start,
+    FromPreviousArea,
+    FromNextArea,
+    FromBuilding,
+    IntoBuilding,
+    Respawn
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +27,21 @@ public class GameManager : MonoBehaviour
 
     public bool battle1Complete = false;
     public bool battle2Complete = false;
+
+    [Header("World Progress")]
+    public int currentArea = 0;
+    public string currentBuilding = "";
+    public string lastBuilding = "";
+    public AreaEntry pendingEntry = AreaEntry.Start;
+    public string pendingMessage = "";
+    public int loopCount = 0;
+    public List<string> clearedBattles = new List<string>();
+
+    [Header("Loadout")]
+    public string equippedWeapon = WeaponCatalog.StarterWeapon;
+    public List<string> ownedWeapons = new List<string> { WeaponCatalog.StarterWeapon };
+
+    private readonly Dictionary<string, int> upgradeLevels = new Dictionary<string, int>();
 
     void Awake()
     {
@@ -32,13 +59,52 @@ public class GameManager : MonoBehaviour
     public void NewGame()
     {
         Debug.Log("GameManager.NewGame() called");
+        maxPlayerHealth = 7;
         playerHealth = maxPlayerHealth;
         playerCoins = 0;
         battle1Complete = false;
         battle2Complete = false;
         previousScene = "";
+
+        currentArea = 0;
+        currentBuilding = "";
+        lastBuilding = "";
+        pendingEntry = AreaEntry.Start;
+        pendingMessage = "";
+        loopCount = 0;
+        clearedBattles.Clear();
+
+        equippedWeapon = WeaponCatalog.StarterWeapon;
+        ownedWeapons.Clear();
+        ownedWeapons.Add(WeaponCatalog.StarterWeapon);
+        upgradeLevels.Clear();
+
         Debug.Log("Loading TownScene...");
         GoToScene("TownScene");
+    }
+
+    public int GetUpgradeLevel(string upgradeId)
+    {
+        int level;
+        return upgradeLevels.TryGetValue(upgradeId, out level) ? level : 0;
+    }
+
+    public void SetUpgradeLevel(string upgradeId, int level)
+    {
+        upgradeLevels[upgradeId] = level;
+    }
+
+    public bool IsBattleCleared(string buildingId)
+    {
+        return clearedBattles.Contains(buildingId);
+    }
+
+    public void MarkBattleCleared(string buildingId)
+    {
+        if (!clearedBattles.Contains(buildingId))
+        {
+            clearedBattles.Add(buildingId);
+        }
     }
 
     public void TakeDamage(int amount)

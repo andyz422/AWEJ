@@ -13,10 +13,12 @@ public class ThirdPersonController : MonoBehaviour
     private InputSystem_Actions inputActions;
     private float verticalVelocity;
     private bool canMove = true;
+    private float baseMoveSpeed;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+        baseMoveSpeed = moveSpeed;
 
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
         if (meshRenderer != null)
@@ -42,6 +44,26 @@ public class ThirdPersonController : MonoBehaviour
         {
             cameraTransform = Camera.main.transform;
         }
+
+        RefreshStats();
+    }
+
+    // Applies purchased Swift Boots levels on top of the inspector speed.
+    public void RefreshStats()
+    {
+        if (GameManager.Instance != null)
+        {
+            moveSpeed = baseMoveSpeed + GameManager.Instance.GetUpgradeLevel("boots") * ShopCatalog.BootsSpeedPerLevel;
+        }
+    }
+
+    // Moves the player without the CharacterController snapping them back.
+    public void Teleport(Vector3 position, float yaw)
+    {
+        controller.enabled = false;
+        transform.SetPositionAndRotation(position, Quaternion.Euler(0f, yaw, 0f));
+        controller.enabled = true;
+        verticalVelocity = 0f;
     }
 
     void Update()

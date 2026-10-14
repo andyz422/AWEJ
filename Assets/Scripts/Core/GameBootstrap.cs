@@ -86,6 +86,13 @@ public static class GameBootstrap
             GameObject setup = new GameObject("TownSetup");
             setup.AddComponent<TownSceneSetup>();
         }
+
+        // TownScene hosts every area and building interior; AreaManager builds the current one.
+        if (Object.FindAnyObjectByType<AreaManager>() == null)
+        {
+            GameObject areaManager = new GameObject("AreaManager");
+            areaManager.AddComponent<AreaManager>();
+        }
     }
 
     static void SetupStoreScene()
