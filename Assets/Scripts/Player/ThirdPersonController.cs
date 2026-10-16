@@ -75,7 +75,15 @@ public class ThirdPersonController : MonoBehaviour
             blocked = blocked || GameManager.Instance.isInDialogue || GameManager.Instance.isTransitioning;
         }
 
-        Vector2 moveInput = blocked ? Vector2.zero : inputActions.Player.Move.ReadValue<Vector2>();
+        Vector2 moveInput = Vector2.zero;
+        if (!blocked)
+        {
+            moveInput = inputActions.Player.Move.ReadValue<Vector2>();
+            if (moveInput.sqrMagnitude < 0.01f)
+            {
+                moveInput = MobileControls.Move;
+            }
+        }
         Vector3 horizontalMove = Vector3.zero;
 
         if (moveInput.magnitude > 0.1f)

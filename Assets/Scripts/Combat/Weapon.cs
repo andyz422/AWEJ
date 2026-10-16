@@ -84,7 +84,7 @@ public class Weapon : MonoBehaviour
             return;
         }
 
-        if (nextAction.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.Q))
+        if (nextAction.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.Q) || MobileControls.SwapPressed)
         {
             CycleWeapon(1);
         }
@@ -94,7 +94,7 @@ public class Weapon : MonoBehaviour
         }
 
         // Holding fire keeps shooting at the weapon's fire rate.
-        if (fireAction != null && fireAction.IsPressed())
+        if ((fireAction != null && fireAction.IsPressed()) || MobileControls.FireHeld)
         {
             Fire();
         }

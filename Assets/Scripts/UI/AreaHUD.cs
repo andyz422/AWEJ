@@ -100,6 +100,16 @@ public class AreaHUD : MonoBehaviour
 
         SetAlpha(toastText, 0f);
         SetAlpha(bannerText, 0f);
+
+        if (MobileControls.ShouldShow)
+        {
+            MobileControls.Create();
+        }
+    }
+
+    public bool HasPrompt
+    {
+        get { return promptPanel.activeSelf; }
     }
 
     static RectTransform Panel(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size)
@@ -175,6 +185,12 @@ public class AreaHUD : MonoBehaviour
 
     public void SetPrompt(string text)
     {
+        // On phones the Use button replaces the E key.
+        if (text != null && MobileControls.Instance != null)
+        {
+            text = text.Replace("[E] ", "");
+        }
+
         bool show = !string.IsNullOrEmpty(text);
         if (promptPanel.activeSelf != show)
         {
@@ -216,7 +232,7 @@ public class AreaHUD : MonoBehaviour
             }
 
             string weapon = WeaponCatalog.GetOrDefault(gm.equippedWeapon).name;
-            weaponText.text = gm.ownedWeapons.Count > 1 ? weapon + "   (Q to swap)" : weapon;
+            weaponText.text = gm.ownedWeapons.Count > 1 && MobileControls.Instance == null ? weapon + "   (Q to swap)" : weapon;
         }
 
         toastTimer -= Time.deltaTime;

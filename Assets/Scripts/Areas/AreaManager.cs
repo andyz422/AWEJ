@@ -370,7 +370,7 @@ public class AreaManager : MonoBehaviour
         Interactable nearest = FindNearestInteractable();
         hud.SetPrompt(nearest != null && nearest.prompt != null ? nearest.prompt() : null);
 
-        if (nearest != null && nearest.onInteract != null && (interactAction.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.E)))
+        if (nearest != null && nearest.onInteract != null && (interactAction.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.E) || MobileControls.InteractPressed))
         {
             nearest.onInteract();
         }

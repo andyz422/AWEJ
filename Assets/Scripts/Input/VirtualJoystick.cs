@@ -37,6 +37,14 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
         }
     }
 
+    // For joysticks built from code, where the serialized references aren't set in the inspector.
+    public void SetParts(RectTransform baseRect, RectTransform handleRect, float range)
+    {
+        joystickBase = baseRect;
+        joystickHandle = handleRect;
+        handleRange = range;
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         OnDrag(eventData);
