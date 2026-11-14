@@ -25,9 +25,6 @@ public class GameManager : MonoBehaviour
     public bool isTransitioning = false;
     public string previousScene = "";
 
-    public bool battle1Complete = false;
-    public bool battle2Complete = false;
-
     [Header("World Progress")]
     public int currentArea = 0;
     public string currentBuilding = "";
@@ -62,8 +59,6 @@ public class GameManager : MonoBehaviour
         maxPlayerHealth = 7;
         playerHealth = maxPlayerHealth;
         playerCoins = 0;
-        battle1Complete = false;
-        battle2Complete = false;
         previousScene = "";
 
         currentArea = 0;
