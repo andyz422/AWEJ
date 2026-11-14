@@ -1,12 +1,13 @@
 using UnityEditor;
 
-// Import settings for the Blender building models in Assets/Resources/Buildings.
+// Import settings for the Blender models in Assets/Resources/Buildings and /Shopkeepers.
 // They are exported with Apply Transform, metre scale and the door on local -Z.
 public class BuildingModelImporter : AssetPostprocessor
 {
     void OnPreprocessModel()
     {
-        if (!assetPath.Replace('\\', '/').Contains("/Resources/Buildings/"))
+        string path = assetPath.Replace('\\', '/');
+        if (!path.Contains("/Resources/Buildings/") && !path.Contains("/Resources/Shopkeepers/"))
         {
             return;
         }

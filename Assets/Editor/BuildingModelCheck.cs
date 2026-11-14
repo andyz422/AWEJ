@@ -5,7 +5,8 @@ using UnityEngine;
 
 // Builds every area's buildings in the editor and checks the Blender models:
 // each one must load, face its door toward local -Z and roughly cover its collider footprint.
-// Writes a report and pictures to <project>/Temp/BuildingModelCheck/.
+// Also builds every shop interior and checks its 3D shopkeeper.
+// Writes a report and pictures to <project>/Logs/BuildingModelCheck/.
 // Batch use: Unity -batchmode -projectPath . -executeMethod BuildingModelCheck.RunBatch -quit
 public static class BuildingModelCheck
 {
@@ -23,8 +24,13 @@ public static class BuildingModelCheck
     public static void RunBatch()
     {
         int failures = Run();
+        // Batch mode saves its (empty) open-scene list on exit, which the next editor session then
+        // reopens as an Untitled scene. Leave the game's start scene open instead.
+        UnityEditor.SceneManagement.EditorSceneManager.OpenScene(StartScene);
         EditorApplication.Exit(failures == 0 ? 0 : 1);
     }
+
+    const string StartScene = "Assets/Scenes/MenuScene.unity";
 
     static int Run()
     {
@@ -117,6 +123,50 @@ public static class BuildingModelCheck
                 finally
                 {
                     Object.DestroyImmediate(root);
+                }
+
+                // Shop interiors: the 3D shopkeeper must load and stand behind the counter.
+                foreach (BuildingDef b in area.buildings)
+                {
+                    if (b.type != BuildingType.Shop)
+                    {
+                        continue;
+                    }
+                    GameObject shop = new GameObject("CheckShop_" + b.id);
+                    shop.transform.position = new Vector3(0f, -200f, 0f);
+                    try
+                    {
+                        InteriorBuilder.BuildShop(shop.transform, b, new System.Collections.Generic.List<ItemPedestal>());
+                        Transform keeper = shop.transform.Find("Shopkeeper");
+                        Renderer[] parts = keeper != null ? keeper.GetComponentsInChildren<Renderer>() : new Renderer[0];
+                        float height = 0f;
+                        if (parts.Length > 0)
+                        {
+                            Bounds kb = parts[0].bounds;
+                            foreach (Renderer r in parts)
+                            {
+                                kb.Encapsulate(r.bounds);
+                            }
+                            height = kb.max.y - shop.transform.position.y;
+                        }
+                        bool ok = keeper != null && keeper.GetComponent<ShopkeeperIdle>() != null && height > 1.8f && height < 3.2f;
+                        if (!ok)
+                        {
+                            failures++;
+                        }
+                        report.AppendLine(string.Format("{0} shopkeeper {1}: loaded={2} height={3:F2}",
+                            ok ? "OK  " : "FAIL", b.id, keeper != null, height));
+
+                        Vector3 o = shop.transform.position;
+                        cam.backgroundColor = Color.black;
+                        cam.transform.position = o + new Vector3(1.2f, 2.4f, -1.5f);
+                        cam.transform.LookAt(o + new Vector3(0f, 1.5f, 6.2f));
+                        Save(cam, rt, Path.Combine(OutDir, "shopkeeper_" + b.id + ".png"));
+                    }
+                    finally
+                    {
+                        Object.DestroyImmediate(shop);
+                    }
                 }
             }
         }

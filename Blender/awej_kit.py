@@ -27,7 +27,8 @@ def reset_scene(name):
         for m in keep:
             m.use_fake_user = False
     sc = bpy.data.scenes.new(name)
-    bpy.context.window.scene = sc
+    if bpy.context.window:  # None when Blender runs headless (-b)
+        bpy.context.window.scene = sc
     return sc
 
 def coll(name, parent=None):

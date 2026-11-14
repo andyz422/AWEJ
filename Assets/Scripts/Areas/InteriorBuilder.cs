@@ -85,18 +85,15 @@ public static class InteriorBuilder
         WorldKit.Prim(PrimitiveType.Cube, root, new Vector3(0f, 1.25f, 4.5f), new Vector3(10.4f, 0.12f, 1.7f), b.roofColor, false);
         WorldKit.Prim(PrimitiveType.Cylinder, root, new Vector3(3.5f, 1.45f, 4.5f), new Vector3(0.5f, 0.15f, 0.5f), new Color(1f, 0.82f, 0.2f), false);
 
-        Sprite keeper = Resources.Load<Sprite>(b.shopkeeperSprite);
+        // 3D shopkeeper made in Blender (Blender/build_shopkeepers.py), one per shop id.
+        GameObject keeper = Resources.Load<GameObject>("Shopkeepers/" + b.id);
         if (keeper != null)
         {
-            GameObject sprite = new GameObject("Shopkeeper");
-            sprite.transform.SetParent(root, false);
-            sprite.transform.localPosition = new Vector3(0f, 2.3f, 6.2f);
-            SpriteRenderer spriteRenderer = sprite.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = keeper;
-            float scale = 2.6f / Mathf.Max(0.01f, keeper.bounds.size.y);
-            sprite.transform.localScale = Vector3.one * scale;
-            sprite.AddComponent<Billboard>();
-            sprite.AddComponent<Bobber>().amplitude = 0.06f;
+            GameObject npc = Object.Instantiate(keeper, root, false);
+            npc.name = "Shopkeeper";
+            npc.transform.localPosition = new Vector3(0f, 0f, 6.2f);
+            npc.transform.localRotation = Quaternion.identity;
+            npc.AddComponent<ShopkeeperIdle>();
         }
         else
         {

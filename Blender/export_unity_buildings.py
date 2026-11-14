@@ -64,7 +64,7 @@ def export_material(src):
     m.diffuse_color = color
     return m
 
-def export_building(root, bid, tmp, dg):
+def export_building(root, bid, tmp, dg, out_dir=None):
     for ob in list(tmp.objects):
         bpy.data.objects.remove(ob, do_unlink=True)
     inv = root.matrix_world.inverted()
@@ -91,7 +91,7 @@ def export_building(root, bid, tmp, dg):
         bpy.ops.object.join()
     me = target.data
     tris = sum(len(p.vertices) - 2 for p in me.polygons)
-    path = os.path.join(OUT_DIR, bid + ".fbx")
+    path = os.path.join(out_dir or OUT_DIR, bid + ".fbx")
     for ob in tmp.objects:
         ob.select_set(ob == target, view_layer=tmp.view_layers[0])
     with bpy.context.temp_override(scene=tmp, view_layer=tmp.view_layers[0], active_object=target, object=target,
@@ -127,4 +127,5 @@ def main():
             bpy.data.materials.remove(m)
     return report
 
-result = {"out": OUT_DIR, "exported": main()}
+if __name__ == "__main__":
+    result = {"out": OUT_DIR, "exported": main()}

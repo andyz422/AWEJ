@@ -33,7 +33,6 @@ public class BuildingDef
 
     // Shop
     public string[] stock = new string[0];
-    public string shopkeeperSprite = "Characters/squirtle";
     public string[] shopkeeperLines = new string[0];
 
     // Battle
@@ -272,7 +271,6 @@ public static class AreaDatabase
                     position = new Vector2(-24f, 18f), size = new Vector2(12f, 10f), facing = -90f,
                     bodyColor = new Color(0.95f, 0.88f, 0.7f), roofColor = new Color(0.25f, 0.45f, 0.7f),
                     stock = new[] { "potion", "hp", "boots", "dmg" },
-                    shopkeeperSprite = "Characters/squirtle",
                     shopkeeperLines = new[] { "Welcome, traveler! Stock up before heading north.", "The gate north only opens for proven fighters." }
                 },
                 new BuildingDef
@@ -281,7 +279,6 @@ public static class AreaDatabase
                     position = new Vector2(-24f, -18f), size = new Vector2(10f, 10f), facing = -90f,
                     bodyColor = new Color(0.62f, 0.6f, 0.58f), roofColor = new Color(0.8f, 0.55f, 0.15f),
                     stock = new[] { "twin", "repeater", "rate" },
-                    shopkeeperSprite = "Characters/diglett",
                     shopkeeperLines = new[] { "Gears, springs, blasters! Mind the sparks.", "Press Q or 1/2 to swap between weapons you own." },
                     interiorFloorColor = new Color(0.4f, 0.4f, 0.42f), interiorWallColor = new Color(0.6f, 0.55f, 0.5f)
                 },
@@ -348,7 +345,6 @@ public static class AreaDatabase
                     position = new Vector2(-30f, 22f), size = new Vector2(10f, 10f), facing = 0f,
                     bodyColor = new Color(0.95f, 0.9f, 0.78f), roofColor = new Color(0.85f, 0.15f, 0.12f),
                     stock = new[] { "potion", "hp", "boots" },
-                    shopkeeperSprite = "Characters/squirtle",
                     shopkeeperLines = new[] { "Herbs for what ails you, friend.", "The Beetle Den beetles charge in straight lines. Sidestep!" },
                     interiorFloorMaterial = "M_YFGM_SoilMoss", interiorWallColor = new Color(0.8f, 0.72f, 0.55f)
                 },
@@ -358,7 +354,6 @@ public static class AreaDatabase
                     position = new Vector2(-18f, -25f), size = new Vector2(9f, 9f), facing = -90f,
                     bodyColor = new Color(0.5f, 0.38f, 0.25f), roofColor = new Color(0.2f, 0.4f, 0.2f),
                     stock = new[] { "twin", "repeater", "scatter", "dmg" },
-                    shopkeeperSprite = "Characters/charmander",
                     shopkeeperLines = new[] { "A ranger travels light but shoots heavy.", "Spitters keep their distance. Close in fast." },
                     interiorFloorColor = new Color(0.45f, 0.32f, 0.2f), interiorWallColor = new Color(0.5f, 0.4f, 0.28f)
                 },
@@ -427,7 +422,6 @@ public static class AreaDatabase
                     position = new Vector2(-22f, 15f), size = new Vector2(14f, 10f), facing = -90f,
                     bodyColor = new Color(0.9f, 0.3f, 0.25f), roofColor = new Color(0.95f, 0.85f, 0.4f),
                     stock = new[] { "scatter", "repeater", "rate", "dmg" },
-                    shopkeeperSprite = "Characters/charmander",
                     shopkeeperLines = new[] { "Finest wares this side of the dunes!", "The Colosseum crowd loves a good Scatter Cannon." },
                     interiorFloorColor = new Color(0.75f, 0.35f, 0.25f), interiorWallColor = new Color(0.95f, 0.8f, 0.45f)
                 },
@@ -437,7 +431,6 @@ public static class AreaDatabase
                     position = new Vector2(-22f, -15f), size = new Vector2(10f, 10f), facing = -90f,
                     bodyColor = new Color(0.92f, 0.85f, 0.7f), roofColor = new Color(0.3f, 0.6f, 0.75f),
                     stock = new[] { "potion", "hp", "boots" },
-                    shopkeeperSprite = "Characters/squirtle",
                     shopkeeperLines = new[] { "Water and remedies. Both priceless out here.", "Stay hydrated, and stay out of the Scorpion Pit unless you mean it." },
                     interiorFloorColor = new Color(0.8f, 0.72f, 0.55f), interiorWallColor = new Color(0.9f, 0.88f, 0.8f)
                 },
@@ -505,7 +498,6 @@ public static class AreaDatabase
                     position = new Vector2(35f, -20f), size = new Vector2(12f, 12f), facing = 90f,
                     bodyColor = new Color(0.95f, 0.97f, 1f), roofColor = new Color(0.6f, 0.8f, 0.95f),
                     stock = new[] { "frost", "scatter", "rate", "dmg" },
-                    shopkeeperSprite = "Characters/squirtle",
                     shopkeeperLines = new[] { "Brr! The Frost Lance pierces right through a line of foes.", "Yetis hit hard. Keep moving." },
                     interiorFloorMaterial = "M_YFGM_FrozenGrass", interiorWallColor = new Color(0.85f, 0.92f, 1f)
                 },
@@ -515,7 +507,6 @@ public static class AreaDatabase
                     position = new Vector2(-15f, -20f), size = new Vector2(12f, 10f), facing = -90f,
                     bodyColor = new Color(0.45f, 0.3f, 0.2f), roofColor = new Color(0.95f, 0.97f, 1f), trimColor = new Color(0.9f, 0.2f, 0.2f),
                     stock = new[] { "potion", "hp", "boots" },
-                    shopkeeperSprite = "Characters/charmander",
                     shopkeeperLines = new[] { "Warm up by the fire. Cocoa's on the house, tonics aren't.", "The west gate leads somewhere much, much hotter." },
                     interiorFloorColor = new Color(0.45f, 0.3f, 0.2f), interiorWallColor = new Color(0.6f, 0.42f, 0.28f)
                 },
@@ -592,7 +583,6 @@ public static class AreaDatabase
                     position = new Vector2(-28f, -5f), size = new Vector2(10f, 10f), facing = -90f,
                     bodyColor = new Color(0.2f, 0.18f, 0.18f), roofColor = new Color(1f, 0.45f, 0.1f),
                     stock = new[] { "ember", "frost", "dmg", "rate" },
-                    shopkeeperSprite = "Characters/charmander",
                     shopkeeperLines = new[] { "Forged in the heart of the volcano. Handle with care.", "The Magma King summons slimes when wounded." },
                     interiorFloorMaterial = "M_YFGM_Burnt", interiorWallColor = new Color(0.3f, 0.22f, 0.2f)
                 },
@@ -602,7 +592,6 @@ public static class AreaDatabase
                     position = new Vector2(28f, 38f), size = new Vector2(10f, 10f), facing = 90f,
                     bodyColor = new Color(0.35f, 0.33f, 0.33f), roofColor = new Color(0.6f, 0.15f, 0.12f),
                     stock = new[] { "potion", "hp" },
-                    shopkeeperSprite = "Characters/diglett",
                     shopkeeperLines = new[] { "Rest a moment. The throne room waits for no one... but it can wait for you.", "Beyond the north gate lies the road home." },
                     interiorFloorMaterial = "M_YFGM_Mars", interiorWallColor = new Color(0.3f, 0.25f, 0.25f)
                 },
