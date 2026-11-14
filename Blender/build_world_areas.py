@@ -642,7 +642,7 @@ def style_arena(b, c, root, theme):
         box("GatePylon", (1.6, 2.2, h1 + h2 + 2.6), (sx * 2.6, -R, (h1 + h2 + 2.6) / 2), stone, c, root, bevel=0.08)
         cyl("PylonTop", 0.9, 0.5, (sx * 2.6, -R, h1 + h2 + 2.6), accent, c, root, segs=12)
     box("GateBeam", (6.8, 2.0, 1.0), (0, -R, h1 + 0.5), stone, c, root, bevel=0.06)
-    door_assembly(root, c, R + 0.6, b['type'] == 'Shop', accent, 0.0)
+    door_assembly(root, c, R, b['type'] == 'Shop', accent, 0.0)
     signboard(root, c, b['name'], (0, -R - 1.1, h1 + 0.5), b['type'] == 'Shop', width=max(4.2, len(b['name']) * 0.34 + 1.4))
     for sx in (-1, 1):
         brazier((sx * 4.4, -R - 1.6, 0), c, root, stone if theme != 'Volcano' else M['basalt'])

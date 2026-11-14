@@ -222,10 +222,19 @@ public static class AreaBuilder
         bool isShop = b.type == BuildingType.Shop;
         Vector3 doorFront = new Vector3(0f, 0f, -doorDepth);
 
-        WorldKit.Prim(PrimitiveType.Cube, t, doorFront + new Vector3(0f, 1.5f, -0.1f), new Vector3(2.4f, 3f, 0.25f), DoorColor, false);
-        WorldKit.Prim(PrimitiveType.Cube, t, doorFront + new Vector3(0f, 3.1f, -0.15f), new Vector3(2.9f, 0.3f, 0.3f), b.trimColor, false);
-        WorldKit.Prim(PrimitiveType.Cube, t, doorFront + new Vector3(0f, 0.01f, -1.2f), new Vector3(2.6f, 0.02f, 2f), isShop ? new Color(0.75f, 0.6f, 0.2f) : new Color(0.6f, 0.15f, 0.12f), false);
-        BuildDoorIcon(t, doorFront + new Vector3(0f, 3.9f, -0.3f), isShop);
+        // Blender model, if there is one: it brings its own door, mat and sign.
+        GameObject model = BuildingModels.Replace(t, b.id);
+        if (model != null)
+        {
+            labelHeight = Mathf.Max(labelHeight, BuildingModels.TopHeight(model, t));
+        }
+        else
+        {
+            WorldKit.Prim(PrimitiveType.Cube, t, doorFront + new Vector3(0f, 1.5f, -0.1f), new Vector3(2.4f, 3f, 0.25f), DoorColor, false);
+            WorldKit.Prim(PrimitiveType.Cube, t, doorFront + new Vector3(0f, 3.1f, -0.15f), new Vector3(2.9f, 0.3f, 0.3f), b.trimColor, false);
+            WorldKit.Prim(PrimitiveType.Cube, t, doorFront + new Vector3(0f, 0.01f, -1.2f), new Vector3(2.6f, 0.02f, 2f), isShop ? new Color(0.75f, 0.6f, 0.2f) : new Color(0.6f, 0.15f, 0.12f), false);
+            BuildDoorIcon(t, doorFront + new Vector3(0f, 3.9f, -0.3f), isShop);
+        }
 
         string kind;
         if (isShop)
