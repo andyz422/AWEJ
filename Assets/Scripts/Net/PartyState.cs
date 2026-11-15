@@ -433,6 +433,25 @@ public class PartyState : NetworkBehaviour
         return "Player " + (clientId + 1);
     }
 
+    // ---------------------------------------------------------------- per-device profiles (rejoin)
+
+    // Server only: each device's upgrades for this run, so a dropped player gets them back on rejoin.
+    private readonly Dictionary<string, ProfileSnapshot> savedProfiles = new Dictionary<string, ProfileSnapshot>();
+
+    public bool TryGetProfile(string device, out ProfileSnapshot snapshot)
+    {
+        return savedProfiles.TryGetValue(device ?? "", out snapshot);
+    }
+
+    public void SaveProfile(ProfileSnapshot snapshot)
+    {
+        string device = snapshot.device.ToString();
+        if (!string.IsNullOrEmpty(device))
+        {
+            savedProfiles[device] = snapshot;
+        }
+    }
+
     // ---------------------------------------------------------------- shared purse
 
     public void RequestPurchase(string itemId, int price)

@@ -754,6 +754,7 @@ public class AreaManager : MonoBehaviour
 
         if (downed != reviveTarget)
         {
+            ReportRevive(reviveTarget, 0f);
             reviveTarget = downed;
             reviveProgress = 0f;
         }
@@ -765,6 +766,7 @@ public class AreaManager : MonoBehaviour
         bool holding = interactAction.IsPressed() || Input.GetKey(KeyCode.E) || MobileControls.InteractHeld;
         reviveProgress = holding ? reviveProgress + Time.deltaTime : 0f;
         string name = downed.Net != null ? downed.Net.DisplayName : "your teammate";
+        ReportRevive(downed, reviveProgress / NetPlayer.ReviveSeconds);
 
         if (reviveProgress >= NetPlayer.ReviveSeconds)
         {
@@ -781,6 +783,25 @@ public class AreaManager : MonoBehaviour
             ? "Reviving " + name + "...  " + Mathf.FloorToInt(reviveProgress / NetPlayer.ReviveSeconds * 100f) + "%"
             : "Hold [E] to revive " + name);
         return true;
+    }
+
+    // Shares revive progress so everyone sees the ring fill (throttled; a 0 is always sent).
+    private float lastReportedRevive;
+    private float nextReviveReport;
+
+    void ReportRevive(PlayerAvatar target, float fraction)
+    {
+        if (target == null || target.Net == null || !target.Net.IsSpawned)
+        {
+            return;
+        }
+        bool stopped = fraction <= 0f && lastReportedRevive > 0f;
+        if (stopped || (fraction > 0f && Time.time >= nextReviveReport))
+        {
+            target.Net.ReportReviveProgress(fraction);
+            lastReportedRevive = fraction;
+            nextReviveReport = Time.time + 0.15f;
+        }
     }
 
     // Host: everyone is down. The whole party wakes up somewhere safe at full health.

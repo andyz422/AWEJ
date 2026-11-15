@@ -161,6 +161,19 @@ public class NetAutoTest : MonoBehaviour
         Check(guest.MaxHealth.Value == PlayerProfile.StartHealth + 1, "guest got the Heart Container (max hp " + guest.MaxHealth.Value + ")");
         Check(GM.maxPlayerHealth == PlayerProfile.StartHealth, "host's own upgrades unchanged (max hp " + GM.maxPlayerHealth + ")");
 
+        // The guest drops out and rejoins: their upgrades come back.
+        yield return WaitFor(() => NetworkManager.Singleton.ConnectedClientsIds.Count == 1, 20f);
+        Check(NetworkManager.Singleton.ConnectedClientsIds.Count == 1, "guest dropped out");
+        yield return WaitFor(() =>
+        {
+            NetPlayer back = FindPlayer(false);
+            return NetworkManager.Singleton.ConnectedClientsIds.Count == 2 && back != null && back.MaxHealth.Value == PlayerProfile.StartHealth + 1;
+        }, 45f);
+        guest = FindPlayer(false);
+        Check(guest != null && guest.MaxHealth.Value == PlayerProfile.StartHealth + 1,
+            "guest rejoined with their Heart Container kept (max hp " + (guest != null ? guest.MaxHealth.Value : 0) + ")");
+        yield return new WaitForSeconds(1.5f);
+
         // Downed and revived.
         guest.HurtRpc(99);
         yield return WaitFor(() => guest.Downed.Value, 10f);
@@ -169,6 +182,18 @@ public class NetAutoTest : MonoBehaviour
         Check(AreaHUD.Instance != null && AreaHUD.Instance.FirstTeammateStatus == "Mochi DOWN",
             "party health HUD shows downed teammate (" + (AreaHUD.Instance != null ? AreaHUD.Instance.FirstTeammateStatus : "none") + ")");
         Check(PlayerRegistry.StandingCount == 1, "enemies/coins now ignore the downed guest");
+
+        // Revive ring: the reviver's progress is shared (the guest's device reports what it sees).
+        for (float t = 0f; t < 2f; t += 0.1f)
+        {
+            guest.ReportReviveProgress(Mathf.Min(0.6f, t / 2f + 0.2f));
+            yield return new WaitForSeconds(0.1f);
+        }
+        Check(guest.ReviveProgress.Value > 0.5f, "revive ring progress shared (" + guest.ReviveProgress.Value.ToString("0.00") + ")");
+        Transform ringVisual = guest.transform.Find("ReviveRing/Visual");
+        Check(ringVisual != null && ringVisual.gameObject.activeSelf, "revive ring shown over the downed guest on the host's screen");
+        yield return new WaitForSeconds(0.8f);
+        Check(guest.ReviveProgress.Value == 0f, "ring empties when the reviver stops");
         guest.ReviveRpc();
         yield return WaitFor(() => !guest.Downed.Value && guest.Health.Value > 0, 10f);
         Check(!guest.Downed.Value && guest.Health.Value > 0, "guest revived (hp=" + guest.Health.Value + "/" + guest.MaxHealth.Value + ")");
@@ -222,6 +247,27 @@ public class NetAutoTest : MonoBehaviour
 
     // ---------------------------------------------------------------- client
 
+    bool rejoining;
+
+    // Client: leave the session and join again, then check our upgrades came back from the host.
+    IEnumerator Rejoin()
+    {
+        rejoining = true;
+        yield return new WaitForSeconds(3f); // let the profile backup reach the host
+        Log("leaving to test rejoin (max hp " + GM.maxPlayerHealth + ")");
+        NetSession.Instance.Leave();
+        yield return WaitFor(() => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == NetSession.MenuScene
+            && !NetworkManager.Singleton.IsListening, 10f);
+        yield return new WaitForSeconds(2f);
+        GM.ResetRun(); // a fresh profile, like a player relaunching the app
+        GM.playerCharacter = "mochi";
+        Check(GM.maxPlayerHealth == PlayerProfile.StartHealth, "profile reset before rejoining");
+        Check(NetSession.Ensure().JoinLan("127.0.0.1"), "rejoin started");
+        yield return WaitFor(() => GM.maxPlayerHealth == PlayerProfile.StartHealth + 1, 40f);
+        Check(GM.maxPlayerHealth == PlayerProfile.StartHealth + 1, "upgrades restored after rejoining (max hp " + GM.maxPlayerHealth + ")");
+        rejoining = false;
+    }
+
     IEnumerator Client()
     {
         yield return WaitFor(() => GM != null, 10f);
@@ -230,10 +276,18 @@ public class NetAutoTest : MonoBehaviour
         yield return new WaitForSeconds(4f); // give the host time to start listening
         Check(NetSession.Ensure().JoinLan("127.0.0.1"), "client started");
         bool ended = false;
-        NetSession.Ended += reason => ended = true;
+        NetSession.Ended += reason =>
+        {
+            if (!rejoining)
+            {
+                ended = true;
+            }
+        };
 
         int votedFor = -1;
         bool bought = false;
+        bool rejoined = false;
+        bool ringSeen = false;
         float nextReport = 0f;
         float end = Time.realtimeSinceStartup + 300f;
         while (!ended && Time.realtimeSinceStartup < end)
@@ -252,6 +306,22 @@ public class NetAutoTest : MonoBehaviour
                     bought = true;
                     Log("buying hp upgrade: " + ShopCatalog.Purchase("hp"));
                 }
+            }
+
+            // Once the upgrade landed, drop out and come back once: it should still be there.
+            if (bought && !rejoined && !rejoining && GM.maxPlayerHealth == PlayerProfile.StartHealth + 1)
+            {
+                rejoined = true;
+                StartCoroutine(Rejoin());
+            }
+
+            NetPlayer self = FindPlayer(true);
+            if (!ringSeen && self != null && self.Downed.Value && self.ReviveProgress.Value > 0f)
+            {
+                Transform visual = self.transform.Find("ReviveRing/Visual");
+                ringSeen = true;
+                Check(visual != null && visual.gameObject.activeSelf,
+                    "downed guest sees their own revive ring filling (" + Mathf.RoundToInt(self.ReviveProgress.Value * 100f) + "%)");
             }
             if (Time.realtimeSinceStartup >= nextReport)
             {

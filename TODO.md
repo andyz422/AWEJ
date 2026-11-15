@@ -8,10 +8,7 @@ Co-op for up to 4 players works over Wi-Fi and passes the automated two-player t
 
 - [ ] **Link the project to Unity Gaming Services** (Edit → Project Settings → Services, from your Unity account) so **Host Online / Join Online** room codes work. Until then those buttons show a "not set up yet" message.
 - [ ] Test online room codes once linked: host on one device, join with the code from another network.
-- [ ] Test co-op on real iPhones (needs the Codemagic/TestFlight pipeline below): lag, joining over Wi-Fi, and what happens when iOS pauses the app in the background (a guest switching apps currently drops out).
-- [ ] Reconnecting: a player who drops can rejoin but starts with a fresh profile (upgrades bought earlier in the run are lost).
-- [ ] The Local Network permission prompt on iOS (Wi-Fi play) needs an `NSLocalNetworkUsageDescription` string in Info.plist.
-- [ ] Revive feedback: a progress ring over the downed player, so teammates can see someone is being revived.
+- [ ] Test co-op on real iPhones once iOS builds are set up for this repo (see the Codemagic checklist below): lag, joining over Wi-Fi (the Local Network permission prompt should appear on first Wi-Fi join), and what happens when iOS pauses the app in the background (a guest switching apps currently drops out; they can rejoin and keep their upgrades).
 - [ ] Save/load (the **Load Game** button) is still unimplemented for both solo and co-op.
 
 ## Graphics (iPhone-friendly upgrade path)

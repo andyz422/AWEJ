@@ -36,7 +36,8 @@ The host presses **Start Game** when everyone is in. Rules:
 
 - **Doors and gates are voted on.** Using one asks the whole party; everyone must say yes within 20 seconds (Y/N or the on-screen buttons).
 - **Money is shared, upgrades are personal.** Every coin and battle reward goes into one purse; each player buys their own weapons and upgrades from it.
-- **Downed, not dead.** At 0 HP you go down; a teammate holds **Use** next to you for 4 seconds to revive you at half health. If everyone is down, the party wakes up somewhere safe, fully healed.
+- **Downed, not dead.** At 0 HP you go down; a teammate holds **Use** next to you for 4 seconds to revive you at half health. A ring over the downed player fills as they're revived (everyone sees it). If everyone is down, the party wakes up somewhere safe, fully healed.
+- **Dropping out is fine.** A player who disconnects can rejoin the same game and gets their weapons and upgrades back (the host remembers each device for the run).
 - **Harder with friends.** Enemy health +60% and waves +50% per extra player.
 
 Solo **New Game** never uses the network.
@@ -47,7 +48,7 @@ How it works: the host runs the shared world (enemies, battles, hits, coins, the
 
 - In the editor: **Window → Multiplayer → Multiplayer Play Mode** runs up to 4 players in one editor.
 - Automated: **AWEJ → Build Co-op Test Player**, then run two copies from `Builds/NetTest`:
-  `AWEJ.exe -batchmode -nographics -awejtest host -logFile host.log` and the same with `-awejtest client`. The host log ends with `NETTEST HOST DONE`.
+  `AWEJ.exe -batchmode -nographics -awejtest host -awejid host1 -logFile host.log` and `AWEJ.exe -batchmode -nographics -awejtest client -awejid guest1 -logFile client.log` (`-awejid` gives each copy its own device identity). The host log ends with `NETTEST HOST DONE`.
 - After changing the network prefabs' scripts, run **AWEJ → Setup Multiplayer**.
 
 ## TODO
