@@ -2,12 +2,50 @@
 
 Open work, roughly in priority order. Done items are removed rather than ticked.
 
+## Pick up here (last updated 2026-11-15, commit `46874f4`)
+
+### Where things stand
+
+- **Co-op (up to 4 players)** is built: Wi-Fi host/join, online room codes (code only, see below), door votes, shared purse with personal upgrades, downed + 4 s revive with a progress ring, party wipe respawn, rejoining keeps upgrades, enemy scaling, party health HUD. The automated two-player test passes (30 host checks + guest checks).
+- **Graphics step 1** is done: URP, Linear colour, per-area sky/lighting/fog/post-processing.
+- **Character select**: four pill characters (Bean, Mochi, Sprout, Pip) after **New Game** / **Co-op**.
+- **Blender assets**: 20 building models and 10 shopkeepers in `Assets/Resources/`, built by scripts in `Blender/`.
+
+### Verified only by automated/headless runs, never played by a person yet
+
+Most of the recent work was checked with headless Unity runs and the scripted co-op test, not by playing. Worth one real play session first:
+
+- [ ] Solo: **New Game** → character select → walk around town, enter a shop and a battle. Check the URP look, the character model and its bounce, the shopkeepers.
+- [ ] Co-op in the editor: **Window → Multiplayer → Multiplayer Play Mode**, enable 1 extra player, press Play. Host on Wi-Fi in one window, **Join** `127.0.0.1` in the other. Try a door vote (on-screen Yes/No), a battle, buying something, going down and reviving (hold E next to the teammate, watch the ring), leaving and rejoining.
+- [ ] Note anything that looks or feels off; the HUD layout and vote panel have only been seen in code.
+
+### Next steps, in order
+
+1. [ ] **Link Unity Gaming Services**: sign in to Unity in the editor → **Edit → Project Settings → Services** → create or choose a project ID → check **Relay** is enabled on cloud.unity.com → commit the changed `ProjectSettings/ProjectSettings.asset`.
+2. [ ] **Test online room codes**: build for Windows, host online on one machine, join with the code from another network (a phone hotspot works).
+3. [ ] **Set up iOS builds for this repo**: Codemagic/TestFlight already works in another project, so reuse its `codemagic.yaml`, signing and Unity licence setup (checklist at the bottom of this file). iOS Build Support isn't installed on this PC; Codemagic's machines build iOS.
+4. [ ] **Test on iPhones** (TestFlight): touch controls, frame rate with URP, Wi-Fi co-op (the Local Network prompt should appear on first join), online co-op over mobile data, switching apps mid-game.
+5. [ ] Then continue with the graphics steps and touch-control fixes below.
+
+### Handy tools (AWEJ menu in the Unity editor)
+
+- **Render Area Previews**: renders every area and a shop with the URP look to `Logs/AreaPreviews/`.
+- **Check Building Models**: verifies building models and shopkeepers load and face the right way.
+- **Build Co-op Test Player**: builds `Builds/NetTest/AWEJ.exe` for the automated two-player test (commands in the README).
+- **Setup Multiplayer**: recreates the network prefabs; run after changing `NetPlayer`/`EnemyNet`/`PartyState` components.
+- **Setup URP**, **Render Character Portraits**: one-off setup/regeneration tools.
+
+### Good to know
+
+- Only one Unity instance can open the project: close the editor before running any headless/batch command.
+- Pushing goes straight to `master` (single-branch repo).
+- Blender scripts (`Blender/*.py`) rebuild the scenes and re-export models; `Blender/AWEJ_World.blend` holds all the Blender scenes.
+
 ## Co-op (multiplayer)
 
 Co-op for up to 4 players works over Wi-Fi and passes the automated two-player test (`Builds/NetTest`, see README). Still to do:
 
-- [ ] **Link the project to Unity Gaming Services** (Edit → Project Settings → Services, from your Unity account) so **Host Online / Join Online** room codes work. Until then those buttons show a "not set up yet" message.
-- [ ] Test online room codes once linked: host on one device, join with the code from another network.
+- [ ] Link Unity Gaming Services and test online room codes (steps 1–2 above). Until linked, **Host Online / Join Online** show a "not set up yet" message.
 - [ ] Test co-op on real iPhones once iOS builds are set up for this repo (see the Codemagic checklist below): lag, joining over Wi-Fi (the Local Network permission prompt should appear on first Wi-Fi join), and what happens when iOS pauses the app in the background (a guest switching apps currently drops out; they can rejoin and keep their upgrades).
 - [ ] Save/load (the **Load Game** button) is still unimplemented for both solo and co-op.
 
