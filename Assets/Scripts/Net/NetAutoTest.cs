@@ -95,6 +95,10 @@ public class NetAutoTest : MonoBehaviour
         Check(PartyState.Instance != null && PartyState.Instance.PlayerCount.Value == 2, "party counts 2 players");
         Check(PlayerRegistry.Local != null && PlayerRegistry.Local.Net != null && PlayerRegistry.Local.Net.IsOwner,
             "host's local player is its own (camera/interactions follow the right player)");
+        yield return null;
+        string expectedHud = "Mochi " + PlayerProfile.StartHealth + " / " + PlayerProfile.StartHealth;
+        Check(AreaHUD.Instance != null && AreaHUD.Instance.ShownTeammateCount == 1 && AreaHUD.Instance.FirstTeammateStatus == expectedHud,
+            "party health HUD shows teammate (" + (AreaHUD.Instance != null ? AreaHUD.Instance.FirstTeammateStatus : "none") + ")");
 
         // Door vote into a battle building.
         yield return new WaitForSeconds(1f);
@@ -136,7 +140,10 @@ public class NetAutoTest : MonoBehaviour
         // Downed and revived.
         guest.HurtRpc(99);
         yield return WaitFor(() => guest.Downed.Value, 10f);
+        yield return null;
         Check(guest.Downed.Value, "guest went down at 0 HP (not defeated)");
+        Check(AreaHUD.Instance != null && AreaHUD.Instance.FirstTeammateStatus == "Mochi DOWN",
+            "party health HUD shows downed teammate (" + (AreaHUD.Instance != null ? AreaHUD.Instance.FirstTeammateStatus : "none") + ")");
         Check(PlayerRegistry.StandingCount == 1, "enemies/coins now ignore the downed guest");
         guest.ReviveRpc();
         yield return WaitFor(() => !guest.Downed.Value && guest.Health.Value > 0, 10f);

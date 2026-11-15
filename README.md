@@ -3,7 +3,7 @@
 A 3D Unity game for iPhone (with a PC build for development). You explore areas, enter shops and battle buildings, and shoot enemies.
 
 - **Unity:** 6000.1.13f1
-- **Scenes (build order):** `MenuScene` → `TownScene` (hosts every area and building interior) → `StoreScene`, `GameOverScene`
+- **Scenes (build order):** `MenuScene` → `TownScene` (hosts every area and building interior)
 - **Input:** Input System package plus legacy input (Active Input Handling = Both)
 
 ## Controls
