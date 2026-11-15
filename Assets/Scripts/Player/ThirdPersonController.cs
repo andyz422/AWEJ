@@ -25,6 +25,9 @@ public class ThirdPersonController : MonoBehaviour
         {
             meshRenderer.material.color = new Color(0.2f, 0.4f, 0.9f, 1f);
         }
+
+        // The chosen pill character replaces the plain capsule (which stays as the fallback).
+        PlayerCharacters.ApplyTo(gameObject);
     }
 
     void OnEnable()

@@ -1,13 +1,28 @@
 using UnityEditor;
 
-// Import settings for the Blender models in Assets/Resources/Buildings and /Shopkeepers.
-// They are exported with Apply Transform, metre scale and the door on local -Z.
+// Import settings for the Blender models in Assets/Resources/Buildings, /Shopkeepers and /Players,
+// plus the character portraits in /Players/Portraits (UI sprites).
+// Models are exported with Apply Transform and metre scale.
 public class BuildingModelImporter : AssetPostprocessor
 {
+    void OnPreprocessTexture()
+    {
+        if (!assetPath.Replace('\\', '/').Contains("/Resources/Players/Portraits/"))
+        {
+            return;
+        }
+        TextureImporter importer = (TextureImporter)assetImporter;
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
+        importer.alphaIsTransparency = true;
+        importer.mipmapEnabled = false;
+        importer.maxTextureSize = 512;
+    }
+
     void OnPreprocessModel()
     {
         string path = assetPath.Replace('\\', '/');
-        if (!path.Contains("/Resources/Buildings/") && !path.Contains("/Resources/Shopkeepers/"))
+        if (!path.Contains("/Resources/Buildings/") && !path.Contains("/Resources/Shopkeepers/") && !path.Contains("/Resources/Players/"))
         {
             return;
         }

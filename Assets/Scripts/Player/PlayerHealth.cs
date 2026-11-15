@@ -11,6 +11,8 @@ public class PlayerHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private MeshRenderer meshRenderer;
     private Color meshOriginalColor;
+    // The pill character model (see PlayerCharacters); it blinks instead of changing colour.
+    private Renderer[] modelRenderers;
 
     void Start()
     {
@@ -25,6 +27,12 @@ public class PlayerHealth : MonoBehaviour
         }
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        Transform model = transform.Find("Model");
+        if (model != null)
+        {
+            modelRenderers = model.GetComponentsInChildren<Renderer>();
+        }
 
         if (spriteRenderer == null)
         {
@@ -43,7 +51,11 @@ public class PlayerHealth : MonoBehaviour
             invincibilityTimer -= Time.deltaTime;
             bool flashOn = Mathf.PingPong(Time.time * 10f, 1f) > 0.5f;
 
-            if (spriteRenderer != null)
+            if (modelRenderers != null && modelRenderers.Length > 0)
+            {
+                SetModelVisible(flashOn);
+            }
+            else if (spriteRenderer != null)
             {
                 Color color = spriteRenderer.color;
                 color.a = flashOn ? 1f : 0.5f;
@@ -57,7 +69,11 @@ public class PlayerHealth : MonoBehaviour
             if (invincibilityTimer <= 0f)
             {
                 isInvincible = false;
-                if (spriteRenderer != null)
+                if (modelRenderers != null && modelRenderers.Length > 0)
+                {
+                    SetModelVisible(true);
+                }
+                else if (spriteRenderer != null)
                 {
                     Color color = spriteRenderer.color;
                     color.a = 1f;
@@ -67,6 +83,17 @@ public class PlayerHealth : MonoBehaviour
                 {
                     meshRenderer.material.color = meshOriginalColor;
                 }
+            }
+        }
+    }
+
+    void SetModelVisible(bool visible)
+    {
+        foreach (Renderer r in modelRenderers)
+        {
+            if (r != null)
+            {
+                r.enabled = visible;
             }
         }
     }

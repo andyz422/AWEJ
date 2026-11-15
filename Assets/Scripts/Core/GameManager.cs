@@ -34,6 +34,10 @@ public class GameManager : MonoBehaviour
     public int loopCount = 0;
     public List<string> clearedBattles = new List<string>();
 
+    [Header("Character")]
+    // Chosen on the character select screen before NewGame(); see PlayerCharacters.
+    public string playerCharacter = PlayerCharacters.DefaultId;
+
     [Header("Loadout")]
     public string equippedWeapon = WeaponCatalog.StarterWeapon;
     public List<string> ownedWeapons = new List<string> { WeaponCatalog.StarterWeapon };
