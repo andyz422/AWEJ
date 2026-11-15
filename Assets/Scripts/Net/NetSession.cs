@@ -85,6 +85,12 @@ public class NetSession : MonoBehaviour
 
     // ---------------------------------------------------------------- start / stop
 
+    // Before an online (Relay) session starts the host or client.
+    public void PrepareOnline()
+    {
+        leaving = false;
+    }
+
     public bool HostLan()
     {
         leaving = false;
@@ -118,6 +124,7 @@ public class NetSession : MonoBehaviour
     public void Leave()
     {
         leaving = true;
+        OnlineSession.Leave();
         if (Manager != null && Manager.IsListening)
         {
             Manager.Shutdown();

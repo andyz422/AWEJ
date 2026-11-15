@@ -31,7 +31,31 @@ public class NetAutoTest : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         Application.runInBackground = true;
+        if (role == "online")
+        {
+            OnlineCheck();
+            return;
+        }
         StartCoroutine(role == "host" ? Host() : Client());
+    }
+
+    // Hosting online without a linked Unity Gaming Services project should fail with a readable message.
+    async void OnlineCheck()
+    {
+        while (GM == null)
+        {
+            await System.Threading.Tasks.Task.Yield();
+        }
+        try
+        {
+            string code = await OnlineSession.HostAsync();
+            Log("ONLINE hosted with room code " + code);
+        }
+        catch (System.Exception e)
+        {
+            Log("ONLINE failed as expected: " + e.Message);
+        }
+        Application.Quit(0);
     }
 
     static void Log(string message)

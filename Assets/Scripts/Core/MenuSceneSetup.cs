@@ -21,6 +21,7 @@ public class MenuSceneSetup : MonoBehaviour
     private GameObject coopPanel;
     private GameObject lobbyPanel;
     private InputField addressField;
+    private InputField codeField;
     private Text lobbyText;
     private GameObject startButton;
     private Text statusText;
@@ -244,19 +245,60 @@ public class MenuSceneSetup : MonoBehaviour
         coopPanel = FullPanel("CoopPanel");
         Transform root = coopPanel.transform;
         CreateText(root, "Co-op  (up to 4 players)", new Vector2(0, 330), 60).GetComponent<RectTransform>().sizeDelta = new Vector2(1200, 100);
-        CreateText(root, "Everyone on the same Wi-Fi: one player hosts, the others join with the host's IP address.",
-            new Vector2(0, 240), 28).GetComponent<RectTransform>().sizeDelta = new Vector2(1500, 60);
+        // Same Wi-Fi: join with the host's IP address.
+        CreateText(root, "Same Wi-Fi: one player hosts, the others join with the host's IP address.",
+            new Vector2(0, 245), 28).GetComponent<RectTransform>().sizeDelta = new Vector2(1500, 60);
+        CreateMenuButton(root, "Host on Wi-Fi", new Vector2(0, 165), OnHostLan).GetComponent<RectTransform>().sizeDelta = new Vector2(420, 70);
+        addressField = CreateInputField(root, new Vector2(-120, 75), "Host's IP address, e.g. 192.168.1.20");
+        CreateMenuButton(root, "Join", new Vector2(260, 75), OnJoinLan);
 
-        CreateMenuButton(root, "Host on Wi-Fi", new Vector2(0, 120), OnHostLan).GetComponent<RectTransform>().sizeDelta = new Vector2(420, 70);
+        // Anywhere: online with a room code (Unity Relay).
+        CreateText(root, "Anywhere: host online and share the room code.",
+            new Vector2(0, -35), 28).GetComponent<RectTransform>().sizeDelta = new Vector2(1500, 60);
+        CreateMenuButton(root, "Host Online", new Vector2(0, -115), OnHostOnline).GetComponent<RectTransform>().sizeDelta = new Vector2(420, 70);
+        codeField = CreateInputField(root, new Vector2(-120, -205), "Room code");
+        CreateMenuButton(root, "Join Online", new Vector2(260, -205), OnJoinOnline);
 
-        addressField = CreateInputField(root, new Vector2(-120, -20), "Host's IP address, e.g. 192.168.1.20");
-        CreateMenuButton(root, "Join", new Vector2(260, -20), OnJoinLan);
-
-        CreateMenuButton(root, "Back", new Vector2(0, -360), () =>
+        CreateMenuButton(root, "Back", new Vector2(0, -380), () =>
         {
             coopPanel.SetActive(false);
             ShowCharacterSelect();
         });
+    }
+
+    async void OnHostOnline()
+    {
+        GameManager.Instance.ResetRun();
+        NetSession.Ensure().PrepareOnline();
+        ShowNotice("Creating an online game...");
+        try
+        {
+            string code = await OnlineSession.HostAsync();
+            ShowNotice("");
+            ShowLobby(true);
+            Debug.Log("[Menu] Hosting online, room code " + code);
+        }
+        catch (System.Exception e)
+        {
+            ShowNotice(e.Message);
+        }
+    }
+
+    async void OnJoinOnline()
+    {
+        GameManager.Instance.ResetRun();
+        NetSession.Ensure().PrepareOnline();
+        ShowNotice("Joining...");
+        try
+        {
+            await OnlineSession.JoinAsync(codeField != null ? codeField.text : "");
+            ShowNotice("");
+            ShowLobby(false);
+        }
+        catch (System.Exception e)
+        {
+            ShowNotice(e.Message);
+        }
     }
 
     void OnHostLan()
@@ -316,8 +358,11 @@ public class MenuSceneSetup : MonoBehaviour
         }
         if (nm.IsServer)
         {
+            string howToJoin = OnlineSession.IsOnline
+                ? "Friends choose Join Online with this room code:\n" + OnlineSession.Code
+                : "Friends join with this address:\n" + LocalAddresses();
             lobbyText.text = "You're hosting.\nPlayers: " + nm.ConnectedClientsIds.Count + " / " + NetSession.MaxPlayers
-                + "\n\nFriends join with this address:\n" + LocalAddresses()
+                + "\n\n" + howToJoin
                 + "\n\nPress Start Game when everyone is in.";
         }
         else
