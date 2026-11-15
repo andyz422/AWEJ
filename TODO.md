@@ -2,7 +2,7 @@
 
 Open work, roughly in priority order. Done items are removed rather than ticked.
 
-## Pick up here (last updated 2026-11-15, commit `46874f4`)
+## Pick up here (last updated 2026-11-15, commit `19bff30`)
 
 ### Where things stand
 
@@ -11,13 +11,17 @@ Open work, roughly in priority order. Done items are removed rather than ticked.
 - **Character select**: four pill characters (Bean, Mochi, Sprout, Pip) after **New Game** / **Co-op**.
 - **Blender assets**: 20 building models and 10 shopkeepers in `Assets/Resources/`, built by scripts in `Blender/`.
 
-### Verified only by automated/headless runs, never played by a person yet
+### First play session (started 2026-11-15)
 
-Most of the recent work was checked with headless Unity runs and the scripted co-op test, not by playing. Worth one real play session first:
+Found and fixed in the first session: the old scene menu showed through the co-op hosting screen, and the camera didn't follow the player in solo (both fixed in `19bff30`, confirmed in the editor).
 
-- [ ] Solo: **New Game** → character select → walk around town, enter a shop and a battle. Check the URP look, the character model and its bounce, the shopkeepers.
-- [ ] Co-op in the editor: **Window → Multiplayer → Multiplayer Play Mode**, enable 1 extra player, press Play. Host on Wi-Fi in one window, **Join** `127.0.0.1` in the other. Try a door vote (on-screen Yes/No), a battle, buying something, going down and reviving (hold E next to the teammate, watch the ring), leaving and rejoining.
-- [ ] Note anything that looks or feels off; the HUD layout and vote panel have only been seen in code.
+Known, not a bug: in Multiplayer Play Mode the extra player's window has no joystick/Fire buttons, because only a Device Simulator Game view counts as a phone. That window uses PC controls (WASD, mouse, E, Q). An editor-only "force touch controls" switch could be added if needed.
+
+Still to try by hand:
+
+- [ ] Solo: walk around town, enter a shop and a battle. Check the URP look, the character model and its bounce, the shopkeepers.
+- [ ] Co-op in the editor (**Window → Multiplayer → Multiplayer Play Mode**, 1 extra player; Host on Wi-Fi in one window, **Join** `127.0.0.1` in the other): a door vote (on-screen Yes/No), a battle, buying something, going down and reviving (hold E next to the teammate, watch the ring), leaving and rejoining.
+- [ ] Note anything that looks or feels off; the HUD layout and vote panel have only been seen in code until now.
 
 ### Next steps, in order
 
