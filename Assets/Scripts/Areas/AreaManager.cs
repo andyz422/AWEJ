@@ -309,28 +309,7 @@ public class AreaManager : MonoBehaviour
 
     void ApplyAtmosphere(bool interior)
     {
-        Camera cam = Camera.main;
-        if (cam != null)
-        {
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = interior ? new Color(0.06f, 0.05f, 0.05f) : Area.skyColor;
-        }
-
-        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-        RenderSettings.ambientLight = interior ? Area.ambientColor * 0.7f : Area.ambientColor;
-        RenderSettings.fog = !interior && Area.fogDensity > 0f;
-        RenderSettings.fogMode = FogMode.Exponential;
-        RenderSettings.fogDensity = Area.fogDensity;
-        RenderSettings.fogColor = Area.skyColor;
-
-        foreach (Light light in FindObjectsByType<Light>(FindObjectsSortMode.None))
-        {
-            if (light.type == LightType.Directional)
-            {
-                light.color = Area.lightColor;
-                light.intensity = interior ? Area.lightIntensity * 0.45f : Area.lightIntensity;
-            }
-        }
+        AreaAtmosphere.Apply(Area, interior, Camera.main);
     }
 
     void ShowArrivalMessage()

@@ -42,7 +42,8 @@ public static class WorldKit
         {
             material = new Material(BaseMaterial);
             material.color = color;
-            material.SetFloat("_Glossiness", 0.15f);
+            // URP Lit calls it _Smoothness; the built-in Standard shader called it _Glossiness.
+            material.SetFloat(material.HasProperty("_Smoothness") ? "_Smoothness" : "_Glossiness", 0.15f);
             colorCache[color] = material;
         }
         return material;

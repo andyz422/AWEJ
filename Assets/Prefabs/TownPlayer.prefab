@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,10 +156,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7411983640562945984eee5025f11f8, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 5000000000000000, guid: a1b2c3d4e5f6789012345678abcd0001, type: 3}
   firePoint: {fileID: 0}
   fireRate: 0.4
   projectileSpeed: 15
   damage: 1
+  projectileCount: 1
+  spreadAngle: 0
+  projectileScale: 0.3
+  pierce: 0
+  projectileColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  aimAssistRange: 22
+  aimAssistAngle: 40
