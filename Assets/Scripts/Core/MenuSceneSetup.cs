@@ -93,6 +93,8 @@ public class MenuSceneSetup : MonoBehaviour
     {
         Debug.Log("MenuSceneSetup SetupScene called");
 
+        HideLegacyMenu();
+
         // Ensure GameManager exists
         if (GameManager.Instance == null)
         {
@@ -147,6 +149,26 @@ public class MenuSceneSetup : MonoBehaviour
         pendingNotice = "";
 
         Debug.Log("Menu setup complete");
+    }
+
+    // MenuScene still contains an older menu saved in the scene (its own canvas with New Game / Load /
+    // Options / Quit, driven by MenuControllerUI). This code-built menu replaces it; switch the old one
+    // off so it can't show through, or be clicked, behind the character select and co-op screens.
+    static void HideLegacyMenu()
+    {
+        foreach (MenuControllerUI legacy in FindObjectsByType<MenuControllerUI>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            GameObject[] buttons = { legacy.newGameButton, legacy.loadGameButton, legacy.optionsButton, legacy.quitButton };
+            foreach (GameObject button in buttons)
+            {
+                Canvas canvas = button != null ? button.GetComponentInParent<Canvas>(true) : null;
+                if (canvas != null)
+                {
+                    canvas.rootCanvas.gameObject.SetActive(false);
+                }
+            }
+            legacy.gameObject.SetActive(false);
+        }
     }
 
     GameObject CreateText(Transform parent, string text, Vector2 position, int fontSize)

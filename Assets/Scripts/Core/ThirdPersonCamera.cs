@@ -8,14 +8,16 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        // Follow this device's player; in co-op it may spawn after the camera.
-        if (target == null)
+        // Always follow this device's player. (The scene's saved target points at the player prefab
+        // asset, which never moves, so it must not win; in co-op the player may also spawn later.)
+        Transform local = PlayerRegistry.LocalTransform;
+        if (local != null)
         {
-            target = PlayerRegistry.LocalTransform;
-            if (target == null)
-            {
-                return;
-            }
+            target = local;
+        }
+        if (target == null || !target.gameObject.scene.IsValid())
+        {
+            return;
         }
 
         transform.position = target.position + offset;
