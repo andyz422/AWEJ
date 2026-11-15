@@ -16,6 +16,31 @@ public class MenuSceneSetup : MonoBehaviour
     static readonly Color CardColor = new Color(0.16f, 0.18f, 0.28f, 1f);
     static readonly Color CardSelectedColor = new Color(0.3f, 0.5f, 0.95f, 1f);
 
+    // Co-op menu state
+    private bool coopMode;
+    private GameObject coopPanel;
+    private GameObject lobbyPanel;
+    private InputField addressField;
+    private Text lobbyText;
+    private GameObject startButton;
+    private Text statusText;
+    private static string pendingNotice = "";
+
+    void OnEnable()
+    {
+        NetSession.Ended += OnSessionEnded;
+    }
+
+    void OnDisable()
+    {
+        NetSession.Ended -= OnSessionEnded;
+    }
+
+    static void OnSessionEnded(string reason)
+    {
+        pendingNotice = reason ?? "";
+    }
+
     void Awake()
     {
         Debug.Log("MenuSceneSetup Awake called");
@@ -108,10 +133,17 @@ public class MenuSceneSetup : MonoBehaviour
         float buttonSpacing = 80;
 
         mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "New Game", new Vector2(0, buttonY), OnNewGame));
-        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Load Game", new Vector2(0, buttonY - buttonSpacing), OnLoadGame));
-        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Controls", new Vector2(0, buttonY - buttonSpacing * 2), OnControls));
-        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Options", new Vector2(0, buttonY - buttonSpacing * 3), OnOptions));
-        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Quit", new Vector2(0, buttonY - buttonSpacing * 4), OnQuit));
+        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Co-op", new Vector2(0, buttonY - buttonSpacing), OnCoop));
+        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Load Game", new Vector2(0, buttonY - buttonSpacing * 2), OnLoadGame));
+        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Controls", new Vector2(0, buttonY - buttonSpacing * 3), OnControls));
+        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Options", new Vector2(0, buttonY - buttonSpacing * 4), OnOptions));
+        mainMenuItems.Add(CreateMenuButton(canvasObj.transform, "Quit", new Vector2(0, buttonY - buttonSpacing * 5), OnQuit));
+
+        // Why the last co-op session ended (host left, connection lost, party full...).
+        statusText = CreateText(canvasObj.transform, pendingNotice, new Vector2(0, -470), 28).GetComponent<Text>();
+        statusText.GetComponent<RectTransform>().sizeDelta = new Vector2(1400, 60);
+        statusText.color = new Color(1f, 0.85f, 0.5f);
+        pendingNotice = "";
 
         Debug.Log("Menu setup complete");
     }
@@ -182,7 +214,200 @@ public class MenuSceneSetup : MonoBehaviour
     void OnNewGame()
     {
         Debug.Log("New Game button clicked");
+        coopMode = false;
         ShowCharacterSelect();
+    }
+
+    void OnCoop()
+    {
+        coopMode = true;
+        ShowCharacterSelect();
+    }
+
+    // ---------------------------------------------------------------- co-op host / join / lobby
+
+    void ShowCoopPanel()
+    {
+        if (characterSelect != null)
+        {
+            characterSelect.SetActive(false);
+        }
+        if (coopPanel == null)
+        {
+            BuildCoopPanel();
+        }
+        coopPanel.SetActive(true);
+    }
+
+    void BuildCoopPanel()
+    {
+        coopPanel = FullPanel("CoopPanel");
+        Transform root = coopPanel.transform;
+        CreateText(root, "Co-op  (up to 4 players)", new Vector2(0, 330), 60).GetComponent<RectTransform>().sizeDelta = new Vector2(1200, 100);
+        CreateText(root, "Everyone on the same Wi-Fi: one player hosts, the others join with the host's IP address.",
+            new Vector2(0, 240), 28).GetComponent<RectTransform>().sizeDelta = new Vector2(1500, 60);
+
+        CreateMenuButton(root, "Host on Wi-Fi", new Vector2(0, 120), OnHostLan).GetComponent<RectTransform>().sizeDelta = new Vector2(420, 70);
+
+        addressField = CreateInputField(root, new Vector2(-120, -20), "Host's IP address, e.g. 192.168.1.20");
+        CreateMenuButton(root, "Join", new Vector2(260, -20), OnJoinLan);
+
+        CreateMenuButton(root, "Back", new Vector2(0, -360), () =>
+        {
+            coopPanel.SetActive(false);
+            ShowCharacterSelect();
+        });
+    }
+
+    void OnHostLan()
+    {
+        GameManager.Instance.ResetRun();
+        if (!NetSession.Ensure().HostLan())
+        {
+            ShowNotice("Couldn't start hosting. Is another copy of the game already hosting?");
+            return;
+        }
+        ShowLobby(true);
+    }
+
+    void OnJoinLan()
+    {
+        GameManager.Instance.ResetRun();
+        string address = addressField != null ? addressField.text : "";
+        if (!NetSession.Ensure().JoinLan(address))
+        {
+            ShowNotice("Couldn't connect. Check the address and try again.");
+            return;
+        }
+        ShowLobby(false);
+    }
+
+    void ShowLobby(bool host)
+    {
+        coopPanel.SetActive(false);
+        if (lobbyPanel == null)
+        {
+            lobbyPanel = FullPanel("Lobby");
+            Transform root = lobbyPanel.transform;
+            CreateText(root, "Lobby", new Vector2(0, 330), 60);
+            lobbyText = CreateText(root, "", new Vector2(0, 80), 34).GetComponent<Text>();
+            lobbyText.GetComponent<RectTransform>().sizeDelta = new Vector2(1500, 360);
+            startButton = CreateMenuButton(root, "Start Game", new Vector2(0, -230), () => NetSession.Instance.StartGame());
+            CreateMenuButton(root, "Leave", new Vector2(0, -330), () =>
+            {
+                NetSession.Instance.Leave();
+            });
+        }
+        lobbyPanel.SetActive(true);
+        startButton.SetActive(host);
+    }
+
+    void Update()
+    {
+        if (lobbyPanel == null || !lobbyPanel.activeSelf || lobbyText == null)
+        {
+            return;
+        }
+        Unity.Netcode.NetworkManager nm = Unity.Netcode.NetworkManager.Singleton;
+        if (nm == null || !nm.IsListening)
+        {
+            lobbyText.text = "Not connected.";
+            return;
+        }
+        if (nm.IsServer)
+        {
+            lobbyText.text = "You're hosting.\nPlayers: " + nm.ConnectedClientsIds.Count + " / " + NetSession.MaxPlayers
+                + "\n\nFriends join with this address:\n" + LocalAddresses()
+                + "\n\nPress Start Game when everyone is in.";
+        }
+        else
+        {
+            lobbyText.text = nm.IsConnectedClient
+                ? "Connected!\nWaiting for the host to start the game..."
+                : "Connecting...";
+        }
+    }
+
+    static string LocalAddresses()
+    {
+        try
+        {
+            System.Collections.Generic.List<string> found = new System.Collections.Generic.List<string>();
+            foreach (System.Net.IPAddress ip in System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && !System.Net.IPAddress.IsLoopback(ip))
+                {
+                    found.Add(ip.ToString());
+                }
+            }
+            return found.Count > 0 ? string.Join("   or   ", found) : "(check your device's Wi-Fi settings)";
+        }
+        catch (System.Exception)
+        {
+            return "(check your device's Wi-Fi settings)";
+        }
+    }
+
+    void ShowNotice(string message)
+    {
+        if (statusText != null)
+        {
+            statusText.text = message;
+        }
+        Debug.Log("[Menu] " + message);
+    }
+
+    GameObject FullPanel(string name)
+    {
+        GameObject panel = new GameObject(name);
+        RectTransform rect = panel.AddComponent<RectTransform>();
+        rect.SetParent(canvasRoot, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+        return panel;
+    }
+
+    InputField CreateInputField(Transform parent, Vector2 position, string placeholder)
+    {
+        GameObject obj = new GameObject("AddressField");
+        RectTransform rect = obj.AddComponent<RectTransform>();
+        rect.SetParent(parent, false);
+        rect.anchoredPosition = position;
+        rect.sizeDelta = new Vector2(560, 64);
+        Image background = obj.AddComponent<Image>();
+        background.color = new Color(0.95f, 0.95f, 0.98f, 1f);
+
+        Text text = CreateFieldText(rect, "Text", "", new Color(0.1f, 0.1f, 0.15f));
+        Text hint = CreateFieldText(rect, "Placeholder", placeholder, new Color(0.45f, 0.45f, 0.55f));
+        hint.fontStyle = FontStyle.Italic;
+
+        InputField field = obj.AddComponent<InputField>();
+        field.textComponent = text;
+        field.placeholder = hint;
+        field.contentType = InputField.ContentType.Standard;
+        field.characterLimit = 64;
+        return field;
+    }
+
+    Text CreateFieldText(RectTransform parent, string name, string value, Color color)
+    {
+        GameObject obj = new GameObject(name);
+        RectTransform rect = obj.AddComponent<RectTransform>();
+        rect.SetParent(parent, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = new Vector2(16, 6);
+        rect.offsetMax = new Vector2(-16, -6);
+        Text text = obj.AddComponent<Text>();
+        text.text = value;
+        text.font = GetFont();
+        text.fontSize = 28;
+        text.color = color;
+        text.alignment = TextAnchor.MiddleLeft;
+        text.supportRichText = false;
+        return text;
     }
 
     // ---------------------------------------------------------------- character select
@@ -327,6 +552,11 @@ public class MenuSceneSetup : MonoBehaviour
         }
         PlayerCharacters.LastChosen = selectedCharacter;
         GameManager.Instance.playerCharacter = selectedCharacter;
+        if (coopMode)
+        {
+            ShowCoopPanel();
+            return;
+        }
         Debug.Log("Starting new game as " + selectedCharacter);
         GameManager.Instance.NewGame();
     }

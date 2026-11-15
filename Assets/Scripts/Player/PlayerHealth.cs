@@ -143,8 +143,24 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    // Brief protection, e.g. right after being revived.
+    public void GrantInvincibility(float seconds)
+    {
+        isInvincible = true;
+        invincibilityTimer = Mathf.Max(invincibilityTimer, seconds);
+    }
+
     void Die()
     {
+        // Co-op: you go down and wait for a teammate. If the whole party is down, the host
+        // sends everyone back to safety (see PartyState / AreaManager.HandlePartyDefeated).
+        PlayerAvatar avatar = GetComponent<PlayerAvatar>();
+        if (Net.Active && avatar != null && avatar.Net != null && avatar.Net.IsSpawned)
+        {
+            avatar.Net.GoDown();
+            return;
+        }
+
         if (AreaManager.Instance != null)
         {
             AreaManager.Instance.HandlePlayerDefeated();

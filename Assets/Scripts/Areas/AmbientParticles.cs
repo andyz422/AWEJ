@@ -16,8 +16,8 @@ public class AmbientParticles : MonoBehaviour
 
     void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        follow = player != null ? player.transform : transform;
+        Transform player = PlayerRegistry.LocalTransform;
+        follow = player != null ? player : transform;
 
         motes = new Transform[count];
         phases = new float[count];

@@ -14,7 +14,7 @@ public class BattleArena : MonoBehaviour
     private BuildingDef building;
     private Rect bounds;
     private float healthScale = 1f;
-    private Transform player;
+    // (spawn spacing uses PlayerRegistry)
     private int pendingSpawns;
 
     void Awake()
@@ -36,9 +36,6 @@ public class BattleArena : MonoBehaviour
         bounds = spawnBounds;
         healthScale = enemyHealthScale;
 
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        player = playerObj != null ? playerObj.transform : null;
-
         StartCoroutine(Run());
     }
 
@@ -46,12 +43,52 @@ public class BattleArena : MonoBehaviour
     {
         StopAllCoroutines();
         InProgress = false;
+        SetSharedInProgress(false);
+    }
+
+    // Co-op: guests read this to keep the exit barred until the battle is won.
+    static void SetSharedInProgress(bool value)
+    {
+        if (Net.Active && Net.IsAuthority && PartyState.Instance != null && PartyState.Instance.IsSpawned)
+        {
+            PartyState.Instance.BattleInProgress.Value = value;
+        }
+    }
+
+    // More players, bigger waves: +50% enemies per extra player (bosses are never duplicated).
+    static EnemyType[] ScaleWave(EnemyType[] wave, int players)
+    {
+        int extra = Mathf.RoundToInt(wave.Length * 0.5f * (players - 1));
+        if (extra <= 0)
+        {
+            return wave;
+        }
+        System.Collections.Generic.List<EnemyType> pool = new System.Collections.Generic.List<EnemyType>();
+        foreach (EnemyType t in wave)
+        {
+            if (t != EnemyType.Boss)
+            {
+                pool.Add(t);
+            }
+        }
+        if (pool.Count == 0)
+        {
+            pool.Add(EnemyType.Slime);
+        }
+        System.Collections.Generic.List<EnemyType> scaled = new System.Collections.Generic.List<EnemyType>(wave);
+        for (int i = 0; i < extra; i++)
+        {
+            scaled.Add(pool[i % pool.Count]);
+        }
+        return scaled.ToArray();
     }
 
     IEnumerator Run()
     {
         InProgress = true;
+        SetSharedInProgress(true);
         EnemyType[][] waves = building.battle.waves;
+        int players = Net.PlayerCount;
 
         Banner(building.name, 2f);
         yield return new WaitForSeconds(2f);
@@ -62,7 +99,7 @@ public class BattleArena : MonoBehaviour
             Banner(last && waves.Length > 1 ? "Final Wave!" : "Wave " + (w + 1) + " / " + waves.Length, 1.5f);
             yield return new WaitForSeconds(1f);
 
-            foreach (EnemyType type in waves[w])
+            foreach (EnemyType type in ScaleWave(waves[w], players))
             {
                 StartCoroutine(SpawnWithTelegraph(type, FindSpawnPoint()));
                 yield return new WaitForSeconds(0.3f);
@@ -89,15 +126,17 @@ public class BattleArena : MonoBehaviour
         {
             bool firstClear = !gm.IsBattleCleared(building.id);
             int reward = firstClear ? building.battle.reward : building.battle.repeatReward;
-            gm.playerCoins += reward;
+            gm.playerCoins += reward; // the shared purse in co-op
             gm.MarkBattleCleared(building.id);
-
-            if (AreaHUD.Instance != null)
+            if (Net.Active && PartyState.Instance != null)
             {
-                AreaHUD.Instance.Toast((firstClear ? "First clear! " : "Cleared again! ") + "+" + reward + " coins\nThe doors are open.", 4f);
+                PartyState.Instance.MarkCleared(building.id);
             }
+
+            Toast((firstClear ? "First clear! " : "Cleared again! ") + "+" + reward + " coins\nThe doors are open.", 4f);
         }
 
+        SetSharedInProgress(false);
         Banner("VICTORY!", 2.5f);
 
         if (onFinished != null)
@@ -106,12 +145,37 @@ public class BattleArena : MonoBehaviour
         }
     }
 
+    // Banners and toasts reach every player in co-op.
     static void Banner(string text, float duration)
     {
-        if (AreaHUD.Instance != null)
+        if (Net.Active && PartyState.Instance != null)
+        {
+            PartyState.Instance.BannerRpc(text, duration);
+        }
+        else if (AreaHUD.Instance != null)
         {
             AreaHUD.Instance.Banner(text, duration);
         }
+    }
+
+    static void Toast(string text, float duration)
+    {
+        if (Net.Active && PartyState.Instance != null)
+        {
+            PartyState.Instance.ToastRpc(text, duration);
+        }
+        else if (AreaHUD.Instance != null)
+        {
+            AreaHUD.Instance.Toast(text, duration);
+        }
+    }
+
+    // The red warning circle where an enemy is about to appear (also shown on guests).
+    public static void ShowTelegraph(Vector3 position, float size)
+    {
+        GameObject marker = WorldKit.Prim(PrimitiveType.Cylinder, null, position + Vector3.up * 0.04f, Vector3.zero, new Color(1f, 0.2f, 0.15f), false);
+        marker.name = "SpawnTelegraph";
+        marker.AddComponent<TelegraphMarker>().size = size;
     }
 
     public void SpawnMinion(EnemyType type, Vector3 near)
@@ -127,18 +191,15 @@ public class BattleArena : MonoBehaviour
     {
         pendingSpawns++;
 
-        GameObject marker = WorldKit.Prim(PrimitiveType.Cylinder, transform, position + Vector3.up * 0.04f, Vector3.zero, new Color(1f, 0.2f, 0.15f), false);
         float size = type == EnemyType.Boss ? 5f : type == EnemyType.Brute ? 2.8f : 1.8f;
-
-        const float duration = 0.8f;
-        for (float t = 0f; t < duration; t += Time.deltaTime)
+        ShowTelegraph(position, size);
+        if (Net.Active && PartyState.Instance != null)
         {
-            float pulse = Mathf.Lerp(0.3f, 1f, t / duration) * size;
-            marker.transform.localScale = new Vector3(pulse, 0.01f, pulse);
-            yield return null;
+            PartyState.Instance.TelegraphRpc(position, size);
         }
 
-        Destroy(marker);
+        yield return new WaitForSeconds(TelegraphMarker.Duration);
+
         Enemy.Spawn(type, position, healthScale, this);
         pendingSpawns--;
     }
@@ -157,7 +218,8 @@ public class BattleArena : MonoBehaviour
                 continue;
             }
 
-            float distance = player != null ? Vector3.Distance(candidate, player.position) : 100f;
+            // Keep spawns away from every player, not just one.
+            float distance = PlayerRegistry.Count > 0 ? PlayerRegistry.DistanceToNearest(candidate) : 100f;
             if (distance >= 9f)
             {
                 return candidate;
@@ -171,5 +233,24 @@ public class BattleArena : MonoBehaviour
         }
 
         return best;
+    }
+}
+
+// Grows a red circle on the floor for a moment, then removes itself.
+public class TelegraphMarker : MonoBehaviour
+{
+    public const float Duration = 0.8f;
+    public float size = 1.8f;
+    private float age;
+
+    void Update()
+    {
+        age += Time.deltaTime;
+        float pulse = Mathf.Lerp(0.3f, 1f, Mathf.Clamp01(age / Duration)) * size;
+        transform.localScale = new Vector3(pulse, 0.01f, pulse);
+        if (age >= Duration)
+        {
+            Destroy(gameObject);
+        }
     }
 }

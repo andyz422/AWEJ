@@ -30,7 +30,10 @@ public class Enemy : MonoBehaviour
 
     private CharacterController controller;
     private Transform player;
-    private PlayerHealth playerHealth;
+    private PlayerAvatar target;
+    // Co-op guests: a mirror of the host's enemy. No AI or damage; position comes over the network.
+    private bool puppet;
+    private EnemyNet net;
     private Transform body;
     private Transform hpBar;
     private Transform hpFill;
@@ -50,12 +53,64 @@ public class Enemy : MonoBehaviour
 
     public static Enemy Spawn(EnemyType type, Vector3 position, float healthScale, BattleArena arena)
     {
+        if (Net.Active && NetSession.EnemyPrefab != null)
+        {
+            // Co-op host: a networked enemy that guests mirror.
+            GameObject netObj = Instantiate(NetSession.EnemyPrefab, position, Quaternion.identity);
+            netObj.name = type.ToString();
+            Enemy netEnemy = netObj.GetComponent<Enemy>();
+            netEnemy.arena = arena;
+            netEnemy.Configure(type, healthScale);
+            netEnemy.net = netObj.GetComponent<EnemyNet>();
+            netEnemy.net.Type.Value = (int)type;
+            netEnemy.net.MaxHealth.Value = netEnemy.maxHealth;
+            netEnemy.net.Health.Value = netEnemy.health;
+            netObj.GetComponent<Unity.Netcode.NetworkObject>().Spawn(true);
+            return netEnemy;
+        }
+
         GameObject obj = new GameObject(type.ToString());
         obj.transform.position = position;
         Enemy enemy = obj.AddComponent<Enemy>();
         enemy.arena = arena;
         enemy.Configure(type, healthScale);
         return enemy;
+    }
+
+    // Guest side of a networked enemy: same look, health from the host, no AI.
+    public void ConfigurePuppet(EnemyType enemyType, int hostMaxHealth)
+    {
+        puppet = true;
+        net = GetComponent<EnemyNet>();
+        Configure(enemyType, 1f);
+        maxHealth = Mathf.Max(1, hostMaxHealth);
+        health = maxHealth;
+    }
+
+    public void SetPuppetHealth(int value)
+    {
+        if (value < health)
+        {
+            Flash();
+        }
+        health = value;
+        if (hpBar != null)
+        {
+            UpdateHealthBar();
+        }
+    }
+
+    public void Flash()
+    {
+        if (renderers == null)
+        {
+            return;
+        }
+        flashTimer = 0.08f;
+        foreach (Renderer r in renderers)
+        {
+            r.sharedMaterial = WorldKit.Colored(Color.white);
+        }
     }
 
     void OnEnable()
@@ -208,14 +263,11 @@ public class Enemy : MonoBehaviour
         hpBar.gameObject.SetActive(type == EnemyType.Boss);
     }
 
-    void Start()
+    // Chase the nearest player who is still up; downed players are left alone.
+    void PickTarget()
     {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-            playerHealth = playerObj.GetComponent<PlayerHealth>();
-        }
+        target = PlayerRegistry.Nearest(transform.position);
+        player = target != null ? target.transform : null;
     }
 
     void Update()
@@ -230,6 +282,13 @@ public class Enemy : MonoBehaviour
             return;
         }
 
+        if (puppet)
+        {
+            UpdateHealthBar();
+            return;
+        }
+
+        PickTarget();
         if (player == null || (GameManager.Instance != null && GameManager.Instance.isTransitioning))
         {
             return;
@@ -267,9 +326,9 @@ public class Enemy : MonoBehaviour
             EndDash();
         }
 
-        if (playerHealth != null && distance < radius + PlayerRadius + 0.35f)
+        if (target != null && distance < radius + PlayerRadius + 0.35f)
         {
-            playerHealth.TakeDamage(contactDamage);
+            target.Hurt(contactDamage);
         }
 
         UpdateHealthBar();
@@ -426,27 +485,36 @@ public class Enemy : MonoBehaviour
         Vector3 origin = transform.position + direction * (radius + 0.4f);
         origin.y = 1f;
 
-        GameObject obj = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(direction));
-        Projectile projectile = obj.GetComponent<Projectile>();
-        if (projectile != null)
+        ShotData shot = new ShotData
         {
-            projectile.Initialize(direction, speed, 1);
-            projectile.Configure(true, false, new Color(1f, 0.2f, 0.45f), 0.45f);
+            origin = origin,
+            direction = direction,
+            speed = speed,
+            damage = 1,
+            pierce = false,
+            fromEnemy = true,
+            color = new Color(1f, 0.2f, 0.45f),
+            scale = 0.45f,
+        };
+        Projectile.Spawn(shot, false);
+        if (Net.Active && PartyState.Instance != null)
+        {
+            PartyState.Instance.ShotRpc(shot);
         }
     }
 
     public void TakeDamage(int amount)
     {
-        if (health <= 0 || spawnTimer > 0f)
+        if (puppet || health <= 0 || spawnTimer > 0f)
         {
             return;
         }
 
         health -= amount;
-        flashTimer = 0.08f;
-        foreach (Renderer r in renderers)
+        Flash();
+        if (net != null && net.IsSpawned)
         {
-            r.sharedMaterial = WorldKit.Colored(Color.white);
+            net.Health.Value = Mathf.Max(0, health);
         }
 
         if (health <= 0)
@@ -488,16 +556,27 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         Vector3 center = transform.position + Vector3.up * height * 0.5f;
-        Debris.Burst(center, color, type == EnemyType.Boss ? 24 : 8, type == EnemyType.Boss ? 0.6f : 0.3f);
+        int pieces = type == EnemyType.Boss ? 24 : 8;
+        float pieceSize = type == EnemyType.Boss ? 0.6f : 0.3f;
+        Debris.Burst(center, color, pieces, pieceSize);
 
         int coins = Mathf.Min(coinValue, 6);
         for (int i = 0; i < coins; i++)
         {
             int value = coinValue / coins + (i < coinValue % coins ? 1 : 0);
-            CoinPickup.Spawn(center, value);
+            CoinPickup.Spawn(center, value, false);
         }
 
         onDeath?.Invoke(this);
+
+        if (net != null && net.IsSpawned)
+        {
+            // Guests see the same burst and coins (the host's coins are the ones that count).
+            PartyState.Instance?.DeathFxRpc(center, color, pieces, pieceSize, coins);
+            Alive.Remove(this);
+            net.NetworkObject.Despawn(true);
+            return;
+        }
         Destroy(gameObject);
     }
 }

@@ -61,7 +61,12 @@ public static class PlayerCharacters
     // but the CharacterController (and so collision and movement) is untouched.
     public static GameObject ApplyTo(GameObject player)
     {
-        string id = GameManager.Instance != null ? GameManager.Instance.playerCharacter : DefaultId;
+        return ApplyTo(player, GameManager.Instance != null ? GameManager.Instance.playerCharacter : DefaultId);
+    }
+
+    // Co-op: each player shows the character its owner picked.
+    public static GameObject ApplyTo(GameObject player, string id)
+    {
         GameObject prefab = Resources.Load<GameObject>("Players/" + Get(id).id);
         if (prefab == null)
         {
@@ -71,6 +76,8 @@ public static class PlayerCharacters
         Transform old = player.transform.Find("Model");
         if (old != null)
         {
+            old.name = "OldModel";
+            old.gameObject.SetActive(false);
             Object.Destroy(old.gameObject);
         }
 
@@ -117,6 +124,18 @@ public class PlayerModelBounce : MonoBehaviour
     void LateUpdate()
     {
         Transform body = transform.parent != null ? transform.parent : transform;
+
+        // Downed in co-op: tip over and lie still until a teammate helps.
+        PlayerAvatar avatar = body.GetComponent<PlayerAvatar>();
+        if (avatar != null && avatar.IsDowned)
+        {
+            transform.localPosition = basePosition + new Vector3(0f, 0.5f, 0f);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(-82f, 0f, 0f), Time.deltaTime * 8f);
+            transform.localScale = Vector3.one;
+            lastWorldPosition = body.position;
+            moving = 0f;
+            return;
+        }
         Vector3 delta = body.position - lastWorldPosition;
         lastWorldPosition = body.position;
         delta.y = 0f;

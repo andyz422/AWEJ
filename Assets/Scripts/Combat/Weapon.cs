@@ -84,6 +84,12 @@ public class Weapon : MonoBehaviour
             return;
         }
 
+        PlayerAvatar avatar = GetComponent<PlayerAvatar>();
+        if (avatar != null && avatar.IsDowned)
+        {
+            return;
+        }
+
         if (nextAction.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.Q) || MobileControls.SwapPressed)
         {
             CycleWeapon(1);
@@ -181,13 +187,34 @@ public class Weapon : MonoBehaviour
             float angle = projectileCount > 1 ? Mathf.Lerp(-spreadAngle * 0.5f, spreadAngle * 0.5f, i / (float)(projectileCount - 1)) : 0f;
             Vector3 shotDirection = Quaternion.Euler(0f, angle, 0f) * direction;
 
-            GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(shotDirection));
-            Projectile projectile = projectileObj.GetComponent<Projectile>();
-
-            if (projectile != null)
+            ShotData shot = new ShotData
             {
-                projectile.Initialize(shotDirection, projectileSpeed, damage);
-                projectile.Configure(false, pierce, projectileColor, projectileScale);
+                origin = firePoint.position,
+                direction = shotDirection,
+                speed = projectileSpeed,
+                damage = damage,
+                pierce = pierce,
+                fromEnemy = false,
+                color = projectileColor,
+                scale = projectileScale,
+                shooter = Net.LocalClientId,
+            };
+
+            if (!Net.Active)
+            {
+                Projectile.Spawn(shot, false);
+            }
+            else if (Net.IsAuthority)
+            {
+                // Host: the real shot is simulated here; guests see copies.
+                Projectile.Spawn(shot, false);
+                PartyState.Instance?.ShotRpc(shot);
+            }
+            else
+            {
+                // Guest: show our shot right away; the host simulates the real one and shows the others.
+                Projectile.Spawn(shot, true);
+                PartyState.Instance?.PlayerShotRpc(shot);
             }
         }
     }

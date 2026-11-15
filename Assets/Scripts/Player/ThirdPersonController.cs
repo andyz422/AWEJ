@@ -20,6 +20,12 @@ public class ThirdPersonController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         baseMoveSpeed = moveSpeed;
 
+        // Every player registers through a PlayerAvatar (see PlayerRegistry).
+        if (GetComponent<PlayerAvatar>() == null)
+        {
+            gameObject.AddComponent<PlayerAvatar>();
+        }
+
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
         if (meshRenderer != null)
         {
@@ -77,6 +83,10 @@ public class ThirdPersonController : MonoBehaviour
         {
             blocked = blocked || GameManager.Instance.isInDialogue || GameManager.Instance.isTransitioning;
         }
+
+        // Downed players wait for a teammate.
+        PlayerAvatar avatar = PlayerRegistry.Local;
+        blocked = blocked || (avatar != null && avatar.gameObject == gameObject && avatar.IsDowned);
 
         Vector2 moveInput = Vector2.zero;
         if (!blocked)

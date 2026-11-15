@@ -11,7 +11,15 @@ public class CoinPickup : MonoBehaviour
     private Vector3 velocity;
     private float age;
 
+    // Co-op guests get coins that only fly and vanish; the host's copy pays into the shared purse.
+    public bool cosmetic;
+
     public static void Spawn(Vector3 position, int value)
+    {
+        Spawn(position, value, false);
+    }
+
+    public static void Spawn(Vector3 position, int value, bool cosmeticOnly)
     {
         GameObject coin = WorldKit.Prim(PrimitiveType.Cylinder, null, position, new Vector3(0.5f, 0.04f, 0.5f), new Color(1f, 0.82f, 0.2f), false);
         coin.name = "Coin";
@@ -19,23 +27,19 @@ public class CoinPickup : MonoBehaviour
 
         CoinPickup pickup = coin.AddComponent<CoinPickup>();
         pickup.value = value;
+        pickup.cosmetic = cosmeticOnly;
         Vector2 spread = Random.insideUnitCircle * 4f;
         pickup.velocity = new Vector3(spread.x, Random.Range(5f, 8f), spread.y);
-    }
-
-    void Start()
-    {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
     }
 
     void Update()
     {
         age += Time.deltaTime;
         transform.Rotate(Vector3.up * 360f * Time.deltaTime, Space.World);
+
+        // Fly to whichever player is closest; the money goes to the shared purse either way.
+        PlayerAvatar nearest = PlayerRegistry.Nearest(transform.position);
+        player = nearest != null ? nearest.transform : null;
 
         if (age < PopDuration || player == null)
         {
@@ -52,7 +56,7 @@ public class CoinPickup : MonoBehaviour
 
         if (Vector3.Distance(transform.position, target) < 0.5f)
         {
-            if (GameManager.Instance != null)
+            if (!cosmetic && GameManager.Instance != null)
             {
                 GameManager.Instance.playerCoins += value;
             }

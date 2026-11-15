@@ -43,15 +43,15 @@ public class NPCInteraction : MonoBehaviour
             exclamationMark.transform.localPosition = new Vector3(0, exclamationYOffset, 0);
         }
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            playerTransform = player.transform;
-        }
+        playerTransform = PlayerRegistry.LocalTransform;
     }
 
     void Update()
     {
+        if (playerTransform == null)
+        {
+            playerTransform = PlayerRegistry.LocalTransform;
+        }
         if (playerTransform == null || !canTalk)
         {
             return;

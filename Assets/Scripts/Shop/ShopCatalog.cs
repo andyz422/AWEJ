@@ -186,20 +186,9 @@ public static class ShopCatalog
             return weapon.name + " is already equipped.";
         }
 
-        if (!gm.ownedWeapons.Contains(weapon.id))
-        {
-            if (gm.playerCoins < weapon.price)
-            {
-                return "Not enough coins! " + weapon.name + " costs " + weapon.price + ".";
-            }
-
-            gm.playerCoins -= weapon.price;
-            gm.ownedWeapons.Add(weapon.id);
-        }
-
-        gm.equippedWeapon = weapon.id;
-        RefreshPlayer();
-        return "Equipped " + weapon.name + "!";
+        // Owned weapons are free to re-equip; new ones are paid from the shared purse.
+        int price = gm.ownedWeapons.Contains(weapon.id) ? 0 : weapon.price;
+        return Pay(gm, weapon.id, weapon.name, price);
     }
 
     static string PurchaseUpgrade(GameManager gm, UpgradeDef upgrade)
@@ -216,14 +205,69 @@ public static class ShopCatalog
             return "You're already at full health.";
         }
 
-        int price = upgrade.PriceForLevel(level);
+        return Pay(gm, upgrade.id, upgrade.name, upgrade.PriceForLevel(level));
+    }
+
+    // Money is shared, upgrades are personal: the purse pays, the buyer gets the item.
+    // Co-op guests ask the host to charge the purse and apply the item when it says yes.
+    static string Pay(GameManager gm, string itemId, string itemName, int price)
+    {
         if (gm.playerCoins < price)
         {
-            return "Not enough coins! " + upgrade.name + " costs " + price + ".";
+            return "Not enough coins! " + itemName + " costs " + price + ".";
+        }
+
+        if (price > 0 && Net.Active && !Net.IsAuthority && PartyState.Instance != null)
+        {
+            PartyState.Instance.RequestPurchase(itemId, price);
+            return "Buying " + itemName + "...";
         }
 
         gm.playerCoins -= price;
+        return Apply(gm, itemId);
+    }
 
+    // Co-op guests: the host answered a purchase request.
+    public static void CompletePurchase(string itemId, bool ok, int price)
+    {
+        GameManager gm = GameManager.Instance;
+        if (gm == null || AreaHUD.Instance == null)
+        {
+            return;
+        }
+        if (!ok)
+        {
+            Debug.Log("[Shop] Host refused purchase of " + itemId + " (purse too small)");
+            AreaHUD.Instance.Toast("Not enough coins in the party purse!", 2.5f);
+            return;
+        }
+        string result = Apply(gm, itemId);
+        Debug.Log("[Shop] Bought " + itemId + " for " + price + ": " + result + " (max hp now " + gm.maxPlayerHealth + ")");
+        AreaHUD.Instance.Toast(result, 2.5f);
+    }
+
+    // Gives the item to this device's player.
+    static string Apply(GameManager gm, string itemId)
+    {
+        WeaponDef weapon = WeaponCatalog.Get(itemId);
+        if (weapon != null)
+        {
+            if (!gm.ownedWeapons.Contains(weapon.id))
+            {
+                gm.ownedWeapons.Add(weapon.id);
+            }
+            gm.equippedWeapon = weapon.id;
+            RefreshPlayer();
+            return "Equipped " + weapon.name + "!";
+        }
+
+        UpgradeDef upgrade = GetUpgrade(itemId);
+        if (upgrade == null)
+        {
+            return "";
+        }
+
+        int level = gm.GetUpgradeLevel(upgrade.id);
         switch (upgrade.id)
         {
             case "potion":
@@ -244,14 +288,15 @@ public static class ShopCatalog
         return "Bought " + upgrade.name + "!";
     }
 
-    // Pushes the new loadout and stats onto the live player.
+    // Pushes the new loadout and stats onto this device's player: upgrades belong to whoever bought them.
     public static void RefreshPlayer()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
+        Transform localPlayer = PlayerRegistry.LocalTransform;
+        if (localPlayer == null)
         {
             return;
         }
+        GameObject player = localPlayer.gameObject;
 
         Weapon weapon = player.GetComponent<Weapon>();
         if (weapon != null)

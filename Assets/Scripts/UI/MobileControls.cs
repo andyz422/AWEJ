@@ -34,6 +34,12 @@ public class MobileControls : MonoBehaviour
         get { return Instance != null && Instance.interactButton.ConsumePress(); }
     }
 
+    // Held down, e.g. to revive a teammate.
+    public static bool InteractHeld
+    {
+        get { return Instance != null && Instance.interactButton.Held; }
+    }
+
     public static bool SwapPressed
     {
         get { return Instance != null && Instance.swapButton.ConsumePress(); }

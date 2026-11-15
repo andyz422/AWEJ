@@ -13,13 +13,77 @@ public enum AreaEntry
     Respawn
 }
 
+// State that belongs to one player. In co-op every player keeps their own (health, the weapons
+// and upgrades they bought); GameManager.Me is the player on this device.
+[System.Serializable]
+public class PlayerProfile
+{
+    public const int StartHealth = 7;
+
+    public int health = StartHealth;
+    public int maxHealth = StartHealth;
+    public string equippedWeapon = WeaponCatalog.StarterWeapon;
+    public List<string> ownedWeapons = new List<string> { WeaponCatalog.StarterWeapon };
+    public readonly Dictionary<string, int> upgrades = new Dictionary<string, int>();
+
+    public void Reset()
+    {
+        maxHealth = StartHealth;
+        health = StartHealth;
+        equippedWeapon = WeaponCatalog.StarterWeapon;
+        ownedWeapons.Clear();
+        ownedWeapons.Add(WeaponCatalog.StarterWeapon);
+        upgrades.Clear();
+    }
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public int playerHealth = 7;
-    public int maxPlayerHealth = 7;
-    public int playerCoins = 0;
+    // This device's player. The fields below forward to it so existing code keeps working.
+    public PlayerProfile Me = new PlayerProfile();
+
+    public int playerHealth { get { return Me.health; } set { Me.health = value; } }
+    public int maxPlayerHealth { get { return Me.maxHealth; } set { Me.maxHealth = value; } }
+    public string equippedWeapon { get { return Me.equippedWeapon; } set { Me.equippedWeapon = value; } }
+    public List<string> ownedWeapons { get { return Me.ownedWeapons; } }
+
+    // The party's shared purse: every coin picked up and every battle reward goes here,
+    // and every player spends from it on their own upgrades. In co-op the host's PartyState
+    // holds it; only the host changes it (guests ask through PartyState.RequestPurchase).
+    private int localCoins = 0;
+
+    public int LocalCoins
+    {
+        get { return localCoins; }
+    }
+
+    public int playerCoins
+    {
+        get
+        {
+            PartyState party = PartyState.Instance;
+            return Net.Active && party != null && party.IsSpawned ? party.Coins.Value : localCoins;
+        }
+        set
+        {
+            PartyState party = PartyState.Instance;
+            if (Net.Active && party != null && party.IsSpawned)
+            {
+                if (Net.IsAuthority)
+                {
+                    party.Coins.Value = value;
+                }
+                else
+                {
+                    Debug.LogWarning("Guests can't change the shared purse directly.");
+                }
+                return;
+            }
+            localCoins = value;
+        }
+    }
 
     public bool isInDialogue = false;
     public bool isTransitioning = false;
@@ -38,12 +102,6 @@ public class GameManager : MonoBehaviour
     // Chosen on the character select screen before NewGame(); see PlayerCharacters.
     public string playerCharacter = PlayerCharacters.DefaultId;
 
-    [Header("Loadout")]
-    public string equippedWeapon = WeaponCatalog.StarterWeapon;
-    public List<string> ownedWeapons = new List<string> { WeaponCatalog.StarterWeapon };
-
-    private readonly Dictionary<string, int> upgradeLevels = new Dictionary<string, int>();
-
     void Awake()
     {
         if (Instance == null)
@@ -60,10 +118,20 @@ public class GameManager : MonoBehaviour
     public void NewGame()
     {
         Debug.Log("GameManager.NewGame() called");
-        maxPlayerHealth = 7;
-        playerHealth = maxPlayerHealth;
-        playerCoins = 0;
+        ResetRun();
+        Debug.Log("Loading TownScene...");
+        GoToScene("TownScene");
+    }
+
+    // Fresh run: this player's profile, the purse and world progress. Co-op hosts and guests call
+    // this when a session starts (the host's PartyState then shares the world state).
+    public void ResetRun()
+    {
+        Me.Reset();
+        localCoins = 0;
         previousScene = "";
+        isTransitioning = false;
+        isInDialogue = false;
 
         currentArea = 0;
         currentBuilding = "";
@@ -72,25 +140,17 @@ public class GameManager : MonoBehaviour
         pendingMessage = "";
         loopCount = 0;
         clearedBattles.Clear();
-
-        equippedWeapon = WeaponCatalog.StarterWeapon;
-        ownedWeapons.Clear();
-        ownedWeapons.Add(WeaponCatalog.StarterWeapon);
-        upgradeLevels.Clear();
-
-        Debug.Log("Loading TownScene...");
-        GoToScene("TownScene");
     }
 
     public int GetUpgradeLevel(string upgradeId)
     {
         int level;
-        return upgradeLevels.TryGetValue(upgradeId, out level) ? level : 0;
+        return Me.upgrades.TryGetValue(upgradeId, out level) ? level : 0;
     }
 
     public void SetUpgradeLevel(string upgradeId, int level)
     {
-        upgradeLevels[upgradeId] = level;
+        Me.upgrades[upgradeId] = level;
     }
 
     public bool IsBattleCleared(string buildingId)
@@ -132,6 +192,11 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToMenu()
     {
+        if (Net.Active && NetSession.Instance != null)
+        {
+            NetSession.Instance.Leave();
+            return;
+        }
         GoToScene("MenuScene");
     }
 

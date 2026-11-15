@@ -88,6 +88,12 @@ public class SceneTransition : MonoBehaviour
         }
     }
 
+    // Fade the screen to a given darkness from wherever it is now (co-op travel rebuilds in place).
+    public IEnumerator FadeTo(float alpha)
+    {
+        yield return StartCoroutine(Fade(fadeImage.color.a, alpha));
+    }
+
     IEnumerator Fade(float startAlpha, float endAlpha)
     {
         float elapsed = 0f;

@@ -6,20 +6,16 @@ public class ThirdPersonCamera : MonoBehaviour
     public Vector3 offset = new Vector3(0f, 3.5f, -6f);
     public float lookHeight = 1.2f;
 
-    void Start()
-    {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            target = player.transform;
-        }
-    }
-
     void LateUpdate()
     {
+        // Follow this device's player; in co-op it may spawn after the camera.
         if (target == null)
         {
-            return;
+            target = PlayerRegistry.LocalTransform;
+            if (target == null)
+            {
+                return;
+            }
         }
 
         transform.position = target.position + offset;

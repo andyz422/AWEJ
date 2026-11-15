@@ -30,11 +30,8 @@ public class ShopkeeperIdle : MonoBehaviour
         if (player == null && Time.time >= nextSearch)
         {
             nextSearch = Time.time + 1f;
-            GameObject found = GameObject.FindGameObjectWithTag("Player");
-            if (found != null)
-            {
-                player = found.transform;
-            }
+            // Each device's shopkeeper turns to that device's own player.
+            player = PlayerRegistry.LocalTransform;
         }
 
         Quaternion target = baseRotation;

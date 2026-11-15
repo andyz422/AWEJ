@@ -57,6 +57,9 @@ public class AreaHUD : MonoBehaviour
         scaler.referenceResolution = new Vector2(1920, 1080);
         scaler.matchWidthOrHeight = 0.5f;
 
+        // Lets the co-op vote buttons receive taps/clicks.
+        gameObject.AddComponent<GraphicRaycaster>();
+
         Transform root = transform;
 
         // Location, top-left.
@@ -110,6 +113,68 @@ public class AreaHUD : MonoBehaviour
     public bool HasPrompt
     {
         get { return promptPanel.activeSelf; }
+    }
+
+    // ---------------------------------------------------------------- co-op door vote
+
+    private GameObject votePanel;
+    private Text voteTitle;
+    private Text voteStatus;
+    private int shownVoteId = -1;
+
+    void BuildVotePanel()
+    {
+        RectTransform panel = Panel(transform, "Vote", new Vector2(0.5f, 1f), new Vector2(0f, -150f), new Vector2(900f, 230f));
+        panel.pivot = new Vector2(0.5f, 1f);
+        votePanel = panel.gameObject;
+
+        voteTitle = MakeText(panel, "Title", new Vector2(20f, -14f), new Vector2(860f, 70f), 34, TextAnchor.MiddleCenter, FontStyle.Bold);
+        voteStatus = MakeText(panel, "Status", new Vector2(20f, -84f), new Vector2(860f, 40f), 26, TextAnchor.MiddleCenter, FontStyle.Normal);
+
+        VoteButton(panel, "Yes (Y)", new Vector2(250f, -150f), new Color(0.25f, 0.6f, 0.35f, 0.95f), true);
+        VoteButton(panel, "No (N)", new Vector2(650f, -150f), new Color(0.7f, 0.25f, 0.22f, 0.95f), false);
+        votePanel.SetActive(false);
+    }
+
+    void VoteButton(RectTransform panel, string label, Vector2 center, Color color, bool yes)
+    {
+        RectTransform rect = Box(panel, label, new Vector2(center.x - 160f, center.y), new Vector2(320f, 64f), color);
+        Image image = rect.GetComponent<Image>();
+        image.raycastTarget = true;
+        Button button = rect.gameObject.AddComponent<Button>();
+        button.targetGraphic = image;
+        button.onClick.AddListener(() =>
+        {
+            if (PartyState.Instance != null)
+            {
+                PartyState.Instance.SendVote(yes);
+            }
+        });
+        Text text = MakeText(rect, "Label", Vector2.zero, new Vector2(320f, 64f), 30, TextAnchor.MiddleCenter, FontStyle.Bold);
+        text.raycastTarget = false;
+    }
+
+    public void ShowVote(int id, string title, int yes, int needed, float secondsLeft)
+    {
+        if (votePanel == null)
+        {
+            BuildVotePanel();
+        }
+        if (!votePanel.activeSelf || id != shownVoteId)
+        {
+            shownVoteId = id;
+            votePanel.SetActive(true);
+        }
+        voteTitle.text = title;
+        voteStatus.text = "Yes " + yes + " / " + needed + "   -   " + Mathf.CeilToInt(secondsLeft) + "s";
+    }
+
+    public void HideVote()
+    {
+        if (votePanel != null && votePanel.activeSelf)
+        {
+            votePanel.SetActive(false);
+        }
     }
 
     static RectTransform Panel(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size)

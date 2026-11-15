@@ -9,9 +9,36 @@ public class Projectile : MonoBehaviour
     public bool fromEnemy = false;
     public bool pierce = false;
 
+    // A visual copy of a shot simulated elsewhere (co-op): it stops where it hits but deals no damage.
+    public bool cosmetic = false;
+
     private Vector3 direction = Vector3.forward;
     private bool initialized = false;
     private readonly HashSet<Enemy> alreadyHit = new HashSet<Enemy>();
+
+    private static GameObject prefab;
+
+    public static Projectile Spawn(ShotData shot, bool cosmeticOnly)
+    {
+        if (prefab == null)
+        {
+            prefab = Resources.Load<GameObject>("Prefabs/Projectile");
+            if (prefab == null)
+            {
+                return null;
+            }
+        }
+        Vector3 direction = shot.direction.sqrMagnitude > 0.0001f ? shot.direction.normalized : Vector3.forward;
+        GameObject obj = Instantiate(prefab, shot.origin, Quaternion.LookRotation(direction));
+        Projectile projectile = obj.GetComponent<Projectile>();
+        if (projectile != null)
+        {
+            projectile.Initialize(direction, shot.speed, shot.damage);
+            projectile.Configure(shot.fromEnemy, shot.pierce, shot.color, shot.scale);
+            projectile.cosmetic = cosmeticOnly;
+        }
+        return projectile;
+    }
 
     void Start()
     {
@@ -80,10 +107,14 @@ public class Projectile : MonoBehaviour
 
             if (other.CompareTag("Player"))
             {
-                PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
+                PlayerAvatar avatar = other.GetComponent<PlayerAvatar>();
+                if (avatar != null && avatar.IsDowned)
                 {
-                    playerHealth.TakeDamage(damage);
+                    return false; // shots pass over downed players
+                }
+                if (!cosmetic && avatar != null)
+                {
+                    avatar.Hurt(damage);
                 }
             }
             return true;
@@ -96,7 +127,7 @@ public class Projectile : MonoBehaviour
 
         if (enemy != null)
         {
-            if (alreadyHit.Add(enemy))
+            if (alreadyHit.Add(enemy) && !cosmetic)
             {
                 enemy.TakeDamage(damage);
             }

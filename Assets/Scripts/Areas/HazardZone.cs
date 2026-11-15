@@ -9,29 +9,23 @@ public class HazardZone : MonoBehaviour
     public Rect[] safeAreas = new Rect[0];
     public int damage = 1;
 
-    private PlayerHealth playerHealth;
-
-    void Start()
-    {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            playerHealth = player.GetComponent<PlayerHealth>();
-        }
-    }
-
     void Update()
     {
-        if (playerHealth == null)
+        // Burns every player standing in it; downed players are left alone.
+        foreach (PlayerAvatar player in PlayerRegistry.All)
         {
-            return;
-        }
+            // In co-op each device burns only its own player (it owns that player's health).
+            if (player == null || player.IsDowned || player.Health == null || (Net.Active && !player.IsLocal))
+            {
+                continue;
+            }
 
-        Vector3 position = playerHealth.transform.position;
-        if (Contains(new Vector2(position.x, position.z)))
-        {
-            // PlayerHealth's invincibility window keeps this to one hit per second.
-            playerHealth.TakeDamage(damage);
+            Vector3 position = player.transform.position;
+            if (Contains(new Vector2(position.x, position.z)))
+            {
+                // PlayerHealth's invincibility window keeps this to one hit per second.
+                player.Health.TakeDamage(damage);
+            }
         }
     }
 
