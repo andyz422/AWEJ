@@ -6,6 +6,12 @@ public class ThirdPersonCamera : MonoBehaviour
     public Vector3 offset = new Vector3(0f, 3.5f, -6f);
     public float lookHeight = 1.2f;
 
+    // How quickly the camera swings round to sit behind the character (higher = snappier).
+    public float followSpeed = 6f;
+
+    private float yaw;
+    private Transform yawTarget;
+
     void LateUpdate()
     {
         // Always follow this device's player. (The scene's saved target points at the player prefab
@@ -20,7 +26,23 @@ public class ThirdPersonCamera : MonoBehaviour
             return;
         }
 
-        transform.position = target.position + offset;
+        float targetYaw = target.eulerAngles.y;
+
+        // Snap to the character when we first see it (or it changes), so the camera doesn't swing in from elsewhere.
+        if (yawTarget != target)
+        {
+            yawTarget = target;
+            yaw = targetYaw;
+        }
+        else
+        {
+            // Swing the camera round until it sits behind the character's facing direction.
+            float t = 1f - Mathf.Exp(-followSpeed * Time.deltaTime);
+            yaw = Mathf.LerpAngle(yaw, targetYaw, t);
+        }
+
+        Quaternion orbit = Quaternion.Euler(0f, yaw, 0f);
+        transform.position = target.position + orbit * offset;
 
         Vector3 lookPoint = target.position + Vector3.up * lookHeight;
         Vector3 lookDirection = lookPoint - transform.position;
