@@ -9,6 +9,9 @@ public class ThirdPersonCamera : MonoBehaviour
     // How quickly the camera swings round to sit behind the character (higher = snappier).
     public float followSpeed = 6f;
 
+    // Follow speed used while the player is pulling back (S, with or without A/D).
+    public float reverseFollowSpeed = 1.5f;
+
     private float yaw;
     private Transform yawTarget;
     private ThirdPersonController targetController;
@@ -40,16 +43,14 @@ public class ThirdPersonCamera : MonoBehaviour
         {
             // Walking straight back: hold the angle.
         }
-        else if (targetController != null && targetController.IsReversing)
-        {
-            // Backing up diagonally: the camera stays locked to the character's facing.
-            yaw = targetYaw;
-        }
         else
         {
             // Swing the camera round until it sits behind the character's facing direction.
             // While the player is walking backward the angle is held still.
-            float t = 1f - Mathf.Exp(-followSpeed * Time.deltaTime);
+            // Backing up diagonally, the camera swings more slowly so the big turn isn't abrupt.
+            bool reversing = targetController != null && targetController.IsReversing;
+            float speed = reversing ? reverseFollowSpeed : followSpeed;
+            float t = 1f - Mathf.Exp(-speed * Time.deltaTime);
             yaw = Mathf.LerpAngle(yaw, targetYaw, t);
         }
 
