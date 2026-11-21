@@ -15,6 +15,16 @@ public class ThirdPersonController : MonoBehaviour
     private bool canMove = true;
     private float baseMoveSpeed;
 
+    // True while walking straight back (S alone, no sideways input). The character and camera hold their
+    // facing then. Backing up diagonally (S + A/D) still turns, so the camera keeps swinging.
+    public bool IsMovingBackward { get; private set; }
+
+    // True whenever the stick is pulled back, straight or diagonal.
+    public bool IsReversing { get; private set; }
+
+    // Turn rate used while backing up diagonally. The camera is locked to the character's facing then,
+    // so this also sets how fast the camera swings. Lower = slower swing.
+    public float reverseTurnSpeed = 0.5f;
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -98,6 +108,8 @@ public class ThirdPersonController : MonoBehaviour
             }
         }
         Vector3 horizontalMove = Vector3.zero;
+        IsReversing = moveInput.y < -0.1f;
+        IsMovingBackward = IsReversing && Mathf.Abs(moveInput.x) < 0.2f;
 
         if (moveInput.magnitude > 0.1f)
         {
@@ -122,7 +134,12 @@ public class ThirdPersonController : MonoBehaviour
                 Vector3 direction = rawDirection.normalized;
                 horizontalMove = direction * moveSpeed;
 
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Time.deltaTime);
+                // Walking backward keeps the character facing the same way, so it moves without turning.
+                if (!IsMovingBackward)
+                {
+                    float turnSpeed = IsReversing ? reverseTurnSpeed : rotationSpeed;
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), turnSpeed * Time.deltaTime);
+                }
             }
         }
 

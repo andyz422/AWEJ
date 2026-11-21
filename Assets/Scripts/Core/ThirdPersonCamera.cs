@@ -11,6 +11,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     private float yaw;
     private Transform yawTarget;
+    private ThirdPersonController targetController;
 
     void LateUpdate()
     {
@@ -32,11 +33,22 @@ public class ThirdPersonCamera : MonoBehaviour
         if (yawTarget != target)
         {
             yawTarget = target;
+            targetController = target.GetComponent<ThirdPersonController>();
+            yaw = targetYaw;
+        }
+        else if (targetController != null && targetController.IsMovingBackward)
+        {
+            // Walking straight back: hold the angle.
+        }
+        else if (targetController != null && targetController.IsReversing)
+        {
+            // Backing up diagonally: the camera stays locked to the character's facing.
             yaw = targetYaw;
         }
         else
         {
             // Swing the camera round until it sits behind the character's facing direction.
+            // While the player is walking backward the angle is held still.
             float t = 1f - Mathf.Exp(-followSpeed * Time.deltaTime);
             yaw = Mathf.LerpAngle(yaw, targetYaw, t);
         }
